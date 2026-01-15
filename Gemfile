@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "github-pages", group: :jekyll_plugins
-gem "just-the-docs"
 
 platforms :windows, :jruby do
     gem "tzinfo", ">= 1", "< 3"
