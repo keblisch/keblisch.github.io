@@ -426,16 +426,104 @@ int main()
 
 ## Comments
 
-- Comments are considered to be whitespace by the compiler
+- Comments are text annotations in source code that are ignored by the compiler
+- Used for documentation, explanations, and temporarily disabling code
+
+### Single-Line Comments
+
+- Single-line comments begin with `//` and continue until the end of the line
 
 ```cpp
-// This is a line comment
+// This is a full-line comment explaining the code below
+int x = 10; // This is an inline comment explaining this variable
 
-/*This
-is
-a
-block
-comment */
+// Comments can span multiple lines by repeating the // prefix
+// Line 1 of the comment
+// Line 2 of the comment
+```
+
+- **Best practices**:
+  - Single-line comments should be used for brief explanations, inline annotations,
+    and quick notes
+
+### Multi-Line Comments
+
+- Multi-line comments begin with `/*` and end with `*/`
+- Multi-line comments can span multiple lines without repeating comment markers
+- Cannot be nested: `/* /* nested */ */` will end at the first `*/`
+
+```cpp
+/* This is a multi-line comment
+   that spans several lines.
+   It ends when the closing marker appears. */
+
+/*
+ * Common formatting style with asterisks
+ * for improved readability in longer comments
+ */
+
+int y = 20; /* Can also be used inline */
+```
+
+- **Best practices**:
+  - Multi-line comments should be used for longer explanations, function/class descriptions,
+    or block documentation
+
+### Documentation Comments
+
+- Documentation comments are a special comment format used by documentation generators
+- They provide structured documentation for functions, classes, and parameters
+- Common formats:
+  - `///` - Triple-slash style
+  - `/** ... */` - JavaDoc style
+- Common documentation tags:
+  - `@brief` - Brief description
+  - `@param` - Parameter description
+  - `@return` - Return value description
+  - `@note` - Additional notes
+  - `@see` - Cross-references
+
+```cpp
+// Triple-slash style example
+/// @brief Calculates the sum of two integers
+/// @param a The first integer
+/// @param b The second integer
+/// @return The sum of a and b
+int add(int a, int b)
+{
+    return a + b;
+}
+
+// JavaDoc style example
+/**
+ * @brief Represents a 2D point in Cartesian coordinates
+ *
+ * This class provides basic operations for working with points,
+ * including distance calculations and coordinate access.
+ *
+ * @note Coordinates are stored as double-precision floating-point values
+ */
+class Point
+{
+public:
+    /**
+     * @brief Constructs a point at the specified coordinates
+     * @param x The x-coordinate (default: 0.0)
+     * @param y The y-coordinate (default: 0.0)
+     */
+    Point(double x = 0.0, double y = 0.0);
+
+    /**
+     * @brief Calculates the distance from this point to another
+     * @param other The other point
+     * @return The Euclidean distance between the two points
+     */
+    double distanceTo(const Point& other) const;
+
+private:
+    double m_x; ///< The x-coordinate of the point
+    double m_y; ///< The y-coordinate of the point
+};
 ```
 
 ## Namespaces
