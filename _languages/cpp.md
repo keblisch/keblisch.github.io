@@ -528,41 +528,110 @@ private:
 
 ## Namespaces
 
-- Block statements can be defined as namespaces
-  - Thereby they are assigned identifiers via which their inner identifiers can be referenced
-    from outside
-  - Thereby multiple namespaces can use the same identifier to be considered the same namespace
-- Identifiers in namespaces can be referenced from outside with the scope resolution operator `::`
+- Namespaces provide a way to organize code and prevent name collisions
+- Identifiers within a namespace can be accessed from outside using the scope resolution operator `::`
+- Multiple namespace blocks with the same name are considered part of the same namespace
+- Namespaces can be nested and aliased for convenience
+
+- **Best practices**
+  - Organize your code into logical namespaces that reflect project structure
+
+### Basic Namespace Usage
 
 ```cpp
-// defining namespaces
-namespace numbers
+// defining a namespace
+namespace math
 {
-    int x = 3;
-    int y = 4;
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+    int multiply(int a, int b)
+    {
+        return a * b;
+    }
 }
-namespace numbers
+
+// split definitions - these belong to the same namespace
+namespace math
 {
-    int z = x + y;
+    int subtract(int a, int b)
+    {
+        return a - b;
+    }
 }
 
-// referencing single identifiers from a namespace
-numbers::x;
-numbers::y;
-numbers::z;
+// access element of namespace from of it
+int result = math::add(5, 3);
 
-// adding single identifiers from namespaces to the current scope
-using numbers::x;
-x;
-numbers::y;
-numbers::z;
+// bring specific identifier into current scope
+using math::add;
+int result2 = add(5, 3);  // no namespace prefix needed
+int result3 = math::multiply(2, 4);  // other identifiers still need prefix
 
-// adding entire namespaces to the current scope
-using namespace numbers;
-x;
-y;
-z;
+// bring entire namespace into current scope
+using namespace math;
+int result4 = subtract(10, 5);  // all identifiers accessible without prefix
 ```
+
+- **Best practices**:
+  - Don't use `using namespace` in header files - it pollutes all files that include the header
+  - Avoid `using namespace std;` in production code to prevent name collisions
+
+### Nested Namespaces
+
+```cpp
+// explicit nested namespace
+namespace company
+{
+    namespace project
+    {
+        namespace module
+        {
+            void function() {}
+        }
+    }
+}
+
+// simplified nested namespace
+namespace company::project::module
+{
+    void function() {}
+}
+
+// access nested namespace
+company::project::module::function();
+
+// namespace alias for convenience
+namespace cpm = company::project::module;
+cpm::function();
+```
+
+- **Best practices**:
+  - Use namespace aliases for deeply nested namespaces to improve readability
+
+### Anonymous Namespaces
+
+- Anonymous namespaces are used to have only internal linkage
+  - This means that their content is only visible inside their translation unit
+  - This is helpful to provide encapsulation in APIs
+
+```cpp
+namespace
+{
+    int helperFunction() { return 42; }
+    const int SECRET = 123;
+}
+
+int publicFunction()
+{
+    // can use directly within same file
+    return helperFunction();
+}
+```
+
+- **Best practices**:
+  - Use anonymous namespaces instead of `static` for internal linkage
 
 ## Preprocessor Directives
 
