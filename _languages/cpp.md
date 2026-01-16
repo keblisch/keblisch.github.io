@@ -10,7 +10,10 @@ title: C++
 # C++
 {: .no_toc }
 
-C++ is a low-mid-level programming language that focuses on runtime speed and functionality.
+C++ is a multi-paradigm, general-purpose programming language that provides high-level
+abstractions while maintaining low-level control over system resources. It emphasizes
+performance, efficiency, and fine-grained memory management, making it ideal for systems
+programming, game development, and performance-critical applications.
 
 | Paradigms                                   | Typing           | Memory Management | Execution |
 | :------------------------------------------ | :--------------- | :---------------- | :-------- |
