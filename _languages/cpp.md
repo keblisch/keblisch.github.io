@@ -2656,9 +2656,10 @@ for (int i = 0; i < 10 && !done; i++)
   - If using `goto`, always jump forward, never backward
   - Use descriptive labels that indicate the target purpose
 
-### Error Handling
+### Exception Handling
 
-- Exception handling provides a mechanism to respond to runtime errors
+- Exceptions are errors that are thrown at runtime
+- Exception handling provides a mechanism to respond to the runtime errors
 - Exceptions separate error handling code from normal program flow
 
 - common standard exceptions:
