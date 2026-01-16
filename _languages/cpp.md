@@ -807,366 +807,779 @@ delete heapVar; // must manually free memory
 
 ## Data Types
 
+- Data types determine how much memory is allocated and how the bits are interpreted for a value
+
 ### Primitive Data Types
 
-| Keyword                         | Representation        | Bytes       | Meaning          |
-| :------------------------------ | :-------------------- | :---------- | :--------------- |
-| `bool`                          | Integral              | 1           | Boolean value    |
-| `char`                          | Integral              | 1           | ANSI-Character   |
-| `short`/`short int`             | Integral              | 2           | Signed Integer   |
-| `int`                           | Integral              | 4           | Signed Integer   |
-| `long`/`long int`               | Integral              | 4/8         | Signed Integer   |
-| `long long`/`long long int`     | Integral              | 8           | Signed Integer   |
-| `size_t`                        | Integral              | Word length | Unsigned Integer |
-| `float`                         | Floating-Point Number | 4           | Real Number      |
-| `double`/`long float`           | Floating-Point Number | 8           | Real Number      |
-| `long double`/`long long float` | Floating-Point Number | 10          | Real Number      |
+- Primitive data types represent single values and have predefined sizes
 
-- Integral data types can be set explicitly as signed and unsigned with modifiers as prefixes
-  - The keyword `signed` sets a data type as a signed value
-  - The keyword `unsigned` sets a data type as an unsigned value
+#### Integer Types
+
+- Integer types represent whole numbers that can be either signed or unsigned
+- Sizes of integer types vary by platform but follow guaranteed minimums
+
+| Keyword                                          | Byte Size   | Signedness              |
+| :----------------------------------------------- | :---------- | :---------------------- |
+| `bool`                                           | At least 1  | N/A                     |
+| `char`                                           | At least 1  | Implementation-defined  |
+| `signed char`                                    | At least 1  | Signed                  |
+| `unsigned char`                                  | At least 1  | Unsigned                |
+| `short`<br>`short int`                           | At least 2  | Signed                  |
+| `unsigned short`<br>`unsigned short int`         | At least 2  | Unsigned                |
+| `int`                                            | At least 4  | Signed                  |
+| `unsigned int`                                   | At least 4  | Unsigned                |
+| `long`                                           | At least 8  | Signed                  |
+| `unsigned long`                                  | At least 8  | Unsigned                |
+| `long long`<br>`long long int`                   | At least 8  | Signed                  |
+| `unsigned long long`<br>`unsigned long long int` | At least 8  | Unsigned                |
+| `int8_t`                                         | 1           | Signed                  |
+| `uint8_t`                                        | 1           | Unsigned                |
+| `int16_t`                                        | 2           | Signed                  |
+| `uint16_t`                                       | 2           | Unsigned                |
+| `int32_t`                                        | 4           | Signed                  |
+| `uint32_t`                                       | 4           | Unsigned                |
+| `int64_t`                                        | 8           | Signed                  |
+| `uint64_t`                                       | 8           | Unsigned                |
+| `size_t`                                         | System Size | Unsigned                |
+| `ptrdiff_t`                                      | System Size | Signed                  |
+
+- `bool` and `char` don't represent integers, but are represented internally as such themselves
+  - Thereby `bool` represents boolean values
+  - Thereby `char` is also a character type
 
 - **Best practices**:
-  - The keyword `short` should be used instead of `short int`
-  - The keyword `long` should be used instead of `long int`
-  - The keyword `long long` should be used instead of `long long int`
-  - The keyword `double` should be used instead of `long float`
-  - The keyword `long double` should be used instead of `long long float`
+  - `int` should be used for general-purpose integers when size doesn't matter
+  - Fixed-width types (`int32_t`, `uint64_t`, etc.) should be used when exact size is relevant
+  - `size_t` should be used for sizes, indices and counts
+  - `short` should be used over `short int`, `long` over `long int` and `long long` over
+  `long long int`
+  - `unsigned` types should be used for bit manipulation and when negative values are meaningless
+  - `ptrdiff_t` should be used for pointer arithmetic
 
-### Reference Data Types
+#### Floating-Point Types
+
+- Floating-point types represent real numbers with fractional parts
+- Sizes and precisions of floating-point types vary by platform but follow guaranteed minimums
+- Floating-point types follow the IEEE 754 standard on most platforms
+  - Therefore they aren't guaranteed to be precise
+
+| Keyword       | Byte Size  | Precision (decimal digits) |
+| :------------ | :--------- | :------------------------- |
+| `float`       | At least 4 | ~6-9                       |
+| `double`      | At least 8 | ~15-17                     |
+| `long double` | At least 8 | ~15-21                     |
+
+- **Best practices**:
+  - `double` should be used instead of `float`
+
+#### Character Types
+
+- Character types represent individual characters
+- These support various character encodings as ASCII, UTF-8, UTF-16 and UTF-32
+
+| Keyword    | Byte Size  | Purpose                             |
+| :--------- | :--------- | :---------------------------------- |
+| `char`     | 1          | Basic character (ASCII/UTF-8)       |
+| `wchar_t`  | At least 2 | Wide character                      |
+| `char8_t`  | 1          | UTF-8 character                     |
+| `char16_t` | 2          | UTF-16 character                    |
+| `char32_t` | 4          | UTF-32 character                    |
+
+### Compound Data Types
+
+- Compound data types consist of any number of primitive data types or even other compound
+  data types
 
 #### Arrays
 
-- Arrays are fixed-sized containers for multiple values of the same data type
-  - Their elements can be accessed by their index in the array
-- Arrays themselves are pointers pointing to their first element
-  - Therefore accessing elements is equivalent to dereferencing pointers to their elements
+- Arrays are fixed-size collections storing multiple elements of the same type in contiguous
+  memory
+  - They are zero-indexed
+  - Their size must be known at compile time
+  - They decay to pointers when passed to functions
+- These were introduced in C, but more modern approaches for them were introduced since then in
+  C++
+  - This is why they are sometimes referred to as C-style arrays
 
 ```cpp
 // declare array
 int x[5];
 
 // initialize arrays
-int y1[5] = {1, 2, 3, 4, 5};
-int y2[] = {1, 2, 3, 4, 5};
-int y3[5] = {}; // initialize with zero-values
+int y1[5] = {1, 2, 3, 4, 5}; // explicit size and values
+int y2[] = {1, 2, 3, 4, 5};  // size inferred from initializer (5 elements)
+int y3[5] = {1, 2};          // partial initialization (remaining elements zero-initialized)
+int y4[5] = {};              // zero-initialization for all elements
 
-// access array elements
-y1[0] == 1;
-y1[1] = 5;
-y1[1] == 5;
-y1[100]; // undefined behavior
+// access elements
+y1[0] == 1; // read first element
+y1[1] = 5;  // modify second element
+y1[1] == 5; // verify modification
+y1[100];    // undefined behavior
 
-// access array elements with pointer arithmetic
-*(y1 + 2);
+// pointer arithmetic (arrays decay to pointers)
+int* ptr = y1;   // pointer to first element
+*(y1 + 2) == 3;  // access third element via pointer arithmetic
+ptr[2] == 3;     // equivalent using subscript notation
+
+// multi-dimensional array
+int matrix[3][4] = {
+    {1, 2, 3, 4},
+    {5, 6, 7, 8},
+    {9, 10, 11, 12}
+};
+matrix[1][2] == 7; // access element at row 1, column 2
 ```
+
+- **Best practices**:
+  - Always initialize arrays to avoid undefined behavior from garbage values
+  - Prefer `std::array` (fixed size) or `std::vector` (dynamic size) over C-arrays
+  - Never access elements beyond array bounds
+    - Use `.at()` with `std` containers for bounds checking
+  - Store array size separately or use `std::size()` when passing arrays to functions
 
 #### Strings
 
-- Strings are syntactic sugar for arrays with the data type `char`
-  - Therefore they behave like arrays
-  - Their last element is a null terminator character `\0` to mark the end of the string
+- Strings are null-terminated character arrays (they end with `\0`)
 
 ```cpp
-const char* name1 = "John";
-char name2[] = "John";
-char name3[] = {'J', 'o', 'h', 'n', '\0'};
+// use string literals (immutable, stored in read-only memory)
+const char* name1 = "John";  // pointer to string literal
+
+// mutable character arrays
+char name2[] = "John";                     // array with null terminator
+char name3[] = {'J', 'o', 'h', 'n', '\0'}; // explicit initialization
+char name4[10] = "John";                   // array with extra space
+
+// string manipulation
+#include <cstring>
+std::strlen(name2);         // get length (4, excludes null terminator)
+std::strcpy(name4, "Jane"); // copy string (unsafe, no bounds checking)
+std::strcat(name4, " Doe"); // concatenate strings (unsafe)
+std::strcmp(name2, name4);  // compare strings (returns 0 if equal)
 ```
+
+- **Best practices**:
+  - Prefer `std::string` over C-style strings for safety and convenience
+  - Use `.at()` instead of `[]` when bounds checking is needed
+  - Pass strings by `const` reference to functions: `void func(const std::string& str)`
+  - Avoid C-string functions (`strcpy`, `strcat`, etc.) due to buffer overflow risks
 
 #### Structures
 
-- Structures are fixed-sized containers for multiple values of any data type
-  - Their elements can be accessed by an identifier associated to them
+- Structures are user-defined types that group related data members of different types
+- Their members are publicly accessible by default (unlike classes)
+- They are typically used for Plain Old Data (POD) types or simple data aggregates
 
 ```cpp
-// create structure
-struct Foo
+// define structure
+struct Point
 {
     int x;
-    float y;
-    char* z;
+    int y;
 };
 
 // declare structure variable
-struct Foo a;
+Point p1;
 
-// create structure and declare a variable with it
-struct Bar
+// define structure and declare variable simultaneously
+struct Rectangle
 {
-    int x;
-    float y;
-    char* z;
-} b;
+    int width;
+    int height;
+} rect1, rect2;
 
-// initialize structure variables
-struct Foobar
+// initialize structure
+struct Person
 {
-    int a;
-    long b;
+    std::string name;
+    int age;
+    double height;
 };
-Foobar bar{10, 3.14};              // uniform initialization (initializes structure with values)
-Foobar foobar{.b = 3.14, .a = 10}; // designated initialization (initializes structure with values)
-Foobar foo = {4, 6.4};             // copy-list-initialization (copies values into structure)
 
-// access element of structures
-foo.a = 10;
+// aggregate initialization
+Person p1{"Alice", 30, 1.65};  // uniform initialization (preferred)
+Person p2 = {"Bob", 25, 1.80}; // copy-list-initialization
 
-// create structure with constructor and deconstructor
-struct Barfoo
+// designated initializers
+Person p3{.name = "Charlie", .age = 35, .height = 1.75}; // can specify in any order
+Person p4{.age = 40, .name = "Diana"};                   // omitted members are zero-initialized
+
+// default initialization (members have indeterminate values)
+Person p5;  // uninitialized members
+
+// direct member access
+p1.name = "Alice Smith";
+p1.age = 31;
+int currentAge = p1.age;
+
+// pointer to structure
+Person* ptr = &p1;
+ptr->name = "Alicia"; // arrow operator for pointers
+(*ptr).age = 32;      // equivalent using dereference and dot operator
+
+// structure with constructor method
+struct Employee
 {
-    int a;
-    long b;
+    std::string name;
+    int id;
+    double salary;
 
-    Barfoo(int in1, long in2)
-        : a(in1), b(in2)
+    // default constructor
+    Employee()
+        : name(""), id(0), salary(0.0)
     {}
 
-    ~Barfoo()
+    // parameterized constructor with initialization list
+    Employee(std::string n, int i, double s)
+        : name(n), id(i), salary(s)
     {}
-};
-Barfoo bar(10, 3.14);
 
-// create and use structures with pointers as elements
-struct Fizz {
-    int* a;
-    double* b;
+    // destructor
+    ~Employee()
+    {
+        // cleanup if needed
+    }
 };
-Fizz fizz{new int(4), new double(6.4)};
-fizz.(*a) = 10;
-fizz->b = 4.5;
-delete fizz.a;
-delete fizz.b;
+Employee emp1;                         // calls default constructor
+Employee emp2("John", 1001, 50000.0);  // calls parameterized constructor
+Employee emp3{"Jane", 1002, 55000.0};  // uniform initialization
+
+// nested structure
+struct Address
+{
+    std::string street;
+    std::string city;
+    int zipCode;
+};
+struct Customer
+{
+    std::string name;
+    Address address;  // nested structure
+};
+Customer c1{"Alice", {"123 Main St", "Springfield", 12345}};
+c1.address.city = "Shelbyville";
 ```
 
 - **Best practices**:
   - Identifiers of structures should be written in Pascal case
-  - Structures should be initialized with uniform or designated initializations to avoid implicit
-    data type conversions
+  - Always initialize structures to avoid undefined behavior with uninitialized members
+  - Prefer uniform initialization `{}` over copy-list-initialization `=` to prevent narrowing
+    conversions
+  - Use designated initializers for clarity when initializing complex structures
+  - Use structures for simple data aggregates
+    - Use classes when adding significant behavior
+    or invariants
+  - Avoid manual memory management within structures
+    - Prefer smart pointers or RAII wrappers
 
 #### Unions
 
-- Unions are containers for single values that is shared by all its elements
-  - This allows the same value to have different data types
+- Unions are special data structures where all members share the same memory location
+- Only one of their members can hold a value at any given time
+- Their size equals the size of the largest member
 
 ```cpp
-// create union
-union Foo
+// define union
+union Data
 {
-    int x;
-    double y;
+    int intValue;     // 4 bytes
+    float floatValue; // 4 bytes
+    char charValue;   // 1 byte
 };
 
 // declare union variable
-Foo a;
+Data d1;
 
-// creating union and declare a variable with it
-union Bar
+// define union and declare variable simultaneously
+union Value
 {
-    int x;
-    double y;
-} b;
+    int i;
+    double d;
+} v1, v2;
 
-// initialize union
-union Foobar
+// initialize union (initializes first member by default)
+Number n1 = {42}; // initializes i
+Number n2{3.14f}; // initializes i with float converted to int (C++11)
+
+// designated initialization
+Number n3{.f = 3.14f}; // explicitly initialize f
+Number n4{.d = 2.718}; // explicitly initialize d
+
+// access members
+n1.i = 100;   // set integer value
+n1.f = 3.14f; // overwrites integer value, now f is active
+
+// n1.i is now undefined!
+int x = n1.i;
+
+// track which member of union is active
+enum class DataType { INT, FLOAT, DOUBLE };
+struct TaggedData
 {
-    int a;
-    double b;
+    DataType type; // discriminator
+    union
+    {
+        int intValue;
+        float floatValue;
+        double doubleValue;
+    } value;
 };
-Foobar foobar{.b = 3.14};
+TaggedData data;
+data.type = DataType::INT;
+data.value.intValue = 42;
 
-// create union with constructor in deconstructor
-union Barfoo
+// define union with constructor and destructor method
+union FlexibleData
 {
-    int a;
-    double b;
+    int i;
+    double d;
 
-    Barfoo(int in)
-        : a(in)
-    {}
+    // constructor for int
+    FlexibleData(int val) : i(val) {}
 
-    Barfoo(double in)
-        : b(in)
-    {}
+    // constructor for double
+    FlexibleData(double val) : d(val) {}
 
-    ~Barfoo()
-    {}
+    // destructor
+    ~FlexibleData() {}
 };
-Barfoo barfoo(10);
-
-// access elements of union
-a.x = 10;
-a.y = 10.0;
+FlexibleData fd1(42);   // initializes i
+FlexibleData fd2(3.14); // initializes d
 ```
 
 - **Best practices**:
   - Identifiers of unions should be written in Pascal case
+  - Prefer `std::variant` over unions for type-safe alternatives
+  - Always track which member is active using a discriminator
+  - Never read from a member that wasn't the last one written
+  - Use unions only when necessary for memory optimization or interfacing with C code
+  - Avoid unions with constructors/destructors unless necessary
 
 #### Enums
 
-- Enumerations are fixed sets of named constant values
+- Enums are user-defined types representing a set of named integer constants
+- They provide type safety and readability for representing discrete values
 
 ```cpp
-// create enumeration
-enum Foo
+// basic enumeration (values start at 0 and increment by 1)
+enum Color
 {
-    a, // 0
-    b, // 1
-    c  // 2
+    Red,   // 0
+    Green, // 1
+    Blue   // 2
 };
 
-// create enumeration with custom values
-enum Bar
+// enumeration with custom values
+enum Status
 {
-    x = 10,
-    y = 20,
-    z = 30
+    Success = 0,
+    Warning = 1,
+    Error = -1,
+    Critical = 100
 };
 
-// create enumeration with custom data type
-enum Foobar : long
+// usage
+Color c1 = Red;          // enumerators are in surrounding scope
+Color c2 = Color::Green; // can also use scope resolution
+int value = Blue;        // implicit conversion to int (value = 2)
+
+// scoped enumeration
+enum class Direction
 {
-    m,
-    n,
-    o
+    North,  // 0
+    South,  // 1
+    East,   // 2
+    West    // 3
 };
 
-// declare enumeration variable
-Foobar foo;
-
-// define enumeration variable
-foo = m;
-
-// initialize enumeration variable
-Foobar bar = o;
-
-// create enumeration class
-enum class Barfoo
+// scoped enumerations with custom values
+enum class HttpStatus
 {
-    s,
-    t,
-    v
+    OK = 200,
+    NotFound = 404,
+    ServerError = 500
 };
 
-// access elements of enumeration class
-Barfoo xyz = Barfoo::s;
+// usage of scoped enumerations
+Direction dir1 = Direction::North;              // must use scope resolution
+int value = static_cast<int>(Direction::South); // explicit conversion required
+
+// specify underlying integer type of enumeration
+enum class Byte : uint8_t
+{
+    Min = 0,
+    Max = 255
+};
 ```
 
 - **Best practices**:
-  - Identifiers of enumerations should be written Pascal case
-  - Enumeration classes should be used instead of enumerations to avoid implicit conversions
-    and naming conflicts
+  - Identifiers of enumerations should be written in Pascal case
+  - Enumerator names should be written in Pascal case or CONSTANT_CASE depending on convention
+  - Prefer `enum class` over plain `enum` to avoid naming conflicts and implicit conversions
+  - Specify underlying type explicitly when size matters or for forward declarations
+  - Use enums for representing a fixed set of related constants (states, options, error codes)
 
 ### Data Type Management
 
+- Multiple utilities for controlling type properties, conversions, and compile-time
+  type manipulation exist
+
 #### Constants
 
-- Constant data types are immutable
-  - This also applies for all elements of reference data types
+- Constants are immutable values that cannot be modified after initialization
+- Multiple levels of compile-time evaluation available
 
 ```cpp
-const double PI = 3.14;
+// primitive runtime constants
+const double PI = 3.14159;
+const int MAX_SIZE = 100;
 
-const unsigned short BIRTH_YEAR = 2001;
+// compound type runtime constants
+const int* ptr1 = &MAX_SIZE;    // pointer to const int (can't modify *ptr1)
+int* const ptr2 = &value;       // const pointer to int (can't modify ptr2)
+const int* const ptr3 = &value; // const pointer to const int (can't modify either)
 
-const char* names[] = {"John", "Jane"};
+// runtime reference constants
+const int& ref = MAX_SIZE;               // reference to const int
+const char* names[] = {"John", "Jane"};  // array of pointers to const char
+const int values[] = {1, 2, 3, 4, 5};    // array of const int
+
+// constant compile-time evaluation
+constexpr int ARRAY_SIZE = 10;
+constexpr double PI = 3.14159265359;
+constexpr int square(int x) { return x * x; }
+int arr[ARRAY_SIZE];  // use compile-time constant
+int area = square(5); // evaluate at compile time if possible
+
+// compile-time constant classes
+class Point
+{
+public:
+    int x, y;
+    constexpr Point(int x_, int y_) : x(x_), y(y_) {} // constexpr constructor
+    constexpr int getX() const { return x; }          // constexpr method
+};
+constexpr Point p(10, 20);       // created at compile time
+constexpr int xCoord = p.getX(); // evaluated at compile time
 ```
 
 - **Best practices**:
-  - Identifiers of constants should be written in constant case
-  - Constant variables shouldn't be declared because their definition afterwards isn't possible
+  - Use constant case for compile-time constants and configuration values
+  - Prefer `constexpr` over `const` when values can be computed at compile time
+  - Declare variables as `const` when they shouldn't be modified after initialization
+  - Use `const` references for function parameters to avoid unnecessary copies
 
-#### Aliases
+#### Volatile
+
+- The `volatile` keyword tells the compiler that a variable's value may change at any time without
+  any action being taken by the code
+  - This prevents the compiler from optimizing away reads or writes to that variable
+  - The variable's actual value is always read from memory rather than being cached in a register
 
 ```cpp
-typedef unsigned int u_int;
-u_int foo;
+// hardware register that can change due to external hardware
+volatile int hardwareRegister = 0;
+
+// variable shared with signal handler
+volatile sig_atomic_t signalFlag = 0;
+
+// memory-mapped I/O
+volatile uint8_t* ioPort = reinterpret_cast<volatile uint8_t*>(0x1000);
+*ioPort = 0xFF; // write to hardware
+
+// reading volatile variable always fetches from memory
+while (hardwareRegister == 0) {
+    // compiler will not optimize this away
+    // always reads the actual value from memory
+}
+
+// volatile pointer variations
+volatile int* ptr1;              // pointer to volatile int
+int* volatile ptr2;              // volatile pointer to int
+volatile int* volatile ptr3;     // volatile pointer to volatile int
 ```
 
-#### Size
+- **Best practices**:
+  - Use `volatile` for hardware registers in embedded systems
+  - Use `volatile` for variables modified by signal handlers
+  - Use `volatile` for memory-mapped I/O operations
+  - Do NOT use `volatile` for thread synchronization - use atomics or mutexes instead
+  - `volatile` does not provide thread safety or memory ordering guarantees
+  - Combine with appropriate types like `sig_atomic_t` for signal-safe operations
 
-- The number of bytes used by data types can be got with the `sizeof` operator
+#### Type Aliases
+
+- Type aliases create alternative names for existing types
 
 ```cpp
-// get size of data type
-size_t x = sizeof(int);
+// traditional type aliases
+typedef const char* cstring;
+cstring myString = "Hello!";
 
-// get size of data type of value
-size_t y = sizeof(10);
-size_t z = sizeof 10;
+// modern type aliases
+using cstring = const char*;
+cstring myOtherString = "Hello!";
 ```
 
-#### Conversion
+- **Best practices**:
+  - Prefer `using` over `typedef` for consistency and template support
+  - Use type aliases to simplify complex type declarations
+  - Create aliases for frequently used container types
+  - Name aliases descriptively to convey their purpose
 
-- Implicit conversions are automatic type adjustments C++ does to make an expression work
-  - When mixing integers and floating-point numbers, the integers are automatically converted
-  into floating-point numbers
-  - A common type for both sides is picked, whereby the bigger type is chosen
-  - Turning  large integers into floating-point numbers can lose precision
-  - Going from `Derived*`/`Derived&` to `Base*`/`Base&` (upcast) happens automatically and is safe
-    - Converting a `Derived` object to `Base` by value drops the derived part
-- Data types can be converted explicitly
+#### Size and Alignment
+
+- Data types are aligned to ensure that data is stored in memory at addresses matching their size
+  or specific boundaries
+  - This improving access speed and preventing hardware errors
 
 ```cpp
-// explicit data type conversion on compile-time
-int a = 10;
-float b = static_cast<float>(a); // casting checked at compile time
-float c = (float)a;              // C-style cast
-float d = float(a);              // C-style functional cast
+// size of types in bytes (traditional)
+size_t intSize = sizeof(int);
+size_t doubleSize = sizeof(23.1);
 
-// explicit data type conversion on run-time (useful for safe class casting)
-class Base {
-public:
-    virtual int getZero() = 0; // pure virtual to enable polymorphism
-};
-class Derived : public Base {
-public:
-    int getZero() override {
-        return 0;
-    }
-};
+// size of types in bytes (modern)
+#include <iterator>
+size_t boolSize = std::size(bool);
+size_t charSize = std::size('r');
+
+// check type sizes at compile time
+static_assert(sizeof(int) >= 4, "int must be at least 4 bytes");
+static_assert(sizeof(void*) == 8, "requires 64-bit platform");
+
+// alignment of types
+size_t intAlign = alignof(int);     // typically 4
+size_t doubleAlign = alignof(4.31); // typically 8
+
+// force alignment of type
+alignas(16) int x;
+```
+
+- **Best practices**:
+  - Use `std::size()`instead of manual sizeof calculations for arrays
+  - Be aware that `sizeof(array_parameter)` gives pointer size, not array size
+  - Use `sizeof` for buffer allocation and memory calculations
+  - Remember that structure sizes include padding for alignment
+  - Use `static_assert` to verify size assumptions at compile time
+
+#### Type Conversion and Casting
+
+- Type conversions transform values from one type to another
+- Conversion can be implicit (automatic) or explicit (manual)
+
+```cpp
+// automatic numeric promotions (smaller to larger)
+int i = 10;
+long l = i;   // int to long
+double d = i; // int to double
+
+// automatic arithmetic conversions (mixed-type operations)
+int x = 5;
+double y = 2.5;
+double result = x + y; // x promoted to double, result is 7.5
+
+// automatic narrowing conversions (can lose data)
+int truncated = 3.14; // 3.14 truncated to 3
+int overflow = 300;
+char c = overflow;    // undefined behavior if overflow occurs
+
+// automatic pointer conversions
+Derived* derived = new Derived();
+Base* base = derived; // upcast (derived to base) - always safe
+
+// automatic boolean conversions
+int num = 42;
+if (num) { }        // int to bool: non-zero is true
+int* ptr = nullptr;
+if (!ptr) { }       // pointer to bool: non-null is true
+
+// explicit compile-time conversions
+int i = 10;
+double d = static_cast<double>(i); // int to double
+int j = static_cast<int>(3.14);    // double to int (truncates to 3)
+Derived* derived = static_cast<Derived*>(base); // unchecked downcast
+
+//explicit C-style conversions (tries multiple cast types in sequence)
+float f = (float)i; // C-style cast
+float g = float(i); // functional cast notation
+
+// explicit run-time conversion for safe downcasting
+class Base {};
+class Derived : public Base {};
 Base* base = new Derived();
-Derived* derived = dynamic_cast<Derived*>(base); // pointer form returns nullptr if the cast fails
+Derived* derived = dynamic_cast<Derived*>(base);
+if (derived) {
+    // safe to use derived methods
+} else {
+    // cast failed
+}
 
-// Remove const modifier from data type
-const int* x = new int(5);
-int* y = const_cast<int*>(x);   // only safe to modify if the original object was non-const
+// remove const modifier
+const int* constPtr = new int(42);
+int* mutablePtr = const_cast<int*>(constPtr);
+
+// add const modifier
+int* ptr = new int(10);
+const int* cptr = const_cast<const int*>(ptr); // or just: const int* cptr = ptr;
+
+// remove volatile modifier
+volatile int hardware = 0;
+int normal = const_cast<int&>(hardware);  // removes volatile qualifier
+
+// bit-level conversion
+int i = 42;
+float* f = reinterpret_cast<float*>(&i); // reinterpret int bits as float
+// *f has undefined value, not 42.0!
 ```
 
 - **Best practices**:
-  - Data types should always be converted explicitly instead of implicitly
-  - Casting should be used instead of C-style conversion due to their strict type checking
-  - `dynamic_cast` should be used for safe downcasting of classes
+  - Prefer C++ casts (`static_cast`, etc.) over C-style casts for clarity and safety
+  - Use `static_cast` for well-defined conversions (numeric, pointer upcast)
+  - Use `dynamic_cast` for safe downcasting in polymorphic hierarchies
+  - Avoid `const_cast` unless interfacing with const-incorrect APIs
+  - Avoid `reinterpret_cast` except for low-level system programming
+  - Make implicit conversions explicit when clarity is important
+  - Avoid narrowing conversions or use explicit checks
+  - Enable compiler warnings for implicit conversions (`-Wconversion`)
 
 #### Type Inference
 
-- Data types can be inferred automatically with the `auto` keyword when they're known at
-  compile time
+- Type inference allows the compiler to deduce types automatically
 
 ```cpp
-auto z = 10;
+// automatic type deduction
+auto i = 42;      // int
+auto d = 3.14;    // double
+auto c = 'x';     // char
+auto s = "hello"; // const char*
+
+// use type of other value
+int i = 42;
+decltype(i) j = i; // int
+
+// function template deduction
+template<typename T>
+void process(T value) {}
+
+process(42);        // T deduced as int
+process(3.14);      // T deduced as double
+process("hello");   // T deduced as const char*
+
+// decompose tuples and pairs
+std::pair<int, std::string> getData() {
+    return {42, "hello"};
+}
+
+// decompose structures
+struct Point { int x; int y; };
+Point p{10, 20};
+auto [x, y] = p; // x: int, y: int
 ```
 
 - **Best practices**:
-  - The `auto` keyword should be used in places where implicit data type conversions would be
-    probable
+  - Use `auto` for complex type names
+  - Use `auto` to avoid redundancy
+  - Use `decltype(auto)` when you need to preserve exact return types
+  - Use structured bindings for clearer tuple/pair decomposition
+  - Don't use `auto` when type is not obvious from context
+  - Consider explicit types for numeric literals if precision matters
+  - Enable warnings for auto type deductions that might surprise (`-Wauto-type`)
 
-#### Generics
+#### Generic Programming (Templates)
 
-- Templates are placeholders for data types in functions and classes
+- Templates enable writing code that works with any type
+- They provide compile-time polymorphism without runtime overhead
 
 ```cpp
-// define any number of templates
-template <typename A, typename B>
-
-// use templates as placeholder for data types in reusable code
-A foo(B x)
+// function template
+template <typename T, typename U>
+auto add(T a, U b) -> decltype(a + b)
 {
-    return A(x);
+    return a + b;
 }
 
-// implement data type for generic
-foo<int, double>(10.0) == 10;
+// explicit function template instantiation
+int i = max<int>(5, 10);          // T = int
+double d = max<double>(3.5, 2.1); // T = double
+
+// function template argument deduction
+int j = max(5, 10);          // T deduced as int
+auto k = max(3.5, 2.1);      // T deduced as double
+auto result = add(5, 3.14);  // returns double (8.14)
+
+// class template
+template <typename T>
+class Container
+{
+private:
+    T value;
+public:
+    Container(T v) : value(v) {}
+    T get() const { return value; }
+    void set(T v) { value = v; }
+};
+
+// explicit class template instantiation
+Container<int> intContainer(42);
+Container<std::string> strContainer("hello");
+
+// class template argument deduction
+Container c1(42);      // Container<int> deduced
+Container c2("text");  // Container<const char*> deduced
+
+// variadic template arguments
+template <typename... Args>
+void print(Args... args)
+{
+    (std::cout << ... << args) << std::endl;
+}
+
+// define concept (constraint)
+template <typename T>
+concept Numeric = std::is_arithmetic_v<T>;
+
+// instantiate concept
+template <Numeric T>
+T multiply(T a, T b)
+{
+    return a * b;
+}
+multiply(5, 10);       // OK: int is numeric
+multiply(3.14, 2.0);   // OK: double is numeric
+// multiply("a", "b"); // Error: string is not numeric
+
+// define concept with requires clause
+template <typename T>
+concept Comparable = requires(T a, T b) {
+    { a < b } -> std::convertible_to<bool>;
+    { a > b } -> std::convertible_to<bool>;
+};
+
+// instantiate concept with requires clause
+template <Comparable T>
+T clamp(T value, T min, T max)
+{
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+}
+
+// use multiple requires clauses
+template <typename T>
+    requires Numeric<T> && Comparable<T>
+T average(T a, T b)
+{
+    return (a + b) / 2;
+}
 ```
+
+- **Best practices**:
+  - Rely on template argument deduction to reduce verbosity
+  - Document template requirements clearly or use concepts
+  - Avoid excessive template complexity
+  - Consider providing explicit instantiations for common types
+  - Use variadic templates for flexible parameter counts
 
 ## Literals
 
