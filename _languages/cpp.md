@@ -2123,100 +2123,196 @@ func((a, b)); // comma operator, only b is passed to func
 
 ## Memory Management
 
+- C++ requires manual memory management, in which the following memory locations are relevant
+  - **Stack**: Automatic storage for local variables (fast, limited size, auto-cleanup)
+  - **Heap**: Dynamic storage requiring manual allocation/deallocation (slower, larger)
+
 ### Pointers
 
-- Pointers store memory addresses of variables via which their values can be passed and
-  manipulated directly
+- Pointers are variables that store memory addresses of other variables
+- They enable indirect access to values, dynamic memory allocation, and efficient passing of large objects
 
 ```cpp
-// declare pointer
+// declare uninitialized pointer
 int* a;
 
-// initialize null pointers that can't be dereferenced yet
-int* b1 = nullptr;
-int* b2 = NULL;
-int* b3 = 0;
+// initialize null pointers (points to nothing)
+int* b1 = nullptr; // modern C++
+int* b2 = NULL;    // C-style
+int* b3 = 0;       // old C++ style
 
-// get memory address
+// get memory address of variable
 int c = 10;
-int* pc = &c;
+int* pc = &c; // pc now holds the address of c
 
-// initialize pointers
-int d = 5;
-int* e = &d;
+// dereference pointer to access/modify value
+int value = *pc; // read value at address (value = 10)
+*pc = 20;        // modify value at address (c now = 20)
 
-// dereference pointers
-int f = *e;
+// pointer to const (cannot modify pointed-to value)
+const int x = 5;
+const int* ptr1 = &x; // pointer to const int
+// *ptr1 = 10;        // Error: cannot modify const value
+ptr1 = &c;            // can point to different address
 
-// use pointers to pointers
+// const pointer (cannot change address)
+int* const ptr2 = &c; // const pointer to int
+*ptr2 = 30;           // can modify value
+// ptr2 = &x;         // Error: cannot change pointer address
+
+// const pointer to const (neither value nor address can change)
+const int* const ptr3 = &x;
+// *ptr3 = 10;              // Error: cannot modify value
+// ptr3 = &c;               // Error: cannot change address
+
+// pointers to pointers (multiple levels of indirection)
 int g = 1;
-int* h = &g;
-int** i = &h;
-int j = **i;
+int* h = &g;  // pointer to int
+int** i = &h; // pointer to pointer to int
+int j = **i;  // dereference twice to get value
 
-// perform pointer arithmetic
-int arrPA[3] = {0, 1, 2};
-int* foo = arrPA;
-int* bar = foo + 1;
-int* foobar = bar - 1;
-foo[1] = 1;
-ptrdiff_t gap = bar - foo; // special integer data type for pointer arithmetic
+// pointer arithmetic (only valid with arrays/contiguous memory)
+int arr[5] = {10, 20, 30, 40, 50};
+int* ptr = arr;          // points to first element
+int* ptr2 = ptr + 2;     // points to third element (arr[2])
+int value1 = *ptr;       // 10
+int value2 = *(ptr + 1); // 20
+int value3 = ptr[2];     // 30 (subscript notation)
+
+ptrdiff_t distance = ptr2 - ptr; // difference in elements (2)
+
+// pointer comparison
+if (ptr < ptr2) { }     // valid for pointers to same array
+if (ptr == nullptr) { } // check for null pointer
+
+// void pointers (generic pointer type)
+void* vptr = &c;                     // can point to any type
+// int val = *vptr;                  // Error: cannot dereference void*
+int* iptr = static_cast<int*>(vptr); // must cast before dereferencing
+int val = *iptr;
+
+// function pointers
+int add(int a, int b)
+{
+    return a + b;
+}
+int (*funcPtr)(int, int) = &add; // pointer to function
+int result = funcPtr(3, 4);      // call function through pointer
+
+// alternative function pointer syntax
+using BinaryOp = int(*)(int, int);
+BinaryOp op = add;
+int result2 = op(5, 6);
 ```
 
 - **Best practices**:
-  - Pointers should always be initialized instead of declared to avoid usage of undefined pointers
-    - Thereby null pointers should be used when they shouldn't point to a value yet
-  - Null pointers should be defined with the keyword `nullptr` instead of the
-    value `NULL` or `0` due to less ambiguity
+  - Always initialize pointers
+  - Use `nullptr` when pointers shouldn't point to a valid address yet
+  - Prefer `nullptr` over `NULL` or `0` for type safety and clarity
+  - Check for null before dereferencing
+  - Use `const` correctly to express intent and prevent bugs
+  - Prefer references over pointers when the value must always be valid
+  - Prefer smart pointers over raw pointers for ownership management
+  - Set pointers to `nullptr` after deleting to avoid dangling pointers
 
 ### References
 
-- References are pointers that can only point to existing values and are always dereferenced
-  - Therefore they're safe to access and no pointer arithmetic is possible
+- References are aliases for existing variables
+- Unlike pointers, references cannot be null, cannot be reassigned, and don't require
+  dereferencing
 
 ```cpp
-// initialize references
+// initialize reference (must be initialized at declaration)
 int x = 3;
-int& y = x;
+int& y = x; // y is now an alias for x
 
-// use references
-int z = y;
-z == 3;
-y = 5;
-y == 5;
+// use reference (automatically dereferenced)
+y = 5;     // modifies x
+int z = y; // reads x
+
+// references cannot be reassigned
+int a = 10;
+y = a;
+
+// const reference (cannot modify referenced value)
+const int& ref = x;
+int value = ref;    // can read
+// ref = 10;        // Error: cannot modify through const reference
+
+// reference to const can bind to temporary values
+const int& temp = 42; // temporary lifetime extended
+// int& temp2 = 42;   // Error: non-const reference cannot bind to temporary
+
+// reference parameters (avoid copying large objects)
+struct LargeObject { int data[1000]; };
+void process(const LargeObject& obj) {  // passed by reference, not copied
+    // use obj without copying overhead
+}
+
+// reference return values (allow chaining)
+int& getElement(int* arr, int index) {
+    return arr[index];  // return reference to array element
+}
+int array[5] = {1, 2, 3, 4, 5};
+getElement(array, 2) = 10; // modify array[2] directly
+
+// dangling reference (undefined behavior)
+int& getDanglingRef() {
+    int local = 42;
+    return local;  // Error: returns reference to local variable!
+}
+// int& bad = getDanglingRef();  // undefined behavior
 ```
 
 - **Best practices**:
-  - References should be used instead of pointers due to their higher security
+  - Use references instead of pointers when the value must always be valid (never null)
+  - Use `const` references for function parameters to avoid unnecessary copies
+  - Never return references to local variables
+  - Prefer references over pointers for cleaner syntax and safety
 
-### Heap Usage
+### Dynamic Memory Allocation
 
-- Variables can be stored in the heap to take control of their lifetime and dynamically
-  change their size
-- The heap has much more memory than the stack, but requires more time to save values on it
+- Dynamic memory is allocated on the heap at runtime, allowing flexible lifetimes and sizes
+- The heap has much more memory than the stack but is slower to access
 
 ```cpp
-// declare variable for the heap
-int* x = new int;
+// allocate single object on heap
+int* x = new int;     // uninitialized
+int* y = new int(10); // initialized to 10
+int* z = new int{15}; // uniform initialization
 
-// initialize variable in the heap
-int* y = new int(10);
-
-// delete variable in the heap
+// delete single object
 delete y;
+y = nullptr;
 
-// initialize array in the heap
-int* z = new int[10]();
+// allocate array on heap
+int* arr = new int[10];          // uninitialized array
+int* arr2 = new int[10]();       // zero-initialized array
+int* arr3 = new int[3]{1, 2, 3}; // initialized with values
 
-// delete all elements of array/container before deleting its variable itself
-delete[] z;
+// delete array
+delete[] arr;
+arr = nullptr;
+
+// allocation failure handling
+try {
+    int* huge = new int[1000000000000];  // may throw std::bad_alloc
+} catch (const std::bad_alloc& e) {
+    // handle allocation failure
+}
+
+// construct object at specific address
+#include <new>
+alignedStorage buffer;
+void* ptr = &buffer;
+int* obj = new(ptr) int(42); // construct int at existing address
+obj->~int();                 // must manually call destructor
 ```
 
 - **Best practices**:
-  - Dynamic or large reference data types should be saved in the heap to avoid stack overflows
-  - Values in the heap should always be deleted to avoid memory leaks
-  - Arrays and containers in the heap should always be deleted with `delete[]` operator to avoid
-    memory leaks and trigger the deconstructors of their elements
+  - Avoid `new[]`, use `std::vector`, `std::array`, or `std::unique_ptr<T[]>` instead
+  - Always match `new` with `delete` and `new[]` with `delete[]`
+  - Set raw pointers to `nullptr` after deletion
 
 ## Control Flow Structures
 
