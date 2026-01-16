@@ -2316,102 +2316,192 @@ obj->~int();                 // must manually call destructor
 
 ## Control Flow Structures
 
+- Control flow determines the order in which statements are executed in a program
+- By default, statements execute sequentially from top to bottom
+- Control flow structures alter this default execution order based on conditions, loops, or
+  explicit jumps
+
 ### Conditions
 
-- Conditions allow to branch the control flow and only execute statements on specific conditions
+- Conditions allow branching of control flow to execute statements based on boolean expressions
 
 ```cpp
 #include <iostream>
 
 int x = 10;
 
-// define if-condition which executes code when a condition is true
+// basic if statement
 if (x < 10)
 {
     std::cout << "x is less than 10" << std::endl;
 }
-// define else-if-condition which executes code when a condition is true and
-// no previous condition was executed
+
+// if-else statement
+if (x < 10)
+{
+    std::cout << "x is less than 10" << std::endl;
+}
+else
+{
+    std::cout << "x is 10 or greater" << std::endl;
+}
+
+// if-else chain
+if (x < 10)
+{
+    std::cout << "x is less than 10" << std::endl;
+}
 else if (x > 10)
 {
     std::cout << "x is greater than 10" << std::endl;
 }
-// define else-condition which executes code when no previous condition was executed
 else
 {
     std::cout << "x is 10" << std::endl;
 }
+
+// single-line if statement
+if (x > 0) std::cout << "positive" << std::endl;
+
+// if statement with initializer statement
+if (int value = getValue(); value > 0)
+{
+    // value is in scope here
+    std::cout << "Value: " << value << std::endl;
+}
+// value is out of scope here
+
+// condition with declaration
+if (auto ptr = getPointer())
+{
+    // ptr is non-null here
+    ptr->doSomething();
+}
 ```
+
+- **Best practices**:
+  - Always use braces `{}` even for single-line statements to prevent errors
+  - Keep conditions simple and readable, extract complex logic to named boolean variables
+  - Order conditions from most likely to least likely for better performance
+  - Avoid deep nesting and prefer early returns or guard clauses
+  - Use `if` with initializers to limit variable scope
 
 ### Loops
 
-- Loops allow to repeatedly execute the same statements
+- Loops repeatedly execute a block of statements until a condition becomes false
 
 ```cpp
 #include <iostream>
+#include <vector>
 
-// define while-loop which executes code as long as a condition is true
+// while loop: condition checked before each iteration
 int x = 0;
 while (x < 10)
 {
-    x++;
     std::cout << x << std::endl;
+    x++;
 }
 
-// define do-while-loop which executes code and repeats it as long as a specific condition is true
+// do-while loop: condition checked after each iteration
 int y = 0;
 do
 {
-    y++;
     std::cout << y << std::endl;
+    y++;
 }
-while (x < 10);
+while (y < 10);
 
-// define for-loop which executes code a specific amount of time
+// for loop: initialization, condition, and increment in one line
 for (int i = 0; i < 10; i++)
 {
     std::cout << i << std::endl;
 }
 
-// define for-each-loop loops over an array or container
-int z[10] = {};
-for (int e : z)
+// for loop with multiple variables
+for (int i = 0, j = 10; i < j; i++, j--)
 {
-    std::cout << e << std::endl;
+    std::cout << i << " " << j << std::endl;
 }
 
-// skip loop iterations
-int a = 0;
-while (a < 10)
+// infinite loop (requires break to exit)
+for (;;)
 {
-    a++;
-    if (a % 2 == 0) {
-        continue;
-    }
-    std::cout << a << std::endl;
+    if (shouldExit()) break;
+    doWork();
 }
 
-// break loop
-int b = 0;
-while (b < 10)
+// for-each loop: iterate over containers and arrays
+int arr[5] = {1, 2, 3, 4, 5};
+for (int element : arr)
 {
-    b++;
-    if (b % 2 == 0) {
-        break;
+    std::cout << element << std::endl;
+}
+
+// range-based for with auto type deduction
+std::vector<std::string> names = {"Alice", "Bob", "Charlie"};
+for (auto name : names)
+{
+    std::cout << name << std::endl;
+}
+
+// range-based for with reference (avoid copying, allow modification)
+std::vector<int> values = {1, 2, 3, 4, 5};
+for (auto& value : values)
+{
+    value *= 2;  // modifies original elements
+}
+
+// range-based for with const reference (avoid copying, prevent modification)
+for (const auto& name : names)
+{
+    std::cout << name << std::endl;  // efficient, no copy
+}
+
+// continue: skip remaining code in current iteration and start next iteration
+for (int i = 0; i < 10; i++)
+{
+    if (i % 2 == 0) {
+        continue;  // skip even numbers
     }
-    std::cout << b << std::endl;
+    std::cout << i << std::endl;
+}
+
+// break: exit loop immediately
+for (int i = 0; i < 10; i++)
+{
+    if (i == 5) {
+        break;  // exit loop when i reaches 5
+    }
+    std::cout << i << std::endl;  // prints 0 to 4
+}
+
+// for loop with initializer
+for (auto values = getData(); auto& val : values)
+{
+    std::cout << val << std::endl;
 }
 ```
 
+- **Best practices**:
+  - Use `for` loops when iteration count is known
+  - Use `while` loops when condition is complex or iteration count is unknown
+  - Use `do-while` loops when loop body must execute at least once
+  - Prefer range-based for loops for iterating over containers
+  - Use `const auto&` in range-based for loops to avoid unnecessary copies
+  - Use `auto&` in range-based for loops when modifying elements
+  - Avoid modifying loop control variables inside the loop body
+  - Keep loop bodies simple; extract complex logic to functions
+  - Prefer `continue` over nested if statements for clarity
+
 ### Switches
 
-- Switches allow to change the control flow to specific points based on the value of a variable
+- Switch statements provide multi-way branching based on the value of an integral expression
 
 ```cpp
 #include <iostream>
 
-// define switch that only executes matching case
-unsigned int x = 3;
+// basic switch with break statements
+int x = 2;
 switch (x)
 {
     case 0:
@@ -2423,74 +2513,294 @@ switch (x)
     case 2:
         std::cout << "x is 2" << std::endl;
         break;
-    default: // case executes when no other case matches
-        std::cout << "x is greater than 2" << std::endl;
+    default: // executes when no case matches
+        std::cout << "x is something else" << std::endl;
+        break; // optional in last case, but recommended for consistency
 }
 
-// define switch that executes matching and every consecutive case
+// intentional fall-through (executes multiple consecutive cases)
 int countdown = 3;
 switch (countdown)
 {
     case 3:
-        std::cout << "Tik" << std::endl;
+        std::cout << "3..." << std::endl;
+        [[fallthrough]]; // attribute to indicate intentional fall-through
     case 2:
-        std::cout << "Tik" << std::endl;
+        std::cout << "2..." << std::endl;
+        [[fallthrough]];
     case 1:
-        std::cout << "Tik" << std::endl;
-    default: // case always executes
-        std::cout << "Ring! Ring!" << std::endl;
+        std::cout << "1..." << std::endl;
+        [[fallthrough]];
+    case 0:
+        std::cout << "Blast off!" << std::endl;
+        break;
+    default:
+        std::cout << "Invalid countdown value" << std::endl;
+}
+
+// switch with multiple cases for same code
+char grade = 'B';
+switch (grade)
+{
+    case 'A':
+    case 'a':
+        std::cout << "Excellent!" << std::endl;
+        break;
+    case 'B':
+    case 'b':
+        std::cout << "Good!" << std::endl;
+        break;
+    case 'C':
+    case 'c':
+        std::cout << "Average" << std::endl;
+        break;
+    default:
+        std::cout << "Unknown grade" << std::endl;
+}
+
+// switch with initializer statement
+switch (int value = getValue(); value)
+{
+    case 1:
+        std::cout << "One" << std::endl;
+        break;
+    case 2:
+        std::cout << "Two" << std::endl;
+        break;
+    default:
+        std::cout << "Other: " << value << std::endl;
+}
+// value is out of scope here
+
+// switch with variable declarations in cases
+switch (x)
+{
+    case 1:
+    {  // braces create scope for variable
+        int temp = x * 2;
+        std::cout << temp << std::endl;
+        break;
+    }
+    case 2:
+    {
+        int temp = x * 3;  // same variable name, different scope
+        std::cout << temp << std::endl;
+        break;
+    }
+    default:
+        break;
 }
 ```
 
-- Best practices:
-  - The last statement after a label in switch cases should be `break;` to avoid execution of the
-    statements of all subsequent labels
-  - Every switch should use a `default` case for improved predictability
+- **Best practices**:
+  - Always include `break` at the end of each case unless fall-through is intentional
+  - Use `[[fallthrough]]` attribute to document intentional fall-through
+  - Always include a `default` case for completeness and debugging
+  - Place `default` case last for readability
+  - Use braces `{}` in cases that declare variables
+  - Prefer switch over long if-else chains for integral/enum comparisons
+  - Use enumerations with switch for type-safe value sets
+  - Enable compiler warnings for missing enum cases (`-Wswitch`) in switches
 
 ### Jumps
 
-- Jumps allow to change the control flow to any point in the code
+- Jump statements unconditionally transfer control to another part of the program
 
 ```cpp
-// define label to jump to
-myLabel:
-;
-
-// jump to defined label
+// basic goto usage
 goto myLabel;
+std::cout << "This is skipped" << std::endl;
+myLabel:
+std::cout << "Jumped here" << std::endl;
+
+// goto cannot jump into scopes
+goto skip;
+{
+    int x = 10;
+    skip:  // Error: jumping into scope
+    std::cout << x << std::endl;
+}
+
+// legitimate use case: breaking out of nested loops
+for (int i = 0; i < 10; i++)
+{
+    for (int j = 0; j < 10; j++)
+    {
+        if (found)
+            goto cleanup;  // break both loops at once
+    }
+}
+cleanup:
+// cleanup code here
+
+// better alternative using flags
+bool done = false;
+for (int i = 0; i < 10 && !done; i++)
+{
+    for (int j = 0; j < 10; j++)
+    {
+        if (found)
+        {
+            done = true;
+            break;
+        }
+    }
+}
 ```
 
 - **Best practices**:
-  - Jumps should be avoided due to their unsafety
+  - Avoid `goto`, use structured control flow instead
+  - Prefer early returns, break, continue, or flags over `goto`
+  - Extract nested loops into functions to avoid needing `goto`
+  - Only consider `goto` for error cleanup in C-style code or performance-critical nested loops
+  - If using `goto`, always jump forward, never backward
+  - Use descriptive labels that indicate the target purpose
 
 ### Error Handling
+
+- Exception handling provides a mechanism to respond to runtime errors
+- Exceptions separate error handling code from normal program flow
+
+- common standard exceptions:
+  - `std::logic_error`: errors in program logic
+    - `std::invalid_argument`
+    - `std::domain_error`
+    - `std::length_error`
+    - `std::out_of_range`
+  - `std::runtime_error`: errors detectable at runtime
+    - `std::range_error`
+    - `std::overflow_error`
+    - `std::underflow_error`
+  - `std::bad_alloc`: memory allocation failure
+  - `std::bad_cast`: failed dynamic_cast with references
 
 ```cpp
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
-// define try-block that executes code that may throw an exception
+// throw exception explicitly
+throw std::runtime_error("Something went wrong");
+
+// create custom exception
+class CustomException : public std::exception
+{
+private:
+    std::string message;
+public:
+    CustomException(const std::string& msg) : message(msg) {}
+    const char* what() const noexcept override
+    {
+        return message.c_str();
+    }
+};
+
+// basic try-catch block
 try
 {
-    std::cout << "Execute code that may throw an exception..." << std::endl;
+    int x = 10;
+    if (x < 0)
+        throw std::runtime_error("Negative value not allowed");
+    std::cout << "Value: " << x << std::endl;
 }
-// define catch-block that executes when the specified Exception was thrown and wasn't caught yet
 catch (const std::runtime_error& e)
 {
-    std::cout << "Catch specified exception: " << e << std::endl;
+    std::cout << "Runtime error: " << e.what() << std::endl; // access exception message
 }
 
-// define generic catch-block that executes when any Exception was thrown that wasn't catched yet
-catch (...)
+// catch multiple exception types
+try
 {
-    std::cout << "Catch exception!" << std::endl;
+    // code that may throw different exceptions
+    throw std::invalid_argument("Invalid input");
 }
+catch (const std::invalid_argument& e)
+{
+    std::cout << "Invalid argument: " << e.what() << std::endl;
+}
+catch (const std::runtime_error& e)
+{
+    std::cout << "Runtime error: " << e.what() << std::endl;
+}
+catch (const std::exception& e)  // base class catches all standard exceptions
+{
+    std::cout << "Exception: " << e.what() << std::endl;
+}
+catch (...)  // catches any exception, including non-standard types
+{
+    std::cout << "Unknown exception caught" << std::endl;
+}
+
+// rethrow exceptions
+try
+{
+    try
+    {
+        throw std::runtime_error("Original error");
+    }
+    catch (const std::runtime_error& e)
+    {
+        std::cout << "Caught and rethrowing..." << std::endl;
+        throw;  // rethrow the same exception
+    }
+}
+catch (const std::runtime_error& e)
+{
+    std::cout << "Caught rethrown exception: " << e.what() << std::endl;
+}
+
+// function promises not to throw exceptions
+int safeDivide(int a, int b) noexcept
+{
+    return (b != 0) ? a / b : 0;
+}
+
+// conditional noexcept
+template <typename T>
+void swap(T& a, T& b) noexcept(noexcept(T(std::move(a))))
+{
+    T temp = std::move(a);
+    a = std::move(b);
+    b = std::move(temp);
+}
+{
+    std::cout << "Error: " << e.what() << std::endl;
+}
+
+// function try blocks for guards in constructors
+class Resource
+{
+public:
+    Resource(int value)
+    try : member(value)
+    {
+        if (value < 0)
+            throw std::invalid_argument("Negative value");
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << "Constructor exception: " << e.what() << std::endl;
+        throw;  // must rethrow in constructor catch block
+    }
+private:
+    int member;
+};
 ```
 
 - **Best practices**:
-  - Statements of error handlings should be block statements
-  - The last block in error handlings should be a catch-block with `...` as triggering error
-    to imitate a finally-block
+  - Catch exceptions by const reference to avoid object slicing and unnecessary copies
+  - Order catch blocks from most specific to most general exception types
+  - Use standard exception classes when appropriate
+  - Derive from `std::exception` for custom exceptions
+  - Implement `what()` in custom exceptions to provide error descriptions
+  - Use `throw;` to rethrow the original exception (preserves exception type)
+  - Use `noexcept` for functions that guarantee no exceptions (enables compiler optimizations)
+  - Don't throw exceptions in destructors (causes program termination if during stack unwinding)
+  - Don't catch exceptions you cannot handle and let them propagate to higher levels
+  - Avoid using `catch (...)` unless you rethrow or log, as it hides errors
+  - Don't use exceptions for normal control flow as they are for exceptional conditions
+  - Document which exceptions a function may throw
+  - Consider using `std::optional`, `std::expected`, or error codes for expected error cases
 
 ## Functions
 
