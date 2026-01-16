@@ -1583,38 +1583,231 @@ T average(T a, T b)
 
 ## Literals
 
+- Literals are fixed values written directly in source code
+- Their types are determined by their syntax and suffixes
+- They are evaluated at compile time
+
+### Integer Literals
+
+- Integer literals represent whole number values
+- Their default type is `int`, but suffixes can change the type
+
 ```cpp
-// integer literals
-10;    // signed int
-10U;   // unsigned int
-10L;   // signed long
-10UL;  // unsigned long
-10LL;  // signed long long
-10ULL; // unsigned long long
-026;   // octal integer
-0x3f6; // hexadecimal integer
-0b101; // binary integer
+// decimal literals (base 10)
+42;   // int
+0;    // int
+1000; // int
 
-// floating-point literals
-3.14;  // double
-3.14F; // float
-.5;    // 0.5
-8.;    // 8.0
-4E-5;  // 0,00004
+// octal literals (base 8)
+052;  // int (42 in decimal)
+0777; // int (511 in decimal)
 
-// boolean literals
-true;
-false;
+// hexadecimal literals (base 16)
+0x2A;   // int (42 in decimal)
+0xFF;   // int (255 in decimal)
+0XABCD; // int (43981 in decimal)
 
-// character literals
-'a';
-'4';
-'@';
-'\n';
+// binary literals (base 2)
+0b101010; // int (42 in decimal)
+0B1111;   // int (15 in decimal)
 
-// string literals
-"Hello";
+// integer suffixes (case-insensitive)
+42U;   // unsigned int
+42L;   // long
+42UL;  // unsigned long
+42LL;  // long long
+42ULL; // unsigned long long
+
+// digit separators for readability
+1'000'000;   // 1000000
+0b1010'0101; // binary with separator
+0x00FF'ABCD; // hexadecimal with separator
 ```
+
+- **Best practices**:
+  - Use digit separators `'` for large numbers to improve readability
+  - Use hexadecimal for bit masks and flags
+  - Use binary literals for bit patterns when clarity is important
+  - Avoid octal literals as they can be confused with decimal (leading zero)
+  - Use suffixes to prevent unexpected type conversions
+
+### Floating-Point Literals
+
+- Floating-point literals represent real numbers with fractional parts
+- Their default type is `double`, but suffixes can change the type
+
+```cpp
+// basic floating-point literals
+3.14;    // double
+0.5;     // double
+.5;      // double (0.5)
+5.;      // double (5.0)
+123.456; // double
+
+// scientific notation (exponent: E or e)
+1e10;    // double (10000000000.0)
+2.5e-3;  // double (0.0025)
+6.02E23; // double (602000000000000000000000.0)
+
+// floating-point suffixes
+3.14F; // float (or 3.14f)
+3.14L; // long double (or 3.14l)
+
+// digit separators for readability
+1'000.5;         // 1000.5
+6.022'140'76e23; // Avogadro's number with separators
+
+// hexadecimal floating-point literals
+0x1.2p3;  // double (9.0 in decimal: 1.125 * 2^3)
+0x1.fp10; // double (1984.0 in decimal)
+```
+
+- **Best practices**:
+  - Use `F` suffix for float literals to avoid implicit double-to-float conversions
+  - Prefer `double` over `float` for general-purpose floating-point arithmetic
+  - Use scientific notation for very large or very small numbers
+  - Be aware that floating-point literals are approximations
+
+### Boolean Literals
+
+- Boolean literals represent truth values
+
+```cpp
+true;  // bool (1)
+false; // bool (0)
+
+// usage
+bool isValid = true;
+bool hasError = false;
+```
+
+### Character Literals
+
+- Character literals represent single characters enclosed in single quotes
+- Type is `char` by default, but prefixes can change that
+
+```cpp
+// basic character literals
+'a'; // char
+'Z'; // char
+'5'; // char
+'@'; // char
+' '; // space character
+
+// escape sequences for special characters
+'\n'; // newline
+'\t'; // horizontal tab
+'\r'; // carriage return
+'\b'; // backspace
+'\f'; // form feed
+'\v'; // vertical tab
+'\0'; // null character
+'\\'; // backslash
+'\''; // single quote
+'\"'; // double quote
+'\?'; // question mark (avoid trigraphs)
+
+// numeric escape sequences
+'\x41'; // hexadecimal (character 'A')
+'\101'; // octal (character 'A')
+
+// wide character literals
+L'A';      // wchar_t
+L'\u00E9'; // wchar_t (é)
+
+// UTF character literals
+u8'a'; // char (UTF-8)
+u'A';  // char16_t (UTF-16)
+U'A';  // char32_t (UTF-32)
+
+// universal character names (Unicode code points)
+'\u0041';     // char ('A')
+'\U00000041'; // char ('A')
+```
+
+- **Best practices**:
+  - Use escape sequences for non-printable characters
+  - Prefer named escape sequences (`\n`, `\t`) over numeric codes for readability
+  - Use Unicode escape sequences (`\u`, `\U`) for international characters
+  - Be aware that character literals are integers and can be used in arithmetic
+
+### String Literals
+
+- String literals represent sequences of characters enclosed in double quotes
+- Type is array of `const char` with null terminator by default
+
+```cpp
+// basic string literals
+"Hello";         // const char[6] (includes '\0')
+"Hello, World!"; // const char[14]
+"";              // empty string: const char[1] (just '\0')
+
+// string literals with escape sequences
+"First line\nSecond line"; // multi-line text
+"Path\\to\\file";          // backslashes
+"He said \"Hello\"";       // quotes within string
+
+// string concatenation (adjacent literals are merged)
+"Hello, " "World!"; // equivalent to "Hello, World!"
+"This is a long string "
+"split across multiple "
+"lines for readability";
+
+// wide string literals
+L"Hello"; // const wchar_t[6]
+
+// UTF string literals
+u8"Hello"; // const char[6] (UTF-8)
+u"Hello";  // const char16_t[6] (UTF-16)
+U"Hello";  // const char32_t[6] (UTF-32)
+
+// raw string literals (escape sequences not interpreted)
+R"(C:\path\to\file)"; // no need to escape backslashes
+R"(Line 1
+Line 2
+Line 3)"; // preserves newlines
+R"delimiter(String with "quotes" and )parentheses)delimiter"; // custom delimiter
+
+// string literal suffixes
+"text"s;   // std::string
+u8"text"s; // std::u8string
+u"text"s;  // std::u16string
+U"text"s;  // std::u32string
+
+// multi-line string literals using raw strings
+const char* json = R"({
+    "name": "John",
+    "age": 30,
+    "city": "New York"
+})";
+```
+
+- **Best practices**:
+  - Use raw string literals for paths, regex patterns, and embedded code to avoid escaping
+  - Use `std::string` (with `"text"s` suffix) instead of `const char*` for easier manipulation
+  - Prefer UTF-8 encoding (`u8""`) for international text
+  - Break long string literals across multiple lines using adjacent string concatenation
+  - Use custom delimiters in raw strings when the string contains `)"` sequence
+
+### Pointer Literals
+
+```cpp
+// null pointer literal
+nullptr; // std::nullptr_t
+
+// usage
+int* ptr = nullptr;
+void func(int* p) { }
+func(nullptr);
+
+// C-style null pointers
+int* oldStyle1 = NULL;
+int* oldStyle2 = 0;
+```
+
+- **Best practices**:
+  - Always use `nullptr` instead of `NULL` or `0` for null pointers
+  - `nullptr` is type-safe and prevents ambiguous overload resolution
 
 ## Operators
 
