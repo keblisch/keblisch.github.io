@@ -68,6 +68,49 @@ int main(int argc, char* argv[])
   - Including a new standard in 2020 called the C++20-Standard
   - Including a new standard in 2023 called the C++23-Standard
 
+## Toolchain
+
+- C++ is only a language specification and therefore doesn't come with an official toolchain
+- To use C++, various tools must be installed that together form a development environment
+
+### Compilers
+
+- Compilers implement C++ and are therefore required
+- Major C++ compilers include:
+  - **GCC/G++**: GNU Compiler Collection, widely used on Linux and cross-platform
+  - **Clang**: LLVM-based compiler, known for fast compilation and helpful error messages
+  - **MSVC**: Microsoft Visual C++, native compiler for Windows
+  - **Intel C++ Compiler**: Optimized for Intel processors
+
+### Standard Library Implementations
+
+- Different compilers come with different standard library implementations:
+  - **libstdc++**: GNU's implementation, shipped with GCC/G++
+  - **libc++**: LLVM's implementation, shipped with Clang
+  - **MSVC STL**: Microsoft's implementation, shipped with MSVC
+
+### Build Systems
+
+- Common C++ build systems include:
+  - **Make**: Traditional build tool using Makefiles
+  - **CMake**: Cross-platform meta-build system that generates native build files
+  - **Ninja**: Fast build system often used with CMake
+  - **Meson**: Modern build system focusing on speed and usability
+
+### Debuggers
+
+- Common C++ debuggers include:
+  - **GDB**: GNU Debugger, standard debugger for Linux
+  - **LLDB**: LLVM debugger, works well with the Clang compiler
+  - **Visual Studio Debugger**: Integrated debugger for Windows
+
+### Package Managers
+
+- Common C++ package managers include:
+  - **vcpkg**: Cross-platform package manager by Microsoft
+  - **Conan**: Decentralized package manager with binary package support
+  - **CPM**: CMake-based package manager
+
 ## Compilation process
 
 ```mermaid
