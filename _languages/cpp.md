@@ -39,37 +39,43 @@ int main(int argc, char* argv[])
 
 ### Resources
 
-- [C++ Reference](https://cppreference.com/w/cpp.html)
-- [cplusplus.com Tutorial](https://cplusplus.com/doc/tutorial/)
-- [Learn C++](https://www.learncpp.com/)
+- Comprehensive reference documentation: [C++ Reference](https://cppreference.com/w/cpp.html)
+- Official C++ standards committee website: [ISO C++ Standard](https://isocpp.org/)
+- Beginner-friendly tutorial: [cplusplus.com Tutorial](https://cplusplus.com/doc/tutorial/)
+- In-depth learning resource with exercises: [Learn C++](https://www.learncpp.com/)
+- Best practices by Bjarne Stroustrup and Herb Sutter:
+  [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
 ### Advantages and Disadvantages
 
-| Advantages                       | Disadvantages                        |
-| :------------------------------- | :----------------------------------- |
-| Widespread                       | No garbage collection                |
-| High performance                 | Easy to write unsafe code            |
-| High level of control            | Confusing syntax                     |
-| Similar syntax to C, C# and Java | Confusing warning and error messages |
+| Advantages                              | Disadvantages                      |
+| :-------------------------------------- | :--------------------------------- |
+| Exceptional runtime performance         | Manual memory management required  |
+| Fine-grained control over hardware      | Steep learning curve               |
+| Zero-cost abstractions                  | Complex syntax and semantics       |
+| Large ecosystem and community           | Longer compilation times           |
+| Backward compatibility with C           | Verbose error messages             |
+| Multi-paradigm support                  | Undefined behavior pitfalls        |
+| Wide platform support                   | No official and built-in toolchain |
 
 ### History
 
-- C++ was developed 1979 by Bjarne Stroustrup in the Bell Telephone Laboratories
-  - It should be an extension of C by introducing object orientation to it
-- The first formal standard of C++ was published 1998 by the International Organization for
+- C++ was developed in 1979 by Bjarne Stroustrup at Bell Telephone Laboratories
+  - It was intended as an extension of C, introducing object-oriented programming features
+  - Originally called "C with Classes"
+- The first formal standard (C++98) was published in 1998 by the International Organization for
   Standardization (ISO)
-  - This standard became known as the C++98 standard
-- C++ was detached 1999 from C by publishing the C99-Standard
-  - This standard introduced some by C++ unsupported changes
-- Multiple updates of the formal C++ standard were published by the International Organization
-  for Standardization
-  - Including a new standard in 2003 called the C++03-Standard
-  - Including a new standard in 2011 called the C++11-Standard
-    - This standard introduced many new functionalities why it became the basic C++ standard
-  - Including a new standard in 2014 called the C++14-Standard
-  - Including a new standard in 2017 called the C++17-Standard
-  - Including a new standard in 2020 called the C++20-Standard
-  - Including a new standard in 2023 called the C++23-Standard
+- C evolved separately with the C99 standard in 1999, introducing features that diverged from C++
+  - This created some incompatibilities between the two languages
+- Major C++ standard updates published by ISO were:
+  - **C++03** (2003): Bug fixes and minor improvements to C++98
+  - **C++11** (2011): Major modernization with lambdas, smart pointers, move semantics, and more
+    - Considered to be the foundation of modern C++
+  - **C++14** (2014): Refinements and library additions
+  - **C++17** (2017): Structured bindings, `std::optional`, `std::variant`, parallel algorithms
+  - **C++20** (2020): Concepts, modules, coroutines, ranges
+  - **C++23** (2023): `std::expected`, `std::mdspan`, improved lambda features
+  - **C++26** (expected 2026): Work in progress with reflection and other proposals
 
 ## Toolchain
 
