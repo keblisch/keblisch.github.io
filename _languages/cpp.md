@@ -162,26 +162,174 @@ graph TD
 
 ### Whitespace
 
-- Whitespaces are mostly ignored in the compilation process
-  - These are merely separators between identifiers, literals and symbols that could be
-    misinterpreted as part of the other
-- Comments are considered as Whitespace
+- Whitespace characters include spaces, tabs, newlines, and carriage returns
+- Whitespaces are mostly ignored during compilation
+  - They serve as separators between tokens (identifiers, literals, keywords, and operators)
+  - Multiple consecutive whitespaces are treated as a single separator
+  - Exception: Whitespace within string literals and character literals is preserved
+  - Exception: Preprocessor directives must start with `#` at the beginning of a line
+- Comments are treated as whitespace by the compiler
+- At least one whitespace is required to separate adjacent keywords or identifiers
+
+```cpp
+int x=10;      // valid: operators don't require whitespace
+int    x = 10; // valid: multiple whitespaces treated as one
+intx = 10;     // invalid: missing whitespace between keyword and identifier
+"Hello World"  // whitespace preserved in string literal
+```
 
 ### Statements
 
-- Statements must be finished with a semicolon `;` as separator
-- Multiple statements can be comprised as block statements
-  - These must be enclosed by curly braces `{}`
-  - These are considered to be single statements
+- Statements are instructions that perform actions
+- Most statements must end with a semicolon `;` as a terminator
+  - Exceptions: Compound statements, control flow structures, function/class definitions
+- Different types of statements:
+  - **Expression statements**: Evaluate an expression followed by `;`
+  - **Declaration statements**: Declare variables or functions
+  - **Compound statements (blocks)**: Multiple statements enclosed in `{}`
+  - **Control flow statements**: Conditionals, loops, jumps
+- Block statements create their own scope
+  - Variables declared inside a block are only accessible within that block
+  - Blocks are treated as single statements in control structures
+- Empty statements (just `;`) are valid but typically indicate a logic error
+
+```cpp
+int x;         // declaration statement
+x = 10;        // expression statement
+{ int y = 5; } // block statement (y is only accessible within the block)
+if (x > 0) ;   // empty statement (likely unintended)
+```
 
 ### Identifiers
 
-- The following rules apply to the definition of identifiers:
-  - Identifiers mustn’t be keywords
-  - Identifiers may only contain letters, underscores and digits
-  - Underscores are considered to be letters
-  - Identifiers mustn’t begin with digits
-  - Identifiers are distinguished by lower and upper case
+- Identifiers are names used for variables, functions, classes, namespaces, etc.
+- Rules for valid identifiers:
+  - Must start with a letter (`a-z`, `A-Z`) or underscore (`_`)
+  - May contain letters, digits (`0-9`), and underscores
+  - Cannot be C++ keywords (e.g., `int`, `class`, `if`, `for`)
+  - Are case-sensitive: `myVar`, `MyVar`, and `MYVAR` are different identifiers
+  - Have no length limit (though most compilers guarantee at least 1024 characters)
+- Reserved naming patterns that are reserved for compiler and standard library implementations:
+  - Identifiers starting with underscore followed by uppercase letter (`_Name`)
+  - Identifiers containing double underscores anywhere (`__name`, `my__var`)
+  - Identifiers starting with underscores in the global namespace (`_global`)
+
+```cpp
+// valid identifiers
+int age;
+int _count;
+int value123;
+int myVariableName;
+
+// invalid identifiers
+int 2fast;  // starts with digit
+int my-var; // contains hyphen
+int class;  // reserved keyword
+int my var; // contains space
+
+// case sensitivity
+int value = 10;
+int Value = 20; // different variable
+int VALUE = 30; // another different variable
+```
+
+### Keywords
+
+- Keywords are reserved words with special meaning in C++ that cannot be used as identifiers
+- C++ has approximately 90+ keywords that are reserved across all versions
+- The following reserved keywords do exist:
+  - `alignas`
+  - `alignof`
+  - `and`
+  - `and_eq`
+  - `asm`
+  - `auto`
+  - `bitand`
+  - `bitor`
+  - `bool`
+  - `break`
+  - `case`
+  - `catch`
+  - `char`
+  - `char8_t`
+  - `char16_t`
+  - `char32_t`
+  - `class`
+  - `compl`
+  - `concept`
+  - `const`
+  - `consteval`
+  - `constexpr`
+  - `constinit`
+  - `const_cast`
+  - `continue`
+  - `co_await`
+  - `co_return`
+  - `co_yield`
+  - `decltype`
+  - `default`
+  - `delete`
+  - `do`
+  - `double`
+  - `dynamic_cast`
+  - `else`
+  - `enum`
+  - `explicit`
+  - `export`
+  - `extern`
+  - `false`
+  - `float`
+  - `for`
+  - `friend`
+  - `goto`
+  - `if`
+  - `inline`
+  - `int`
+  - `long`
+  - `mutable`
+  - `namespace`
+  - `new`
+  - `noexcept`
+  - `not`
+  - `not_eq`
+  - `nullptr`
+  - `operator`
+  - `or`
+  - `or_eq`
+  - `private`
+  - `protected`
+  - `public`
+  - `register`
+  - `reinterpret_cast`
+  - `requires`
+  - `return`
+  - `short`
+  - `signed`
+  - `sizeof`
+  - `static`
+  - `static_assert`
+  - `static_cast`
+  - `struct`
+  - `switch`
+  - `template`
+  - `this`
+  - `thread_local`
+  - `throw`
+  - `true`
+  - `try`
+  - `typedef`
+  - `typeid`
+  - `typename`
+  - `union`
+  - `unsigned`
+  - `using`
+  - `virtual`
+  - `void`
+  - `volatile`
+  - `wchar_t`
+  - `while`
+  - `xor`
+  - `xor_eq`
 
 ## Structure
 
