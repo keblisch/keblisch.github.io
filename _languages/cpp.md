@@ -1811,28 +1811,46 @@ int* oldStyle2 = 0;
 
 ## Operators
 
-### Parentheses Operator
+- Operators perform operations on operands (values, variables, or expressions)
+- Operators have precedence rules that determine evaluation order
+- Operators can be overloaded for custom types
 
-- Parenthesis operators `()` are used to to change the order of calculation of an expression
-  inside a compound expression
-  - The operand of this is alway calculated before any other expression inside the compound
-    expression
+### Operator Precedence and Parentheses
+
+- Operators are evaluated according to precedence rules (e.g., `*` before `+`)
+- Parentheses `()` override default precedence and force evaluation of enclosed expressions first
+- Use parentheses to clarify intent even when not strictly necessary
 
 ```cpp
-4 + 3 * 2 == 10;
+// multiplication has higher precedence than addition
+4 + 3 * 2 == 10;  // evaluated as: 4 + (3 * 2)
+
+// parentheses change evaluation order
 (4 + 3) * 2 == 14;
+
+// multiple levels of parentheses
+((2 + 3) * 4) - 5 == 15;
+
+// use parentheses for clarity even when not required
+if ((x > 0) && (y < 10)) { }  // clearer than: if (x > 0 && y < 10)
 ```
+
+- **Best practices**:
+  - Use parentheses to clarify complex expressions
+  - Don't rely on memorizing precedence rules for readability
 
 ### Arithmetic Operators
 
-- Arithmetic operators produce numerical values from other numerical values
+- Arithmetic operators perform mathematical operations on numeric values
+- Result types depend on operand types (integer vs floating-point)
+- They may cause overflow, underflow, or undefined behavior with invalid operations
 
-| **Operation**    | **Operator** | **syntax** | **Example**            |
+| Operation        | Operator     | syntax     | Example                |
 | :--------------- | :----------- | :--------- | :--------------------- |
 | Addition         | `+`          | `x + y`    | `3 + 4 == 7;`          |
-| Unary Plus       | `+`          | `+x`       | `+(-3) == 3;`          |
+| Unary Plus       | `+`          | `+x`       | `+(5) == 5;`           |
 | Subtraction      | `-`          | `x - y`    | `4 - 3 == 1;`          |
-| Unary Minus      | `-`          | `-y`       | `-4 == -4;`            |
+| Unary Minus      | `-`          | `-y`       | `-(4) == -4;`          |
 | Multiplication   | `*`          | `x * y`    | `3 * 2 == 6;`          |
 | Division         | `/`          | `x / y`    | `3.0 / 2.0 == 1.5;`    |
 | Integer Division | `/`          | `x / y`    | `3 / 2 == 1;`          |
@@ -1842,11 +1860,45 @@ int* oldStyle2 = 0;
 | Pre-Decrement    | `--`         | `--x`      | `int x = 3; --x == 2;` |
 | Post-Decrement   | `--`         | `x--`      | `int x = 3; x-- == 3;` |
 
+```cpp
+// integer division truncates toward zero
+7 / 2 == 3;   // not 3.5
+-7 / 2 == -3; // not -3.5
+
+// floating-point division
+7.0 / 2.0 == 3.5;
+7 / 2.0 == 3.5;   // mixed types promote to double
+
+// modulo operator (remainder after integer division)
+10 % 3 == 1;
+-10 % 3 == -1;  // sign matches dividend
+10 % -3 == 1;
+
+// modulo only works with integer types
+// 5.5 % 2.0;  // compilation error
+
+// increment/decrement operators
+int x = 5;
+int a = ++x;  // x becomes 6, then a = 6 (pre-increment)
+int b = x++;  // b = 6, then x becomes 7 (post-increment)
+
+// division by zero
+int result = 10 / 0;      // undefined behavior
+double d = 10.0 / 0.0;    // may produce infinity (implementation-defined)
+```
+
+- **Best practices**:
+  - Be explicit with floating-point literals to avoid unintended integer division: `x / 2.0` not `x / 2`
+  - Prefer pre-increment `++i` over post-increment `i++` for better performance with complex types
+  - Check for division by zero before dividing
+  - Be aware that modulo with negative numbers may produce unexpected results
+
 ### Comparison Operators
 
-- Comparison operators produce truth values based on the relationship between values
+- Comparison operators compare values and return boolean results (`true` or `false`)
+- All comparison operators have lower precedence than arithmetic operators
 
-| **Operation**  | **Operator** | **syntax** | **Example**       |
+| Operation      | Operator     | syntax     | Example           |
 | :------------- | :----------- | :--------- | :---------------- |
 | Equality       | `==`         | `x == y`   | `4 == 4 == true;` |
 | Inequality     | `!=`         | `x != y`   | `3 != 4 == true;` |
@@ -1855,57 +1907,219 @@ int* oldStyle2 = 0;
 | Less           | `<`          | `x < y`    | `3 < 4 == true;`  |
 | Less-Equals    | `<=`         | `x <= y`   | `3 <= 4 == true;` |
 
+```cpp
+// comparing floating-point values requires caution
+double a = 0.1 + 0.2;
+a == 0.3;  // may be false due to floating-point precision
+std::abs(a - 0.3) < 0.0001;  // better approach with epsilon
+
+// comparing pointers
+int x = 5;
+int* p1 = &x;
+int* p2 = &x;
+p1 == p2;  // true (same address)
+
+// comparing C++-strings
+std::string s1 = "hello";
+std::string s2 = "hello";
+s1 == s2;  // true (compares content)
+
+const char* c1 = "hello";
+const char* c2 = "hello";
+c1 == c2;  // may be true or false (compares addresses, not content)
+std::strcmp(c1, c2) == 0;  // correct way to compare C-strings
+```
+
+- **Best practices**:
+  - Use `std::abs(a - b) < epsilon` for floating-point comparisons
+  - Use `std::strcmp()` or `std::string` for string comparisons, not `==` on `char*`
+  - Be aware that `==` compares pointer addresses, not pointed-to values
+
 ### Logical Operators
 
-- Logical operators perform boolean algebra with truth values
+- Logical operators perform boolean logic operations on truth values
+- Logical AND and OR use short-circuit evaluation (right operand may not be evaluated)
+- Their result is always `bool` type
 
-| **Operation** | **Operator** | **syntax** | **Example**              |
+| Operation     | Operator     | syntax     | Example                  |
 | :------------ | :----------- | :----------| :----------------------- |
 | AND           | `&&`         | `x && y`   | `true && true == true;`  |
 | OR            | `││`         | `x ││ y`   | `true ││ false == true;` |
 | NOT           | `!`          | `!x`       | `!false == true;`        |
 
+```cpp
+// short-circuit evaluation with AND
+if (ptr != nullptr && ptr->value > 0) {  // safe: ptr checked first
+    // ptr->value only evaluated if ptr != nullptr
+}
+
+// short-circuit evaluation with OR
+if (x == 0 || y / x > 10) {  // safe: division only if x != 0
+    // y / x only evaluated if x != 0
+}
+
+// logical NOT
+bool isValid = true;
+!isValid == false;
+
+// common patterns
+if (!ptr) { }         // check if pointer is null
+if (!vec.empty()) { } // check if container has elements
+
+// has higher precedence than && and ||
+!x && y;   // equivalent to: (!x) && y
+x || y && z; // equivalent to: x || (y && z)
+```
+
+- **Best practices**:
+  - Rely on short-circuit evaluation for null checks and bounds checking
+  - Put cheaper/faster conditions first in `&&` chains
+  - Put more likely-true conditions first in `||` chains
+  - Use parentheses to clarify complex logical expressions
+
 ### Bitwise Operators
 
-- Bitwise operators manipulate the bits of values
+- Bitwise operators manipulate individual bits of integer values
+- They only work with integer types (not floating-point)
+- Left shift multiplies by powers of 2, right shift divides by powers of 2
 
-| **Operation** | **Operator** | **syntax** | **Example**                |
-| :------------ | :----------- | :--------- | :------------------------- |
-| Bitwise AND   | `&`          | `x & y`    | `0b011 & 0b001 == 0b001;`  |
-| Bitwise OR    | `│`          | `x │ y`    | `0b011 │ 0b001 == 0b011;`  |
-| Bitwise NOT   | `~`          | `~x`       | `~0b011 == 0b100;`         |
-| Bitwise XOR   | `^`          | `x ^ y`    | `0b011 ^ 0b001 == 0b010;`  |
-| Left Shift    | `<<`         | `x << y`   | `2 << 0b0011 == 0b1100;`   |
-| Right Shift   | `>>`         | `x >> y`   | `2 >> 0b1100 == 0b0011;`   |
+| Operation     | Operator     | syntax     | Example                      |
+| :------------ | :----------- | :--------- | :--------------------------- |
+| Bitwise AND   | `&`          | `x & y`    | `0b0110 & 0b0011 == 0b0010;` |
+| Bitwise OR    | `│`          | `x │ y`    | `0b0110 │ 0b0011 == 0b0111;` |
+| Bitwise NOT   | `~`          | `~x`       | `~0b0110 == 0b...11111001;`  |
+| Bitwise XOR   | `^`          | `x ^ y`    | `0b0110 ^ 0b0011 == 0b0101;` |
+| Left Shift    | `<<`         | `x << n`   | `0b0011 << 2 == 0b1100;`     |
+| Right Shift   | `>>`         | `x >> n`   | `0b1100 >> 2 == 0b0011;`     |
+
+```cpp
+// bit masking to check specific bits
+uint8_t flags = 0b10110100;
+if (flags & 0b00000100) {  // check if bit 2 is set
+    // bit 2 is set
+}
+
+// set specific bits
+flags |= 0b00001000;  // set bit 3
+
+// clear specific bits
+flags &= ~0b00000100;  // clear bit 2
+
+// toggle specific bits
+flags ^= 0b00000001;  // toggle bit 0
+
+// shifts as multiplication/division by powers of 2
+int x = 5;
+x << 1 == 10;   // multiply by 2^1 = 2
+x << 3 == 40;   // multiply by 2^3 = 8
+x >> 1 == 2;    // divide by 2^1 = 2 (truncates)
+
+// XOR swap algorithm
+int a = 5, b = 10;
+a ^= b;  // a = a ^ b
+b ^= a;  // b = b ^ (a ^ b) = original a
+a ^= b;  // a = (a ^ b) ^ original a = original b
+
+// check if number is power of 2
+bool isPowerOf2 = (x != 0) && ((x & (x - 1)) == 0);
+```
+
+- **Best practices**:
+  - Use bitwise operators for flags, permissions, and bit manipulation
+  - Use shifts for efficient multiplication/division by powers of 2
+  - Prefer named constants for bit masks
+  - Be careful with right shift on negative signed integers
+  - Use unsigned types for bitwise operations to avoid sign extension issues
 
 ### Assignment Operators
 
 - Assignment operators are assigning values to variables
   - Therefore the left operand must always be a variable
 
-| **Operation**               | **Operator** | **syntax** | **Example**                        |
-| :-------------------------- | :----------- | :--------- | :--------------------------------- |
-| Assignment                  | `=`          | `x = y`    | `x = 3; x == 3;`                   |
-| Addition Assignment         | `+=`         | `x += y`   | `x = 3; x += 4; x == 7;`           |
-| Subtraction Assignment      | `-=`         | `x -= y`   | `x = 4; x -= 3; x == 1;`           |
-| Multiplication Assignment   | `*=`         | `x *= y`   | `x = 3; x *= 4; x == 12;`          |
-| Division Assignment         | `/=`         | `x /= y`   | `x = 3.0; x /= 2.0; x == 1.5;`     |
-| Integer Division Assignment | `/=`         | `x /= y`   | `x = 3; x /= 2; x == 1;`           |
-| Modulo Assignment           | `%=`         | `x %= y`   | `x = 11; x %= 4; x == 3;`          |
-| Bitwise AND Assignment      | `&=`         | `x &= y`   | `x = 0b01; x &= 0b11; x == 0b01;`  |
-| Bitwise OR Assignment       | `│=`         | `x │= y`   | `x = 0b01; x │= 0b11; x == 0b11;`  |
-| Bitwise XOR Assignment      | `^=`         | `x ^= y`   | `x = 0b01; x ^= 0b11; x == 0b10;`  |
-| Left Shift Assignment       | `<<=`        | `x <<= y`  | `x = 0b01; x <<= 1; x == 0b10;`    |
-| Right Shift Assignment      | `>>=`        | `x >>= y`  | `x = 0b10; x >>= 1; x == 0b01;`    |
+| Operation                   | Operator     | syntax     | Example                           |
+| :-------------------------- | :----------- | :--------- | :-------------------------------- |
+| Assignment                  | `=`          | `x = y`    | `x = 3; x == 3;`                  |
+| Addition Assignment         | `+=`         | `x += y`   | `x = 3; x += 4; x == 7;`          |
+| Subtraction Assignment      | `-=`         | `x -= y`   | `x = 4; x -= 3; x == 1;`          |
+| Multiplication Assignment   | `*=`         | `x *= y`   | `x = 3; x *= 4; x == 12;`         |
+| Division Assignment         | `/=`         | `x /= y`   | `x = 3.0; x /= 2.0; x == 1.5;`    |
+| Integer Division Assignment | `/=`         | `x /= y`   | `x = 3; x /= 2; x == 1;`          |
+| Modulo Assignment           | `%=`         | `x %= y`   | `x = 11; x %= 4; x == 3;`         |
+| Bitwise AND Assignment      | `&=`         | `x &= y`   | `x = 0b01; x &= 0b11; x == 0b01;` |
+| Bitwise OR Assignment       | `│=`         | `x │= y`   | `x = 0b01; x │= 0b11; x == 0b11;` |
+| Bitwise XOR Assignment      | `^=`         | `x ^= y`   | `x = 0b01; x ^= 0b11; x == 0b10;` |
+| Left Shift Assignment       | `<<=`        | `x <<= y`  | `x = 0b01; x <<= 1; x == 0b10;`   |
+| Right Shift Assignment      | `>>=`        | `x >>= y`  | `x = 0b10; x >>= 1; x == 0b01;`   |
 
 ### Ternary Operator
 
-- The ternary operator allows for an if-else expression
+- The ternary operator is the only ternary (three-operand) operator in C++
+- It provides a concise way to write simple if-else expressions
+
+**Syntax**: `condition ? value_if_true : value_if_false`
 
 ```cpp
+// basic usage
 int x = 3;
 const char* answer = x > 10 ? "x is greater than 10" : "x is 10 or less";
+
+// assign different values based on condition
+int max = (a > b) ? a : b;
+
+// can be used in function arguments
+print((x > 0) ? "positive" : "non-positive");
+
+// both branches must have compatible types
+int result = condition ? 42 : 3.14;  // OK: double promoted
+auto value = flag ? 100 : "text";    // Error: incompatible types
+
+// nested ternary (discouraged for readability)
+int category = score >= 90 ? 1 :
+               score >= 80 ? 2 :
+               score >= 70 ? 3 : 4;
+
+// equivalent if-else (more readable for complex logic)
+int category;
+if (score >= 90) category = 1;
+else if (score >= 80) category = 2;
+else if (score >= 70) category = 3;
+else category = 4;
 ```
+
+- **Best practices**:
+  - Use for simple conditional assignments
+  - Avoid nesting ternary operators deeply (use if-else for complex logic)
+  - Add parentheses around condition for clarity: `(x > 0) ? a : b`
+  - Both branches should be simple expressions, not complex statements
+  - Consider using if-else if the ternary operator reduces readability
+
+### Comma Operator
+
+- The comma operator `,` evaluates multiple expressions sequentially
+- It returns the value of the rightmost expression
+- It has the lowest precedence of all operators
+
+```cpp
+// basic usage
+int x = (a = 1, b = 2, a + b); // x = 3, a = 1, b = 2
+
+// common use in for loops
+for (int i = 0, j = 10; i < j; i++, j--) {
+    // i increments, j decrements each iteration
+}
+
+// multiple expressions evaluated left to right
+int result = (printf("Hello"), 42); // prints "Hello", returns 42
+
+// comma in function arguments is NOT the comma operator
+func(a, b);   // separate arguments, not comma operator
+func((a, b)); // comma operator, only b is passed to func
+```
+
+- **Best practices**:
+  - Main legitimate use is in for loop initialization/iteration
+  - Avoid in most other contexts as it reduces readability
+  - Parentheses are required to use comma operator in most contexts
 
 ## Memory Management
 
