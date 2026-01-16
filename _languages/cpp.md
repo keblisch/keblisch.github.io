@@ -757,24 +757,53 @@ std::cout << "Error at " << __FILE__ << ":" << __LINE__ << std::endl;
 
 ## Variables
 
+- Variables are named storage locations that hold values of a specific data type
+- They must be declared with a type before use and can be modified during program execution
+
 ```cpp
-// declare new variable without initial value
+// declaration without initialization
 int x;
 
 // undefined behavior
 x + 1;
 
-// initialize new variable with initial value
+// copy initialization (makes temporary copies for classes)
 int y = 10;
 
-// define existing variables
+// direct initialization (makes no temporary copies for classes)
+int z(20);
+
+// uniform initialization (prevents type narrowing)
+int a{30};
+
+// list initialization (alternative syntax for uniform initialization)
+int b = {40};
+
+// assignment
 x = 10;
 y = 12;
+
+// initialize constant that is immutable (must be initialized)
+const int MAX_SIZE = 100;
+
+// type inference with auto
+auto value = 42;    // int
+auto pi = 3.14;     // double
+auto name = "John"; // const char*
+
+// save variable on the heap
+int* heapVar = new int(100);
+delete heapVar; // must manually free memory
 ```
 
 - **Best practices**:
   - Identifiers of variables with primitive data types should be written in camel case
-  - Variables should be initialized instead of declared to avoid usage of undefined values
+  - Variables should always be initialized to avoid undefined behavior
+  - Prefer uniform initialization `{}` to prevent narrowing conversions
+  - Use `const` for variables that should not be modified
+  - Use `auto` when the type is obvious from context to reduce verbosity
+  - Create variables close to first use
+  - Prefer automatic storage (stack) over dynamic storage (heap) when possible
 
 ## Data Types
 
