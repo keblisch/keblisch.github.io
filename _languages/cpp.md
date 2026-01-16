@@ -635,33 +635,125 @@ int publicFunction()
 
 ## Preprocessor Directives
 
-- Preprocessor directives are executed by the preprocessor in the compilation process
+- Preprocessor directives are executed by the preprocessor before compilation
+- They begin with `#` and do not require semicolons
+- Processed as text substitution before the compiler sees the code
+
+### Include Directives
 
 ```cpp
-// replace directive by the contents of the specified library
-#include <library>
+// include standard library header (searches system include paths)
+#include <iostream>
+#include <vector>
 
-// replace directive by the contents of the specified file
-#include "file.h"
-
-// define macro whose occurrences are replaced by the defined value
-#define FOO 100
-int x = FOO;
-int y = FOO + 10;
-
-// define macro expression whose occurrences are replaced by the result of the defined expression
-#define BAR(a, b) (a + b)
-int a = BAR(50, 30);
-int b = a - BAR(10, 30);
-
-// undefine macros
-#undef FOO
-#undef BAR
+// include local header (searches current directory first)
+#include "myheader.h"
+#include "utilities/helper.h"
 ```
 
 - **Best practices**:
-  - `include` directives should only be used at the beginning of files
-  - Macros should be avoided as they make it difficult to identify errors during compilation
+  - Put `#include` directives at the beginning of files
+  - Always include what you use (don't rely on transitive includes)
+
+### Include Guards
+
+```cpp
+// traditional include guards to prevent multiple inclusion
+#ifndef MYHEADER_H
+#define MYHEADER_H
+// header content here...
+#endif
+
+// modern include guards to prevent multiple inclusion
+#pragma once
+```
+
+- **Best practices**:
+  - Use `#pragma once` in all header files (simpler and faster)
+
+### Macros
+
+```cpp
+// define simple constant macro
+#define PI 3.14159
+#define MAX_SIZE 100
+
+// function-like macros (text substitution, not type-safe)
+#define SQUARE(x) ((x) * (x))      // parentheses prevent precedence issues
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+// using macros
+int area = SQUARE(5);      // expands to ((5) * (5))
+int maximum = MAX(10, 20); // expands to ((10) > (20) ? (10) : (20))
+
+// undefine macros
+#undef PI
+#undef SQUARE
+```
+
+- **Best practices**:
+  - Prefer `const` variables and `inline` functions over macros when possible
+  - Use all caps for macro names to distinguish them from regular code
+  - Always use parentheses in macro expressions to avoid precedence issues
+  - Avoid complex macro logic and use templates or functions instead
+
+### Conditional Compilation
+
+```cpp
+// compile code only if macro is defined
+#ifdef DEBUG
+    std::cout << "Debug mode enabled" << std::endl;
+#endif
+
+// compile code only if macro is not defined
+#ifndef NDEBUG
+    assert(x > 0);
+#endif
+
+// include conditionally
+#if defined(WINDOWS)
+    #include <windows.h>
+#elif defined(LINUX)
+    #include <unistd.h>
+#else
+    #error "Unsupported platform"
+#endif
+
+// check macro values
+#define VERSION 2
+
+#if VERSION >= 2
+    // new feature code
+#else
+    // legacy code
+#endif
+```
+
+- **Best practices**:
+  - Use conditional compilation for platform-specific or debug code
+
+### Predefined Macros
+
+```cpp
+// standard predefined macros
+__FILE__    // current source file name
+__LINE__    // current line number
+__DATE__    // compilation date
+__TIME__    // compilation time
+__cplusplus // C++ standard version (e.g., 201703L for C++17)
+
+std::cout << "Error at " << __FILE__ << ":" << __LINE__ << std::endl;
+```
+
+### Error and Warning Generation
+
+```cpp
+// generate compiler error with message
+#error "This configuration is not supported"
+
+// generate compiler warning with message (non-standard, compiler-specific)
+#warning "This feature is deprecated"
+```
 
 ## Variables
 
