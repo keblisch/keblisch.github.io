@@ -753,7 +753,7 @@ const char* names[] = {"John", "Jane"};
 
 - **Best practices**:
   - Identifiers of constants should be written in constant case
-  - Constant variables shouldn’t be declared because their definition afterwards isn’t possible
+  - Constant variables shouldn't be declared because their definition afterwards isn't possible
 
 #### Aliases
 
@@ -1025,7 +1025,7 @@ ptrdiff_t gap = bar - foo; // special integer data type for pointer arithmetic
 
 - **Best practices**:
   - Pointers should always be initialized instead of declared to avoid usage of undefined pointers
-    - Thereby null pointers should be used when they shouldn’t point to a value yet
+    - Thereby null pointers should be used when they shouldn't point to a value yet
   - Null pointers should be defined with the keyword `nullptr` instead of the
     value `NULL` or `0` due to less ambiguity
 
@@ -1558,12 +1558,12 @@ class FooBar;    // friend class of `Bar`
 - Classes can be derived from other classes as their base to inherit all of their members
 - Derivations can be modified with access modifiers to configure the access modifiers for
   all derived members
-  - `public`: Doesn’t change the access modifiers of derived members
+  - `public`: Doesn't change the access modifiers of derived members
   - `protected`: Changes derived public members to protected members
   - `private`: Changes derived members to private members
 - Derived classes are treated as the same data type as their base class, which is why they can
   be substituted by them in variables and function calls
-  - Thereby they’re losing all members that aren’t part of the substituted base class
+  - Thereby they're losing all members that aren't part of the substituted base class
     - This can be bypassed with pointers for base classes to which derivations are assigned
       instead
 
@@ -1670,7 +1670,7 @@ public:
 ```
 
 - **Best practices**:
-  - Dummy parameters should be keywords of data types to guarantee that they aren’t used
+  - Dummy parameters should be keywords of data types to guarantee that they aren't used
   - Operator overloads should be used to make reference data types compatible with operators
   - Operator Overloads for classes should be friend functions or methods of these so they can
     access their private members
@@ -1894,8 +1894,8 @@ foo.second == 1;
 
 - Maps are unordered lists of key-value pairs
   - Thereby their key-value pairs are implemented as pairs
-    - In these the first value is the map’s key
-    - In these the second value is the map’s value of the key
+    - In these the first value is the map's key
+    - In these the second value is the map's value of the key
   - Thereby their keys must be unique
 
 ```cpp
