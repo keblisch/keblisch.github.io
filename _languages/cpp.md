@@ -335,21 +335,45 @@ int VALUE = 30; // another different variable
 
 ### Scopes
 
-- Block statements are building scopes inside programs
-  - Thereby scopes can be nested inside other scopes
-    - Thereby programs themselves are building the global scope in which other scopes are nested
-- The current scope of the control flow is formed by the set of statements that are fulfilling
-  all of the following criteria:
-  - Statements before the control flow
-  - Statements that are inside the scope in which the control flow is
-  - All scopes in which the scope with the control flow is inside
+- A scope is a region of code where a name (identifier) is valid and accessible
+- Block statements (code enclosed in `{}`) create their own scopes
+  - Scopes can be nested within other scopes
+  - The program itself forms the global scope, which contains all other scopes
+- A name is visible at a given point in the code if:
+  - It was declared earlier in the current scope, or
+  - It was declared in an outer scope
+- Inner scopes can hide names from outer scopes, which is called shadowing
+
+```cpp
+int x = 10; // global scope
+
+void foo()
+{
+    int y = 20; // function scope
+
+    {
+        int z = 30; // nested block scope
+        y = 10;     // variables from outer scopes are accessible
+        int x = 5;  // shadows global x
+    }
+}
+```
 
 ### Entry Point
 
-Every program must contain a main function as entry point for execution:
+Every program must contain a main function as the entry point for execution:
 
 ```cpp
+// main with command-line arguments
 int main(int argc, char* argv[])
+{
+    // code goes here
+
+    return 0;
+}
+
+// main without command-line arguments (when not needed)
+int main()
 {
     // code goes here
 
@@ -357,30 +381,48 @@ int main(int argc, char* argv[])
 }
 ```
 
-- The parameter `argc` hands over the number of used command-line arguments
-- The parameter `argv` hands over all used command-line arguments as array of strings
-- The return value is the status code of the program
+- The parameter `argc` provides the count of command-line arguments
+- The parameter `argv` provides the actual command-line arguments as an array of C-strings
+  - `argv[0]` is always the program name
+  - `argv[1]` through `argv[argc-1]` are the user-provided arguments
+- The return value is the program's exit status code
+  - `0` conventionally indicates success
+  - Non-zero values indicate various error conditions
+- If no `return` statement is present, `main()` implicitly returns `0`
 
 ### Header and Source Files
 
-- Source code can be divided into source and header files
-  - Header files contain declarations of functions and classes
-  - Source files contain definitions of declarations inside header files
-  - This allows for separation of design and implementation
-- File extensions don't matter, but conventions do exist
-  - `.cpp` is the most used convention for source files (`c` and `cc` are also used sometimes)
-  - `.hpp` is the most used convention for header files (`h` and `hh` are also used sometimes)
-- Header files are imported with `include` directives to use their identifiers
-  - Their definitions are added by the linker in the compilation process
+- C++ code is typically organized into header files and source files
+  - Header files contain:
+    - Function declarations
+    - Class declarations
+    - Template definitions (must be in headers)
+    - Inline function definitions
+    - Constants and type aliases
+  - Source files contain:
+    - Function definitions
+    - Class member function definitions
+    - Global variable definitions
+  - This separation allows for interface/implementation separation
+- Extensions don't affect compilation, but conventions exist:
+  - **Source files**: `.cpp` (most common), `.cc`, `.cxx`, `.c++`
+  - **Header files**: `.hpp` (C-compatible), `.h`, `.hh`, `.hxx`
+
+- **Best practices**:
+  - Definitions should be kept in `.cpp` files and declarations in `.hpp` files
+  - Use forward declarations to reduce header dependencies when possible
 
 ### Project Structure
 
-- The following directories should be used inside projects:
-  - `src/`: source files
-  - `include/`: header files
-  - `lib/`: external binary libraries
-  - `build/`: intermediate files built in the compilation process
-  - `bin/`: executable binary files built by the compilation process
+- Common project directory conventions:
+  - `src/`: Source files (`.cpp`)
+  - `include/`: Public header files (`.hpp`)
+  - `lib/`: External library files (`.a`, `.so`, `.lib`, `.dll`)
+  - `build/`: Build artifacts (object files, intermediate files)
+  - `bin/`: Final executable binaries
+  - `test/`: Test files and test executables
+  - `docs/`: Documentation
+  - `examples/`: Example code demonstrating usage
 
 ## Comments
 
