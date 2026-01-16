@@ -2805,60 +2805,146 @@ private:
 
 ## Functions
 
-- Functions are reusable blocks of code that can take and evaluate to values
+- Functions are reusable blocks of code that perform specific tasks and can take parameters
+  and return values
+- Functions must be declared before use (forward declaration) and can be defined separately
 
 ```cpp
-// declare function
+// forward declaration (prototype)
 int sum(int x, int y);
 
-// define function
+// definition
 int sum(int x, int y)
 {
-    int z = x + y;
-    return z;
+    return x + y;
 }
 
-// define function with no parameters and return value
-void foo()
+// function with no parameters or return value
+void printMessage()
 {
-    ; // nothing
+    std::cout << "Hello" << std::endl;
 }
 
-// call functions
-sum(10, 4) == 14;
+// function call
+int result = sum(10, 4); // result == 14
+printMessage();
 
-// overload functions (declare/define same function with different parameters)
-int decrement(int x) {
-    return x - 1;
-}
-double decrement(double x) {
-    return x - 1.0;
-}
-decrement(4) == 3;
-decrement(4.0) == 3.0;
-
-// declare and define function with default parameter (can only defined in one of both)
-int increment(int base, int inc = 1);
-int increment(int base, int inc)
+// pass by value (copies the argument)
+void increment(int x)
 {
-    return base + inc;
+    x++; // only modifies local copy
 }
-increment(13, 2) == 15;
-increment(13) == 14;
 
-// declare and define inline function whose calls are replaced by their code on compile-time
-inline int diff(int x, int y);
-inline int diff(int x, int y)
+// pass by reference (allows modification of original)
+void increment(int& x)
 {
-    return x - y;
+    x++; // modifies original variable
+}
+
+// pass by const reference (read-only, no copy overhead)
+void printVector(const std::vector<int>& vec)
+{
+    for (int val : vec) {
+        std::cout << val << " ";
+    }
+}
+
+// pass by pointer (can be nullptr)
+void maybeModify(int* ptr)
+{
+    if (ptr != nullptr) {
+        *ptr = 42;
+    }
+}
+
+// same function name, different parameter types or counts (function overloading)
+int add(int x, int y)
+{
+    return x + y;
+}
+
+double add(double x, double y)
+{
+    return x + y;
+}
+int add(int x, int y, int z)
+{
+    return x + y + z;
+}
+add(5, 3);     // calls int version, returns 8
+add(5.5, 3.2); // calls double version, returns 8.7
+add(1, 2, 3);  // calls three-parameter version, returns 6
+
+// default parameters (must be rightmost and declared only once)
+int power(int base, int exponent = 2);
+int power(int base, int exponent)
+{
+    int result = 1;
+    for (int i = 0; i < exponent; i++) {
+        result *= base;
+    }
+    return result;
+}
+
+power(3);    // uses default, returns 9 (3^2)
+power(3, 3); // returns 27 (3^3)
+
+// multiple return values using std::pair or std::tuple
+std::pair<int, int> divmod(int dividend, int divisor)
+{
+    return {dividend / divisor, dividend % divisor};
+}
+auto [quotient, remainder] = divmod(17, 5);  // structured binding
+
+// return by reference
+int& getElement(std::vector<int>& vec, size_t index)
+{
+    return vec[index];  // returns reference to element
+}
+
+// trailing return type for better readability
+auto multiply(int x, int y) -> int
+{
+    return x * y;
+}
+
+// inline suggests the compiler to replace function calls with the function body
+inline int max(int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+// constexpr functions can be evaluated at compile time
+constexpr int factorial(int n)
+{
+    return (n <= 1) ? 1 : n * factorial(n - 1);
+}
+constexpr int result = factorial(5); // computed at compile time
+int runtime = factorial(n);          // can still be called at runtime
+
+// constexpr functions must have literal return type
+constexpr double circleArea(double radius)
+{
+    return 3.14159 * radius * radius;
+}
+
+// noexcept indicates a function won't throw exceptions
+int safeDivide(int a, int b) noexcept
+{
+    return (b != 0) ? a / b : 0;
 }
 ```
 
 - **Best practices**:
-  - Identifiers of functions should be written in camel case
-  - The parameters and return values of functions should be references when they have reference
-    data types to reduce the amount of copied data
-    - These should also comply to const correctness to avoid unwanted side effects
+  - Use `const` references for read-only parameters to avoid unnecessary copies
+  - Pass small types by value and large types by const reference
+  - Use `noexcept` for functions that won't throw exceptions to enable optimizations
+  - Prefer early returns to reduce nesting depth
+  - Avoid functions with too many parameters (consider grouping into a struct)
+  - Mark compile-time computable functions as `constexpr` when possible
+  - Use `[[nodiscard]]` attribute for functions whose return value shouldn't be ignored
+  - Document preconditions, postconditions, and exceptions in comments
+  - Prefer references over pointers when the argument must always be valid
 
 ## Lambda Expressions
 
