@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 
 ## Backgrounds
 
-### Sources
+### Resources
 
 - [C++ Reference](https://cppreference.com/w/cpp.html)
 - [cplusplus.com Tutorial](https://cplusplus.com/doc/tutorial/)
