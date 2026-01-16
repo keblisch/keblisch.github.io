@@ -3,7 +3,7 @@ layout: base
 title: C++
 ---
 
-<!-- markdownlint-disable MD033 MD025 MD022 -->
+<!-- markdownlint-disable MD033 MD032 MD029 MD025 MD022 MD007 -->
 
 {% raw %}
 
@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
   - **Conan**: Decentralized package manager with binary package support
   - **CPM**: CMake-based package manager
 
-## Compilation process
+## Compilation Process
 
 ```mermaid
 graph TD
@@ -134,26 +134,29 @@ graph TD
     object_files --> |passed to| linker[Linker];
     library_files[Library files] --> |passed to| linker;
     linker --> |links into| executable_binary[Executable Binary];
-    linker --> |If compiler error| stop;
+    linker --> |If linker error| stop;
 ```
 
-- Execution of the preprocessor is the first step in the compilation of C++ and produces
-  translation units from the source code
-  - Thereby all preprocessor directives from the source code are executed
-  - These translation units are still containing C++ code
+1. **Preprocessor**: Produces translation units from source and header files
+  - All preprocessor directives are executed
+  - Translation units are self-contained C++ source files that result from preprocessing each
+    source file with its included headers
+  - Each source file becomes one translation unit after preprocessing
   - This step is canceled if a preprocessor directive is incorrect
-- Execution of the compiler is the second step in the compilation of C++ and produces binary
-  object files
-  - Thereby the translation units are translated into machine code
-  - These object files are enriched with meta data for the linker
-  - These object files are mostly getting the file extension `.o`
-  - This step is canceled if a translation unit contains a syntax error
-- Execution of the linker the third step in the compilation of C++ and produces a single
-  executable binary file
-  - Thereby all object files and library files are composed
-  - This binary file is mostly getting the file extension `.exe`
-  - This step is cancelled if references inside the object files or library files can’t
-    be resolved
+2. **Compiler**: Produces binary object files from translation units
+  - Translation units are translated into machine code
+  - Each translation unit can be compiled independently (separate compilation)
+  - Object files contain machine code along with metadata such as symbol tables, relocation
+    information, and debugging data
+  - Object files typically get the file extension `.o` (Unix/Linux) or `.obj` (Windows)
+  - This step is canceled if a translation unit contains a syntax error or semantic error
+3. **Linker**: Produces a single executable binary file from object and library files
+  - All object files and library files are linked together
+  - Resolves external symbol references (functions and variables declared in one file and defined
+    in another)
+  - The executable gets no extension on Unix/Linux or `.exe` on Windows
+  - This step is canceled if references can't be resolved (e.g., undefined references or multiple
+    definitions)
 
 ## Syntax
 
