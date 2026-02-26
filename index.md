@@ -4,7 +4,7 @@ title: Home
 nav_exclude: true
 ---
 
-<!-- markdownlint-disable MD025 -->
+<!-- markdownlint-disable MD013 MD025 -->
 
 # Programming Notes
 

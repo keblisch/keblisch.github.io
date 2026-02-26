@@ -3,7 +3,7 @@ layout: base
 title: C++
 ---
 
-<!-- markdownlint-disable MD033 MD032 MD029 MD025 MD022 MD007 -->
+<!-- markdownlint-disable MD013 MD033 MD032 MD029 MD025 MD022 MD007 -->
 
 {% raw %}
 
