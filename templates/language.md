@@ -771,3 +771,5 @@ Example for manual memory management in the language
 **Best Practices**:
 - First best practice
 - Second best practice
+
+{% endraw %}
