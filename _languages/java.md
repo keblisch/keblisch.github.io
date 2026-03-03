@@ -3,7 +3,7 @@ layout: base
 title: Java
 ---
 
-<!-- markdownlint-disable MD033 MD032 MD029 MD025 MD022 MD007 -->
+<!-- markdownlint-disable MD013 MD033 MD032 MD029 MD025 MD022 MD007 -->
 
 {% raw %}
 
@@ -82,9 +82,9 @@ official JDK is licensed proprietary by Oracle, but free versions of the JDK, ca
 OpenJDKs, are available by other companies.
 
 The following JDKs are available:
-- [https://www.oracle.com/java/technologies/downloads/](Oracle JDK)
-- [https://adoptium.net/de/temurin/releases](Temurin OpenJDK)
-- [https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html](Coretto OpenJDK)
+- [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)
+- [Temurin OpenJDK](https://adoptium.net/de/temurin/releases)
+- [Coretto OpenJDK](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html)
 
 ### Compiler
 
@@ -112,17 +112,22 @@ java SomeFile.class
 
 Java bytecode files can be bundled into Jar (Java Archive) files by the **Jar** tool. This way
 entire Java projects consisting of multiple bytecode files can be distributed more easily and
-even executed directly.
+even executed directly. Thereby Jar files can also contain other Jar files as dependencies.
+To make Jar files executable they must contain a `MANIFEST.txt` file which specifies metadata
+including the class containing the main method.
 
 ```bash
-# bundle Java bytecode files into Jar
+# bundle Java bytecode files into Jar file
 jar cf app.jar Main.class Util.class
 
-# bundle Java bytecode files into executable Jar by specifying class with main method
+# bundle Java bytecode files into executable Jar file with MANIFEST.txt file
 jar cfe app.jar Main Main.class Util.class
 
 # execute executable Jar
 java -jar app.jar
+
+# list contents of Jar file
+jar tf app.jar
 ```
 
 ### Build Systems
@@ -167,7 +172,7 @@ the **JShell**.
 jshell
 ```
 
-## Compilation/Interpretation
+## Compilation and Execution
 
 ```mermaid
 graph TD
