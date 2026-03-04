@@ -63,7 +63,7 @@ public class Main {
   Java SE (Java Standard Edition)
 - The rights on Java passed to Oracle after it acquired Sun Microsystems in 2010
 - Java SE shifted to a six months release cycle after the release of Java SE 9 in 2017
-- LTS versions of Java published since version 1.0 were:
+- The following LTS versions of Java were published:
   - **Java SE 8** (2014): Inner classes, Beans, JDBC, RMI, Collection, Swing GUI, JIT compilation,
     JNDI, Proxy classes, Assertions, Regular expressions, Generics, Enhanced for-loop, autoboxing,
     Annotations, JShell, Try with resources, Binary literals, Strings in switches,
@@ -113,21 +113,26 @@ java SomeFile.class
 Java bytecode files can be bundled into Jar (Java Archive) files by the **Jar** tool. This way
 entire Java projects consisting of multiple bytecode files can be distributed more easily and
 even executed directly. Thereby Jar files can also contain other Jar files as dependencies.
+
 To make Jar files executable they must contain a `MANIFEST.txt` file which specifies metadata
-including the class containing the main method.
+including the class containing the main method. This file can be generated automatically or
+created and included manually.
 
 ```bash
 # bundle Java bytecode files into Jar file
-jar cf app.jar Main.class Util.class
+jar cf App.jar Main.class Util.class OtherApp.jar
 
-# bundle Java bytecode files into executable Jar file with MANIFEST.txt file
-jar cfe app.jar Main Main.class Util.class
+# bundle Java bytecode files into executable Jar file
+jar cfe App.jar Main Main.class Util.class
 
-# execute executable Jar
-java -jar app.jar
+# bundle Java bytecode files into executable Jar file with manually created MANIFEST.txt file
+jar cf App.jar Main.class Util.class MANIFEST.txt
+
+# execute executable Jar file
+java -jar App.jar
 
 # list contents of Jar file
-jar tf app.jar
+jar tf App.jar
 ```
 
 ### Build Systems
@@ -177,10 +182,10 @@ jshell
 ```mermaid
 graph TD
   source_files[Source files] --> |passed to| javac[Java Compiler];
-  javac --> |compiles into| bytecode_files[Bytecode Files];
+  javac --> |compiles| bytecode_files[Bytecode Files];
   bytecode_files --> |passed to| jre[Java Runtime Environment];
-  jre --> |passes bytecode into| jvm[Java Virtual Machine];
-  jre --> |passes standard library into| jvm;
+  jre --> |passes bytecode to| jvm[Java Virtual Machine];
+  jre --> |passes standard library to| jvm;
 ```
 
 1. **JavaC**: Produces Java bytecode files (`.class`) from Java source files (`.java`)
@@ -211,23 +216,23 @@ braces `{}`, which are then treated as a single statement.
 // line statement
 int x;
 
-// block statement
+// compound statement
 {
     int y = 5;
     int z = x + y;
 }
 
-// compound statement
+// empty statement
 ;
 ```
 
 ### Identifiers
 
 The following rules apply for identifiers:
-  - They must start with a letter (`a-z`, `A-Z`) or underscore (`_`)
-  - They may contain letters, digits (`0-9`), and underscores
-  - They cannot be predefined keywords (e.g., `int`, `class`, `if`, `for`)
-  - They are case-sensitive (`myVar`, `MyVar`, and `MYVAR` are different identifiers)
+  - They must start with a letter or underscore
+  - They may contain letters, digits, and underscores
+  - They cannot be predefined keywords
+  - They are case-sensitive
 
 ```java
 // valid identifiers
@@ -251,6 +256,7 @@ program itself forms the global scope in which every other scope lives.
 An identifier is visible at a given point in the program if:
   - It was declared earlier in the current scope, or
   - It was declared in an outer scope
+
 Identifiers can shadow identifiers from outer scopes by redefining them and are active until the
 end of their scope.
 
@@ -259,7 +265,7 @@ int x = 10; // global scope
 
 void foo()
 {
-    int y = 20; // function scope
+    int y = 20; // block scope
 
     {
         int z = 30; // nested block scope
@@ -284,9 +290,8 @@ The following identifiers are reserved as keywords with special meaning:
 ### Files
 
 Java source files must contain a class or interface definition and have the file suffix `.java`.
-Thereby they can contain optional additional class definitions.
-Java bytecode files are automatically named like their according Java source files and have the
-file suffix `.class`.
+Thereby they can contain optional additional class definitions. Java bytecode files are
+automatically named like their according Java source files and have the file suffix `.class`.
 
 **Best Practices**:
 - Java source files should be named like their contained class or interface definition
@@ -324,6 +329,7 @@ public class Main {
 Packages act as namespaces for Java files to group them logically. They correspond to the
 directory structure, which means that every package should be named after its current directory
 and that they can be nested inside each other.
+
 Java files from other packages can be imported to make them usable in the current file. Thereby
 Java files are always accessible inside their own package without needing to import them.
 
