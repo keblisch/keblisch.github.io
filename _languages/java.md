@@ -201,9 +201,9 @@ other and as characters inside string literals. In every other case whitespace i
 entirely by the Java compiler.
 
 ```java
-int x=10;      // valid
-int    x = 10; // valid
-intx = 10;     // invalid
+int x=10;       // valid
+int    x = 10;  // valid
+intx = 10;      // invalid
 ```
 
 ### Statements
@@ -261,16 +261,16 @@ Identifiers can shadow identifiers from outer scopes by redefining them and are 
 end of their scope.
 
 ```java
-int x = 10; // global scope
+int x = 10;  // global scope
 
 void foo()
 {
-    int y = 20; // block scope
+    int y = 20;  // block scope
 
     {
-        int z = 30; // nested block scope
-        y = 10;     // variables from outer scopes are accessible
-        int x = 5;  // shadows global x
+        int z = 30;  // nested block scope
+        y = 10;      // variables from outer scopes are accessible
+        int x = 5;   // shadows global x
     }
 }
 ```
@@ -365,169 +365,456 @@ and are imported implicitly in every Java file.
 The following packages exist in the standard library:
 - `java.lang`: Contains fundamental data structures and utilities
 
-<!--
 ## Comments
 
-How comments are treated in the language.
+Comments are treated as whitespace by the Java compiler and are therefore mostly ignored.
 
 ### Single-Line Comments
 
-```text
-Example for single-line comments in the language
-```
+```java
+// this is a single-line comment
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+int x = 0;  // this is another single-line comment
+```
 
 ### Multi-Line Comments
 
-```text
-Example for multi-line comments in the language
+```java
+/* This
+is a
+multi-line
+comment */
 ```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
 
 ### Documentation Comments
 
-```text
-Example for documentation comments in the language
-```
+Documentation comments are used by some tools and editors to generate documentation for
+according code, but are still regular comments for the Java compiler.
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+```java
+/**
+ * Some random class.
+ *
+ * @author John Doe
+ * @version 1.0.0
+ */
+public class FooBar {
+
+    /**
+     * Some random field.
+     *
+     * @see FooBar#bar
+     * @since 1.0.0
+     */
+    public int foo;
+
+    /**
+     * Does some random stuff.
+     * 
+     * <p>Example:</p>
+     * <p>{@code
+     * int result = fb.bar(2, 3);
+     * result == 5;
+     * }</pre>
+     *
+     * @param x first operand
+     * @param y second operand
+     * @return sum of the parameters
+     * @throws IllegalArgumentException if x or y are negative
+     *
+     * @see FooBar#foo
+     * @since 1.0.0
+     */
+    public int bar(int x, int y) {
+        if (x < 0 || y < 0) {
+            throw new IllegalArgumentException("Ooops");
+        }
+        return x + y;
+    }
+
+}
+```
 
 ## Variables
 
-```text
-Example for variable usage in the language
+Variables can only exist as fields of classes.
+
+```java
+// declare variables
+int x;
+int x, y ,z;
+
+// define variables
+x = 12;
+y = z = 12;
+
+// initialize variables
+int a = 12;
+int b = 10, int c = 20;
+
+// shadow variable
+int foo = 1;
+{
+    int foo = 2;  // shadow variable from outer scope by redeclaring it
+    foo == 2;
+}
+foo == 1;         // shadowing is revoked when its scope is left
 ```
 
 <u>Best Practices</u>:
-- First best practice
-- Second best practice
+- Variables should be named in camel case
 
 ## Constants
 
-```text
-Example for constant usage in the language
+Constants can only exist as fields of classes.
+
+```java
+// initialize constant
+final float EULER = 2.71;
+
+// declare and define constant
+final float PI;
+PI = 3.14;  // only possible once
 ```
 
 <u>Best Practices</u>:
-- First best practice
-- Second best practice
+- Constants should be named in constant case
 
 ## Data Types
 
+Data types in Java have default values that get assigned automatically to undefined variables.
+
 ### Primitive Data Types
 
-| Keyword | Representation | Byte Size | Signedness | Literals               |
-| :------ | :------------- | :-------- | :--------- | :--------------------- |
-| `int`   | Integers       | 4         | Signed     | `0`, `45`, `-12`       |
-| `float` | Real Numbers   | 4         | Signed     | `0.0`, `3.89`, `-12.9` |
+| Keyword   | Representation        | Byte Size | Values                           | Default |
+| :-------- | :-------------------- | :-------- | :------------------------------- | :------ |
+| `byte`    | Signed Integer        | 1         | $-2^{7}$ to $2^{7}-1$            | `0`     |
+| `short`   | Signed Integer        | 2         | $-2^{15}$ to $2^{15}-1$          | `0`     |
+| `int`     | Signed Integer        | 4         | $-2^{31}$ to $2^{31}-1$          | `0`     |
+| `long`    | Signed Integer        | 8         | $-2^{63}$ to $2^{63}-1$          | `0`     |
+| `float`   | Floating Point Number | 4         | $\approx$ 7 digits               | `0.0`   |
+| `double`  | Floating Point Number | 8         | $\approx$ 15 digits              | `0.0`   |
+| `boolean` | Boolean Value         | 1         | `true`, `false`                  | `false` |
+| `char`    | Unicode Character     | 2         | `'\u0000'` to `'\uffff'`         | `''`    |
+
+#### Type Conversion
+
+Primitive data type are converted automatically in according contexts when the following applies:
+- The data type encoding is the same
+- The new data type has a the same or a bigger size as the old one
+
+#### Type Casting
+
+```java
+// casting floating point numbers into integers
+(int)12.3 == 12;
+
+// casting integers into floating point numbers
+(double)12 == 12.0
+
+// casting number data types into smaller number data types
+(byte)46 == 46
+(byte)257 == 257 % 127
+
+// casting characters into unicode values and vice versa
+int ascii = 'A';
+char letter = (char)65;
+```
+
+#### Data Type Wrappers
+
+Data type wrappers are objects representing primitive data types that are wrapping these. Their
+contained primitive data type is boxed und unboxed automatically in according contexts and
+therefore they can be used in place of any primitive data type.
+
+Data type wrappers have the benefit that they can be used for generic classes and methods, because
+these require objects to implement them. Also they add some utility methods to the data types.
+
+| Wrapper     | Wrapped Primitives             |
+| :---------- | :----------------------------- |
+| `Integer`   | `byte`, `short`, `int`, `long` |
+| `Double`    | `float`, `double`              |
+| `Boolean`   | `boolean`                      |
+| `Character` | `char`                         |
 
 <u>Best Practices</u>:
-- First best practice
-- Second best practice
+- Data type wrappers should only be used when they're needed, because they add additional overhead
 
 ### Compound Data Types
 
-#### Strings
-
-How strings are treated in the language.
-
-```text
-Example for string usage in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
 #### Arrays
 
-How arrays are treated in the language.
+The default value of arrays are `null`.
 
-```text
-Example for array usage in the language
+```java
+// declare arrays
+char letters[];
+
+// initialize arrays with specified size and default values
+double reals[] = new double[5];
+
+// initialize arrays with specified size and values
+int nums[] = {1, 3, 5, 8, 11};
+
+// access array elements
+int x = nums[0];
+nums[1] = 4;
+
+// get array length
+nums.length == 5;
+
+// using multi-dimensional arrays
+int matrix[][] = new int[4][4];
+matrix = {
+    {1, 2, 3, 4},
+    {2, 3, 4, 5},
+    {3, 4, 5, 6}
+};
+int row = matrix[0];
+matrix[0] = {4, 2, 3, 1};
+int cell = matrix[0][0];
+matrix[0][5] = 3;
+
+// using jagged arrays
+int peaks[][] = new int[3][];
+peaks = {
+    {1, 2},
+    {2, 3, 4, 5},
+    {3, 4, 5}
+};
+int line = peaks[0];
+peaks[0] = {4, 2};
+int point = peaks[0][0];
+peaks[0][5] = 3;
+```
+
+#### Strings
+
+Strings are stored as immutable objects inside an internal global string table, that adds new
+entries when strings are created and removes entries when strings are garbage collected. Therefore
+string manipulations don't manipulate the underlying string, but create new strings.
+
+String data types themselves are only wrappers for pointers referencing entries inside the
+string table. Their concatenation and slicing is performing according pointer combination and
+slicing under the hood.
+
+The default value of strings are `""`.
+
+```java
+// create strings
+String firstName = "John";            // literal syntax
+String lastName = new String("Doe");  // object syntax
+
+// create strings from character arrays
+char[] letters = {'J', 'o', 'h' 'n'};
+String name = new String(letters);
+name == "John"
+
+// format strings
+String pitch = String.format(
+    "My name is %s, I'm %d years old and %.02f meters high",  // use format specifiers
+    "John", 21, 1.8                                           // use values for format specifiers
+);
+pitch == "My name is John, I'm 21 years old and 1.80 meters high";
+
+// create multiline string
+String multi = """
+    This
+    is a
+    multiline
+    string
+""";
+multi == "This\nis a\nmultiline\nstring";
+```
+
+##### String Processing
+
+```java
+// concatenate strings
+"Foo" + "Bar" = "FooBar";         // operator syntax
+"Bar".concat("Foo") == "BarFoo";  // method syntax
+
+// get string size
+"John".length() == 4;
+
+// get string characters
+"John".charAt(0) == 'J';
+"John".charAt(3) == 'n';
+
+// convert case
+"Hello, World!".toLowerCase() == "hello, world!";
+"Hello, World!".toLowerCase() == "HELLO, WORLD!";
+
+// check for substrings
+"Hello, World!".contains("Hello") == true;
+"Hello, World!".contains("hello") == false;
+
+// get substrings
+"Hello, World!".substring(7) == "World!";     // until end
+"Hello, World!".substring(7, 12) == "World";  // until exclusive index
+
+// parse integers
+Integer.parseInt("12") == 12;
+
+// create character arrays from strings
+String name = "John";
+char[] letters = name.toCharArray();
+```
+
+##### Buffered Strings
+
+Buffered strings don't use the global internal string table, but are wrapping a dynamic character
+array, that keeps track of its length and capacity and that gets reallocated when it needs to
+grow beyond its capacity. They're completely compatible with regular strings and can be used
+in their place.
+
+Buffered strings have the benefit that they're more flexible and that they can be more performant
+in cases where many string manipulations are performed.
+
+```java
+// create buffered strings
+StringBuffer name = new StringBuffer("John");
+
+// set buffered strings lengths
+name.setLength(5);
+
+// set buffered strings capacities
+name.ensureCapacity(10);
+
+// concatenate strings to buffered strings
+name.append("Doe");
+name == "John Doe";
+
+// insert substrings into buffered strings
+hello.insert(4, ",ny");
+name == "Johnny Doe";
 ```
 
 <u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-#### Structs
-
-How structs are treated in the language.
-
-```text
-Example for struct usage in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+- Buffered strings should be used when strings are expected to be manipulated often
 
 #### Enums
 
-How enums are treated in the language.
+Enums are classes that wrap enumerations.
 
-```text
-Example for enum usage in the language
+The default value of enums are `null`.
+
+```java
+// use ordinal enums
+enum Status {
+    RUNNING,  // 0
+    SUCCESS,  // 1
+    FAILURE,  // 2
+    PENDING   // 3
+}
+Status request = State.RUNNING;  // assign enum element
+request.ordinal() == 0;          // get value of assigned enum element
+
+// use enums with custom values
+enum Status {
+    RUNNING(300),
+    SUCCESS(200),
+    FAILURE(500),
+    PENDING(400);
+
+    // field to hold enum value
+    public final int code;
+
+    // initialize enum with custom value with private constructor
+    private Status(int code) {
+        this.code = code;
+    }
+}
+Status request = Status.RUNNING;  // assign enum element
+request.code == 300;              // get value of assigned enum element
+
+// get all possible values of enums
+Status[] stats = Status.values();
+stats[0] == Status.RUNNING;
+stats[3] == Status.PENDING;
+
+// use enums with members
+enum Status {
+    RUNNING(300),
+    SUCCESS(200),
+    FAILURE(500),
+    PENDING(400);
+
+    public final int code;
+    private Status(int code) {
+        this.code = code;
+    }
+
+    // initialize enum field
+    public String message = "hi";
+
+    // define enum method
+    public String greet() {
+        return "hello";
+    }
+}
+Status request = Status.RUNNING;
+request.message == "hi";
+request.greet() == "hello";
+
+// use switch statements on enums
+switch (request) {
+    case RUNNING:
+        System.out.println("running...");
+    case SUCCESS:
+        System.out.println("success...");
+    case FAILURE:
+        System.out.println("failure...");
+    case PENDING:
+        System.out.println("pending...");
+}
 ```
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+#### Optionals
 
-### Type Aliases
+```java
+import java.util.Optional;
 
-How data type aliases are treated in the language.
+// create optional values that might be `null`
+Optional<String> maybeEmpty = Optional.ofNullable("foo");
+Optional<String> maybeNotEmpty = Optional.ofNullable(null);
 
-```text
-Example for data type aliases in the language
+// create optional value that isn't `null`
+Optional<String> notEmpty = Optional.of("foo");
+
+// check wether optional contains value
+maybeEmpty.get() == true;
+
+// check wether optional contains `null`
+maybeNotEmpty.empty() == false;
+
+// return values of optionals or alternative values if empty
+maybeEmpty.orElse("bar") == "foo";
+maybeNotEmpty.orElse("bar") == "bar";
 ```
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+## Literals
 
-### Type Conversion
+```java
+// use integer literals with different bases
+0b10011011;  // binary
+0o1772;      // octal
+0xF12A2;     // hexadecimal
 
-How data type conversion is treated in the language.
+// use separators in number literals
+1_000_000 == 1000000;
+12_343.623_22 == 12343.62322;
 
-```text
-Example for data type conversions in the language
+// specify data types of floating point literals
+23.15;   // `double`
+23.15f;  // `float`
+23.15F;  // `float`
+
+// specify data types of integer literals
+12;   // `int`
+12l;  // `long`
+12L;  // `long`
 ```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Type Casting
-
-How data type casting is treated in the language.
-
-```text
-Example for data type casting in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Type Size
-
-```text
-Example for data type size receiving in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
 
 ## Operators
 
@@ -542,125 +829,164 @@ Description how operator precedence can be changed.
 
 ### Arithmetic Operators
 
-How arithmetic operators are treated in the language.
-
-| Operation   | Operator | Syntax  |
-| :---------- | :------- | :-------|
-| Addition    | `+`      | `x + y` |
-| Subtraction | `-`      | `x - y` |
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+| Operation        | Operator | Syntax  |
+| :--------------- | :------- | :-------|
+| Addition         | `+`      | `x + y` |
+| Unary Plus       | `+`      | `+x`    |
+| Subtraction      | `-`      | `x - y` |
+| Negation         | `-`      | `-x`    |
+| Multiplication   | `*`      | `x * y` |
+| Division         | `/`      | `x / y` |
+| Integer Division | `/`      | `x / y` |
+| Modulo           | `%`      | `x % y` |
+| Pre-Increment    | `++`     | `++x`   |
+| Post-Increment   | `++`     | `x++`   |
+| Pre-Decrement    | `--`     | `--x`   |
+| Post-Decrement   | `--`     | `x--`   |
 
 ### Comparison Operators
 
-How comparison operators are treated in the language.
-
-| Operation  | Operator | Syntax   |
-| :--------- | :------- | :--------|
-| Equality   | `==`     | `x == y` |
-| Inequality | `!=`     | `x == y` |
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+| Operation          | Operator | Syntax   |
+| :----------------- | :------- | :--------|
+| Equality           | `==`     | `x == y` |
+| Inequality         | `!=`     | `x == y` |
+| Less Than          | `<`      | `x < y`  |
+| Less Equal Than    | `<=`     | `x <= y` |
+| Greater Than       | `>`      | `x > y`  |
+| Greater Equal Than | `>=`     | `x >= y` |
 
 ### Logical Operators
 
-How logical operators are treated in the language.
+Logical operators in Java are short circuited.
 
 | Operation | Operator | Syntax     |
 | :-------- | :------- | :----------|
 | AND       | `&&`     | `x && y`   |
 | OR        | `\|\|`   | `x \|\| y` |
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Bitwise Operators
-
-How bitwise operators are treated in the language.
-
-| Operation   | Operator | Syntax     |
-| :---------- | :------- | :----------|
-| Bitwise AND | `&`      | `x & y`    |
-| Bitwise OR  | `\|`     | `x \| y`   |
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+| NOT       | `!`      | `!x`       |
 
 ### Assignment Operators
 
-How assignment operators are treated in the language.
+The left operand in assignment operations is always the assigned to variable.
 
-| Operation           | Operator | Syntax   |
-| :------------------ | :------- | :--------|
-| Assignment          | `=`      | `x = y`  |
-| Addition Assignment | `+=`     | `x += y` |
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+| Operation                 | Operator | Syntax   |
+| :------------------------ | :------- | :--------|
+| Assignment                | `=`      | `x = y`  |
+| Addition Assignment       | `+=`     | `x += y` |
+| Subtraction Assignment    | `-=`     | `x -= y` |
+| Multiplication Assignment | `*=`     | `x *= y` |
+| Division Assignment       | `/=`     | `x /= y` |
+| Modulo Assignment         | `%=`     | `x %= y` |
 
 ### Ternary Operator
 
-How the ternary operator is treated in the language.
-
-```text
-Example for the ternary operator in the language
+```java
+boolean toCheck = true;
+toCheck ? System.out.println("Is true") : System.out.println("Is false");
 ```
 
 <u>Best Practices</u>:
-- First best practice
-- Second best practice
+- Ternary operations should only be used for simple and short if-else checks
 
 ## Control Flow Structures
 
 ### Conditions
 
-```text
-Example for conditions in the language
-```
+```java
+int x = 9;
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+if (x % 3 == 0) {
+    System.out.println("x is divisible by 3");
+}
+else if (x % 5 == 0) {
+    System.out.println("x is divisible by 5");
+}
+else if (x % 2 == 0) {
+    System.out.println("x is divisible by 2");
+}
+else {
+    System.out.println("x is divisible by 1");
+}
+```
 
 ### Switches
 
-```text
-Example for switches in the language
-```
+```java
+// define switches without fallthroughs
+int x = 3;
+switch (x) {
+    case 1:
+        System.out.println("x is 1");
+        break;
+    case 2:
+        System.out.println("x is 2");
+        break;
+    case 3:
+        System.out.println("x is 3");
+        break;
+    // optional default case
+    default:
+        System.out.println("x isn't 1, 2 or 3");
+}
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+// define switches with fallthroughs
+int countdown = 3;
+switch (countdown) {
+    case 3:
+        System.out.println("Tick");
+    case 2:
+        System.out.println("Tick");
+    case 1:
+        System.out.println("Tick");
+    default:
+        System.out.println("RING!!!");
+}
+```
 
 ### Loops
 
-```text
-Example for loops in the language
+```java
+// define while-loops
+int i = 0;
+while (i < 10) {
+    System.out.println("Current index: " + i);
+    i++;
+}
+
+// define do-while-loops
+int j = 0;
+do {
+    System.out.println("Current index: " + j);
+    j++;
+} while (j < 10);
+
+// define for-loops
+for (int i = 0; i < 10; i++) {
+    System.out.println("Current index: " + i);
+}
+
+// define enhanced-for-loops that loop through arrays and collections
+int nums[] = new int[5];
+for (int n : nums) {
+    System.out.println("Current number: " + n);
+}
+
+// break loops
+for (int i = 0; i < 10; i++) {
+    if (i % 2 == 0) {
+        break; // break loop immediately
+    }
+}
+
+// skip loop iterations
+for (int i = 0; i < 10; i++) {
+    if (i % 2 == 0) {
+        break; // skip iteration immediately
+    }
+}
 ```
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Jumps
-
-How jumps are treated in the language.
-
-```text
-Example for jumps in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
+<!--
 ## Functions
 
 How functions are treated in the language.
