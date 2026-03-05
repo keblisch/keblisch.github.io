@@ -8,10 +8,9 @@ nav_exclude: true
 
 # Programming Notes
 
-This site collects concise notes on programming languages, frameworks, and development
-tools. They aim to serve as simple references for programmers with some experience in the
-respective topics, not introductory tutorials or full technical documentation. Each note
-includes a Resources section with links for different audiences.
+This site collects concise notes on programming topics. They aim to serve as simple references for programmers with some experience in the respective topics, not as introductory tutorials or full
+technical documentation. Each note includes a Resources section with links suited for different
+audiences.
 
 ## Disclaimer
 
