@@ -986,121 +986,413 @@ for (int i = 0; i < 10; i++) {
 }
 ```
 
-<!--
 ## Functions
 
-How functions are treated in the language.
+Functions can only exist as methods and functional interfaces of classes.
 
-### Basic Functions
+```java
+// define functions without parameters and return values
+void greet() {
+    System.out.println("Hi!");
+}
+greet();  // execute function without parameters and return values
 
-```text
-Example for functions in the language
+// define functions with parameters and return values
+int add(int x, int y) {
+    return x + y;   // return value of expression
+}
+int x = add(2, 3);  // execute function with parameters nad return values
 ```
 
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
+### Function Overloading
 
-### Default Parameters
+```java
+// overload already defined functions
+int add(int x, int y) {
+    return x + y;
+}
+int add(int x, int y, int z) {
+    return x + y + z;
+}
+double add(double x, double y) {
+    return x + y;
+}
 
-```text
-Example for default parameters in the language
+// use according function overloads implicitly
+add(5, 10) == 15;
+add(5, 10, 8) == 23;
+add(5.0, 10.0) == 20.0;
 ```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Variadic Parameters
-
-```text
-Example for variadic parameters in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
 
 ### Generic Functions
 
-How generic functions are treated in the language.
+Generic functions are compiled into multiple overloads of the same function, whereby a version for
+each possible implementation is created.
 
-```text
-Example for generic functions in the language
+```java
+// define generics that can be implemented by any compatible class
+T add<T, U>(T x, U y) {
+    System.out.println(y);
+    return x;
+}
+
+// implement generics by inserting any compatible classes
+Integer x = add<Integer, Double>(12, 4.5);
+```
+
+## Object Orientation
+
+Classes are custom compound data types with a default value of `null`.
+
+```java
+// define classes
+class FooBar {
+
+    // define fields of classes
+    String foo;
+
+    // define constructor methods of classes
+    FooBar(String foo) {
+        this.foo = foo;  // access members of classes inside class definitions themselved
+    }
+
+    // overload constructor methods of classes
+    FooBar(String foo, String bar) {
+        this(foo); // call constructora of classes themselves
+        this.foo += bar;
+    }
+
+    // define methods of classes
+    String getFoo() {
+        return this.foo;
+    }
+}
+
+// instantiate objects of classes
+FooBar foobar = new FooBar("Foo");
+FooBar barfoo = new FooBar("Foo", "Bar");
+
+// access members of objects
+foobar.foo == "Foo";
+barfoo.getFoo() == "FooBar";
+
+// check if objects are instances of classes
+foobar instanceof FooBar == true;
+```
+
+### Inheritance
+
+Objects of derivations are also considered to be instances of their base classes, which enables
+polymorphism between inherited classes. Classes can only be derived from one class, but derived
+classes can also be derived from. Thereby derived objects that are used as instances of base
+classes can only use members defined for these base classes.
+
+```java
+public class Foo {
+    protected String foo;
+
+    public Foo(String foo) {
+        this.foo = foo;
+    }
+
+    public String getFoo() {
+        return this.foo;
+    }
+}
+
+// derive classes
+public class Bar extends Foo {
+    protected String bar;
+
+    public Bar(String foo, String bar) {
+        super(foo);  // call constructors of base classes
+        this.bar = bar;
+    }
+
+    // override inherited methods (parameters and return types must match or be compatible)
+    @Override // annotate as override for compile-time checking
+    public StringBuffer getFoo() {
+        return new StringBuffer(this.foo);
+    }
+
+    // mark methods as final (not overridable)
+    public final String getBar() {
+        return this.bar;
+    }
+}
+
+// mark classes as final (not derivable)
+public final class BarFoo extends FooBar {
+    public BarFoo(String foo, String bar) {
+        super(foo, bar);
+    }
+}
+
+// access members of base class from derived class instances
+BarFoo barfoo = new BarFoo("Foo", "Bar");
+barfoo.getFoo() == "Foo";
+barfoo.getBar() == "Bar";
+
+// upcast instances to base classes
+Foo foo = new BarFoo("Foo", "Bar");
+foo.getFoo() == "Foo";  // can only access members of "Foo"
+
+// downcast instances to derived classes
+FooBar foobar = (FooBar)foo;
+
+// check if objects are instances of base classes
+barfoo instanceof Foo == true;
+
+// derive classes anonymously for one-time usage
+FooBar foofoo = new FooBar() {
+    private String foofoo = "Foo Foo";
+
+    public String getFooFoo() {
+        return this.foofoo;
+    }
+};
+foofoo.getFoo() == "Foo";
+foofoo.getBar() == "Bar";
+foofoo.getFooFoo() == "Foo Foo";
+```
+
+### Access Modifiers
+
+The following access modifiers do exist for class members and classes:
+- Default: Member and class can only be accessed inside its current package (default)
+- `public`: Member and class can be freely accessed
+- `private`: Member can only be accessed inside its class and class can only be accessed inside
+             its file
+- `protected`: Member can only be accessed inside its class or classes derived from it
+
+```java
+// define default classes
+public class FooBar {
+
+    // define protected members
+    protected String foo = "Foo";
+
+    // define default members
+    String bar = "Bar";
+
+    // define public members
+    public String getFoo() {          // getter method
+        return this.foo;
+    }
+    public void setFoo(String foo) {  // setter method
+        this.foo = foo;
+    }
+}
+
+FooBar foobar = new FooBar();
+
+// use getters and setters
+foobar.getFoo() == "foo";
+foobar.setFoo("FOO");
 ```
 
 <u>Best Practices</u>:
-- First best practice
-- Second best practice
+- Members and classes should be as less privileged as possible
+- Fields should be private and only accessible from outside via getter and setter methods
 
-### Function Expressions
+### Static Classes
+
+```java
+class John {
+
+    // define static fields
+    static String name = "John";
+
+    // define static methods
+    static String greet() {
+        return "Hi, I'm " + name;  // access static fields inside static methods
+    }
+
+    // define static blocks that only execute at startup on loading of classes
+    static {
+        System.out.println("Class loaded!");
+    }
+
+}
+
+John john = new John();
+
+// access static fields
+John.name == "John";  // through classes
+john.name == "John";  // through objects
+
+// call static methods
+John.greet() == "Hi, I'm John";  // through classes
+john.greet() == "Hi, I'm John";  // through objects
+```
+
+<u>Best Practices</u>:
+- Static members should be accessed through their classes
+
+### Inner Classes
+
+```java
+public class Foo {
+    public String name = "Foo";
+
+    // define inner classes
+    public class Bar {
+        public String name = "Bar";
+    }
+}
+
+// access inner classes
+Foo foo = new Foo();
+Foo.Bar bar = foo.new Bar();
+foo.bar.name == "bar";
+```
+
+### Abstract Classes
+
+```java
+// define class as abstract (only inheritable)
+public abstract class Foo {
+    private String foo = "Foo";
+
+    // define method as abstract (must be overriden)
+    public abstract String getFoo() {}
+}
+
+// derive from abstract clases
+public class FooBar extends Foo {
+    // override abstract classes
+    @Override
+    public String getFoo {
+        return this.foo;
+    }
+}
+
+FooBar foobar = new FooBar();
+foobar.getFoo() == "Foo";
+```
+
+### Generic Classes
+
+Generic classes are compiled into multiple overloads of the same class, whereby a version for
+each possible implementation is created.
+
+```java
+// define generics that can be implemented by any compatible class
+class FooBar<T, U> {
+    T foo;
+    U bar;
+
+    T getFoo() {
+        return foo;
+    }
+
+    U getBar() {
+        return bar;
+    }
+}
+
+// implement generics by inserting any compatible classes
+FooBar foobar = new FooBar<String, Integer>();
+foobar.foo = "Foo";
+foobar.getFoo() == "Foo";
+foobar.bar = 12;
+foobar.getBar() == 12;
+```
+
+### Interfaces
+
+Implementations of interfaces are also considered to be instances of that interface, which enables
+polymorphism between implemented interfaces. Thereby implementations of interfaces that are used
+instance of specific interfaces can only use members defined by that interface.
+
+```java
+// define interfaces
+public interface Person {
+    // initialize static properties that are inherited
+    double BASE_DISTANCE = 10.0;  // public, static and final
+
+    // declare methods that must be implemented
+    double walk(double distance);  // public
+}
+
+public interface Greeter {
+    // declare methods with default implementations that don't have to be implemented
+    default String greet() {
+        return "Hi";
+    }
+}
+
+// derive interfaces
+public interface Talker extends Greeter {
+    String pass();
+}
+
+// implement interfaces
+public class Student implements Person, Talker {
+    @Override
+    public double walk(double distance) {
+        return BASE_DISTANCE + distance;
+    }
+
+    // "greet" method is implemented per default
+
+    @Override
+    public String pass() {
+        return "Bye!";
+    }
+}
+
+// access members of interfaces from implementations
+Person john = new Student();  // can only use members declared by "Person"
+john.walk(5.0) == 15.0;
+Talker jane = new Student();  // can only use members declared by "Talker"
+jane.greet() == "Hi!";
+jane.pass() == "Bye!";
+
+// abstract classes don't have to implement interface methods, only their derivations
+public abstract class Person implements Human {}
+
+// implement interfaces anonymously for one-time usage
+Person jonny = new Person() {
+    public double walk(double distance) {
+        return distance - 1.0;
+    }
+};
+jonny.walk(10.0) == 9.0;
+
+// check if objects implement interfaces
+Student jack = new Student();
+jack instanceof Person == true;
+```
+
+#### Generic Interfaces
+
+```java
+// define generics that can be implemented by any compatible class
+public interface FooBar<T, U> {
+    T foo(T some);
+    U bar(U thing);
+}
+
+// implement generics by inserting any compatible classes
+public class BarFoo implements FooBar<String, Integer> {
+    public String foo(String some) {
+        return some;
+    }
+
+    public Integer bar(Integer thing) {
+        return thing;
+    }
+}
+```
+
+<!--
+## Lambda Expressions
 
 How function expressions are treated in the language.
 
 ```text
 Example for function expressions in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-## Object Orientation
-
-How object orientation in implemented in the language.
-
-### Classes and Objects
-
-```text
-Example for classes and objects in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Inheritance
-
-How inheritance is treated in the language.
-
-```text
-Example for inheritance in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Access Modifiers
-
-How access modifiers are treated in the language.
-
-```text
-Example for classes and objects in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Abstract Classes
-
-How abstract classes are treated in the language.
-
-```text
-Example for abstract classes in the language
-```
-
-<u>Best Practices</u>:
-- First best practice
-- Second best practice
-
-### Interfaces
-
-How interfaces are treated in the language.
-
-```text
-Example for interfaces in the language
 ```
 
 <u>Best Practices</u>:
