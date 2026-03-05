@@ -350,6 +350,18 @@ Example for data type size receiving in the language
 - First best practice
 - Second best practice
 
+## Literals
+
+How literals are treated in the language.
+
+```text
+Example for literals in the language
+```
+
+<u>Best Practices</u>:
+- First best practice
+- Second best practice
+
 ## Operators
 
 ### Precedence
