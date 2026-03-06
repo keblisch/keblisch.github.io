@@ -3504,7 +3504,7 @@ foobar.insert(0);
 foobar.erase(1);
 ```
 
-#### Pairs
+#### 19.1.5 Pairs
 
 - Pairs are data structures to store exactly two values
 
@@ -3523,7 +3523,7 @@ foo.first == 'a';
 foo.second == 1;
 ```
 
-#### 19.1.5 Maps
+#### 19.1.6 Maps
 
 - Maps are unordered lists of key-value pairs
   - Thereby their key-value pairs are implemented as pairs
@@ -3556,7 +3556,7 @@ foo.erase('a');  // specify key of key-value pair to remove
 foo.clear();     // remove all elements
 ```
 
-#### 19.1.6 Iterators
+#### 19.1.7 Iterators
 
 - Containers use iterator objects to iterate through them
   - These are wrappers for pointers pointing to elements of these containers
@@ -3808,7 +3808,7 @@ std::isspace(' ') == true;
 <u>Best practices</u>:
   - Smart pointers should always be used instead of pointers and references due to their
     enhanced security and usability
-- Use raw pointers and references only for non-owning access
+  - Use raw pointers and references only for non-owning access
   - Avoid `new/delete` for ownership.
 
 #### 19.6.1 Shared Pointers
