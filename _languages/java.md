@@ -1386,58 +1386,183 @@ public class BarFoo implements FooBar<String, Integer> {
 }
 ```
 
-<!--
 #### 14.7.2 Functional Interfaces
 
-How function expressions are treated in the language.
+Functional interfaces allow the usage of lambda expressions as values for them and therefore
+the utilization of functional programming patterns.
 
-```text
-Example for function expressions in the language
+```java
+// define functional interfaces
+@FunctionalInterface  // enable compile-time checks
+public interface Greeter {
+    String greet(String name);  // declare single method for interface
+}
+
+// implement functional interfaces by providing lambda expressions
+Greeter hi = (String name) -> {
+    return "Hi " + name + "!";
+};
+hi.greet("John") == "Hi John!";
+
+// implement functional interfaces by providing inline lambda expressions
+Greeter hey = (String name) -> return "Hey " + name "!";
+greeter.hey("Jane") == "Hey Jane!";
+
+// implement functional interfaces by providing shortened inline lambda expressions
+Greeter hello = (name) -> "Hello " + name "!";
+greeter.hello("Jonny") == "Hello Jonny!";
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Lambda expressions should be written in the shortest possible way to make the most out of their
+  enhanced readability capabilities
 
-## 15 Error Handling
+### 14.8 Object Class
 
-How errors are treated in the language.
+Every class in Java is a derivation of the `Object` class. Therefore every class is guaranteed to
+have its members and polymorphism is possible between every class if used as the `Object` type.
 
-### 15.1 Error/Exception Recovery/Catching
+```java
+public class Foo {
+    public String foo = "Foo";
 
-```test
-Example for error/exception recovery/catching in the language
+    // override inherited string representation method
+    @Override
+    public String toString() {
+        return "Foo{ foo: " + this.foo + " }";
+    }
+
+    // override inherited comparison method
+    @Override
+    public boolean compare(Foo other) {
+        return this.foo == other.foo;
+    }
+
+    // override inherited hash generation method
+    @Override
+    public int hashCode() {
+        return this.foo.length;
+    }
+}
+
+Foo foo = new Foo();
+Foo bar = new Foo();
+
+String.format("%v", foo) == "Foo{foo: Foo}";  // use custom string representations
+foo == bar == true;                           // compare objects based on custom criterias
+foo.hashCode() == 3;                          // compute custom hash codes
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- The hash code generation method shouldn't be overriden, because many internal processes depend
+  on it
 
-### 15.2 Error/Exception Raising/Throwing
+## 15 Annotations
 
-```test
-Example for error/exception raising/throwing in the language
+Annotations are shorthand syntax for wrapping code around classes, intefaces, fields and methods to
+add aditional checks or functionality to them. Thereby the following distinction exists:
+- Compile-time annotations add additional metadata and/or compile-time checks and are optional
+- Runtime annotations add additional features and are therefore mandatory to access these features
+
+```java
+@Deprecated           // Mark interfaces as deprecated (compile-time)
+@FunctionalInterface  // Mark interfaces as functional interface (compile-time)
+public interface Greeter {
+    @Deprecated  // Mark method declarations as deprecated (compile-time)
+    public String greet();
+}
+
+@Deprecated  // Mark classes as deprecated (compile-time)
+public class Person {
+    @Deprecated  // Mark fields as deprecated (compile-time)
+    private String name;
+
+    @Deprecated  // Mark methods as deprecated (compile-time)
+    public String getName() {
+        return "";
+    }
+}
+
+public class John extends Person {
+    @Override  // Mark fields as overriding inherited fields (compile-time)
+    public String name = "John";
+
+    @Override    // Mark methods as overriding inherited methods (compile-time)
+    public String getName() {
+        return this.name;
+    }
+}
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Compile-time annotations should be used when applicable
 
-### 15.3 Error/Exception Creation
+## 16 Exceptions
 
-```test
-Example for error/exception creation in the language
+Java uses exceptions to handle runtime erros. Thereby the following distinction between exceptions
+exist:
+- Checked exceptions have to be handled or propagated when they can occur
+- Unchecked exceptions don't have to be handled or propagated when they can occur
+
+| Exception                        | Meaning                            | Checked |
+| :------------------------------- | :--------------------------------- | :------ |
+| `ClassNotFoundException`         | Accessed invalid class identifier  | Yes     |
+| `InterruptedException`           | Interrupted thread execution       | Yes     |
+| `ArithmeticException`            | Used invalid arithmetic expression | No      |
+| `ArrayIndexOutOfBoundsException` | Accessedd invalid array index      | No      |
+| `NullPointerException`           | Accessed null pointer              | No      |
+
+### 16.1 Catching Exceptions
+
+```java
+try {  // only executes until exception is thrown
+    int x = 5 / 0;
+}
+catch (ArithmeticException e) {          // only executes when specified exception is thrown
+    System.out.println(e.getMessage());  // print message of exception
+    e.printStackTrace();                 // print stack trace of exception
+}
+catch (ArrayIndexOutOfBoundsException e) {  // only executes when specified exception is thrown
+    System.out.println(e.getMessage());     // print message of exception
+    e.printStackTrace();                    // print stack trace of exception
+}
+catch (Exception e) {                    // only executes when yet uncatched exception is thrown
+    System.out.println(e.getMessage());  // print message of exception
+    e.printStackTrace();                 // print stack trace of exception
+}
+finally {  // always executes
+    System.out.println("Everything handled!");
+}
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 16.2 Throwing Exceptions
 
-## 16 Containers
+```java
+// propagate exceptions that can be thrown by functions
+void doSomething() throws ClassNotFoundException {
+    // manually throw exceptions with optional messages
+    throw new ClassNotFoundException("Can't do this");
+}
+```
+
+### 16.3 Creating Exceptions
+
+```java
+// create custom exceptions
+class MyException extends Exception {
+    // optionally define super constructor to handle exception messages
+    public MyException(String message) {
+        super(message);
+    }
+}
+```
+
+<!--
+## 17 Containers
 
 How containers are treated in the language.
 
-### 16.1 Lists
+### 17.1 Lists
 
 How lists are treated in the language.
 
@@ -1449,7 +1574,7 @@ Example for list usage in the language
 - First best practice
 - Second best practice
 
-### 16.2 Maps
+### 17.2 Maps
 
 How maps are treated in the language.
 
@@ -1461,7 +1586,7 @@ Example for map usage in the language
 - First best practice
 - Second best practice
 
-### 16.3 Iterators
+### 17.3 Iterators
 
 How iterators are treated in the language.
 
@@ -1473,11 +1598,11 @@ Example for iterator usage in the language
 - First best practice
 - Second best practice
 
-## 17 IO
+## 18 IO
 
 How streams are treated in the language.
 
-### 17.1 Terminal
+### 18.1 Terminal
 
 How terminal streams are treated in the language.
 
@@ -1489,7 +1614,7 @@ Example for terminal streams usage in the language
 - First best practice
 - Second best practice
 
-### 17.2 Files
+### 18.2 Files
 
 How file streams are treated in the language.
 
@@ -1501,7 +1626,7 @@ Example for file streams usage in the language
 - First best practice
 - Second best practice
 
-## 18 Math
+## 19 Math
 
 ```test
 Example for math utilities in the language
@@ -1511,7 +1636,7 @@ Example for math utilities in the language
 - First best practice
 - Second best practice
 
-## 19 Time and Date
+## 20 Time and Date
 
 ```test
 Example for time and date utilities in the language
@@ -1521,7 +1646,7 @@ Example for time and date utilities in the language
 - First best practice
 - Second best practice
 
-## 20 System
+## 21 System
 
 ```test
 Example for system utilities in the language
@@ -1531,7 +1656,7 @@ Example for system utilities in the language
 - First best practice
 - Second best practice
 
-## 21 Concurrency
+## 22 Concurrency
 
 How concurrency is treated in the language
 
@@ -1543,7 +1668,7 @@ Example for concurrency in the language
 - First best practice
 - Second best practice
 
-## 22 Parallelism
+## 23 Parallelism
 
 How parallelism is treated in the language
 
@@ -1555,7 +1680,7 @@ Example for parallelism in the language
 - First best practice
 - Second best practice
 
-## 23 Memory Management
+## 24 Memory Management
 
 Description of how memory management is implemented in the language.
 
