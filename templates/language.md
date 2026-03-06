@@ -26,49 +26,49 @@ Hello, World!
 - TOC
 {:toc}
 
-## Backgrounds
+## 1 Backgrounds
 
-### Resources
+### 1.1 Resources
 
 - Some link to a resource
 - Some link to another resource
 
-### Advantages and Disadvantages
+### 1.2 Advantages and Disadvantages
 
 | Advantages                    | Disadvantages                    |
 | :---------------------------- | :------------------------------- |
 | Some language advantage       | Some language disadvantage       |
 | Some other language advantage | Some other language disadvantage |
 
-### History
+### 1.3 History
 
 Short overview of the history of the language.
 
-## Toolchain
+## 2 Toolchain
 
 Short description about the implementation and availability of the language's toolchain.
 
-### Compilers/Interpreters
+### 2.1 Compilers/Interpreters
 
 Description and/or list of the language's compiler(s)/interpreter(s).
 
-### Build Systems
+### 2.2 Build Systems
 
 Description and/or list of the language's build system(s).
 
-### Package Managers
+### 2.3 Package Managers
 
 Description and/or list of the language's package manager(s).
 
-### Debuggers
+### 2.4 Debuggers
 
 Description and/or list of the language's debugger(s).
 
-### Formatters
+### 2.5 Formatters
 
 Description and/or list of the language's formatter(s).
 
-## Compilation/Interpretation
+## 3 Compilation/Interpretation
 
 ```mermaid
 graph TD
@@ -79,9 +79,9 @@ graph TD
 1. **First compilation/interpretation step**: Description of the step
 2. **Second compilation/interpretation step**: Description of the step
 
-## Syntax
+## 4 Syntax
 
-### Whitespace
+### 4.1 Whitespace
 
 How whitespace is treated in the language.
 
@@ -93,7 +93,7 @@ Example for whitespace usage
 - First best practice
 - Second best practice
 
-### Statements
+### 4.2 Statements
 
 How statements are composed in the language.
 
@@ -105,7 +105,7 @@ Example for statement usage
 - First best practice
 - Second best practice
 
-### Scope
+### 4.3 Scope
 
 How scope is treated in the language.
 
@@ -117,7 +117,7 @@ Example for scope usage
 - First best practice
 - Second best practice
 
-### Identifiers
+### 4.4 Identifiers
 
 How identifiers are composed in the language.
 
@@ -129,15 +129,15 @@ Example for identifier usage
 - First best practice
 - Second best practice
 
-### Keywords
+### 4.5 Keywords
 
 The following identifiers are reserved as keywords with special meaning:
 - `keyword1`
 - `keyword2`
 
-## Structure
+## 5 Structure
 
-### Files
+### 5.1 Files
 
 Description of which files are used how for the language.
 
@@ -145,7 +145,7 @@ Description of which files are used how for the language.
 - First best practice
 - Second best practice
 
-### Projects
+### 5.2 Projects
 
 Conventional project organization for the language:
 - `src/`: Source files
@@ -155,7 +155,7 @@ Conventional project organization for the language:
 - First best practice
 - Second best practice
 
-### Entry Point
+### 5.3 Entry Point
 
 Description of the language's entry point in executable programs.
 
@@ -167,7 +167,7 @@ Example for the language's entry point
 - First best practice
 - Second best practice
 
-### Packages/Modules/libraries
+### 5.4 Packages/Modules/libraries
 
 Description of the language's package/module/library system.
 
@@ -179,7 +179,7 @@ Example for the language's package/module/library system
 - First best practice
 - Second best practice
 
-### Standard Library
+### 5.5 Standard Library
 
 Description of the language's standard library.
 
@@ -187,11 +187,11 @@ The following packages/modules/libraries exist in the standard library:
 - `library1`: Usage of the library
 - `library2`: Usage of the library
 
-## Comments
+## 6 Comments
 
 How comments are treated in the language.
 
-### Single-Line Comments
+### 6.1 Single-Line Comments
 
 ```text
 Example for single-line comments in the language
@@ -201,7 +201,7 @@ Example for single-line comments in the language
 - First best practice
 - Second best practice
 
-### Multi-Line Comments
+### 6.2 Multi-Line Comments
 
 ```text
 Example for multi-line comments in the language
@@ -211,7 +211,7 @@ Example for multi-line comments in the language
 - First best practice
 - Second best practice
 
-### Documentation Comments
+### 6.3 Documentation Comments
 
 ```text
 Example for documentation comments in the language
@@ -221,7 +221,7 @@ Example for documentation comments in the language
 - First best practice
 - Second best practice
 
-## Variables
+## 7 Variables
 
 ```text
 Example for variable usage in the language
@@ -231,7 +231,7 @@ Example for variable usage in the language
 - First best practice
 - Second best practice
 
-## Constants
+## 8 Constants
 
 ```text
 Example for constant usage in the language
@@ -241,9 +241,9 @@ Example for constant usage in the language
 - First best practice
 - Second best practice
 
-## Data Types
+## 9 Data Types
 
-### Primitive Data Types
+### 9.1 Primitive Data Types
 
 | Keyword | Representation | Byte Size | Signedness | Literals               |
 | :------ | :------------- | :-------- | :--------- | :--------------------- |
@@ -254,9 +254,9 @@ Example for constant usage in the language
 - First best practice
 - Second best practice
 
-### Compound Data Types
+### 9.2 Compound Data Types
 
-#### Strings
+#### 9.2.1 Strings
 
 How strings are treated in the language.
 
@@ -268,7 +268,7 @@ Example for string usage in the language
 - First best practice
 - Second best practice
 
-#### Arrays
+#### 9.2.2 Arrays
 
 How arrays are treated in the language.
 
@@ -280,7 +280,7 @@ Example for array usage in the language
 - First best practice
 - Second best practice
 
-#### Structs
+#### 9.2.3 Structs
 
 How structs are treated in the language.
 
@@ -292,7 +292,7 @@ Example for struct usage in the language
 - First best practice
 - Second best practice
 
-#### Enums
+#### 9.2.4 Enums
 
 How enums are treated in the language.
 
@@ -304,7 +304,7 @@ Example for enum usage in the language
 - First best practice
 - Second best practice
 
-### Type Aliases
+### 9.3 Type Aliases
 
 How data type aliases are treated in the language.
 
@@ -316,7 +316,7 @@ Example for data type aliases in the language
 - First best practice
 - Second best practice
 
-### Type Conversion
+### 9.4 Type Conversion
 
 How data type conversion is treated in the language.
 
@@ -328,7 +328,7 @@ Example for data type conversions in the language
 - First best practice
 - Second best practice
 
-### Type Casting
+### 9.5 Type Casting
 
 How data type casting is treated in the language.
 
@@ -340,7 +340,7 @@ Example for data type casting in the language
 - First best practice
 - Second best practice
 
-### Type Size
+### 9.6 Type Size
 
 ```text
 Example for data type size receiving in the language
@@ -350,7 +350,7 @@ Example for data type size receiving in the language
 - First best practice
 - Second best practice
 
-## Literals
+## 10 Literals
 
 How literals are treated in the language.
 
@@ -362,9 +362,9 @@ Example for literals in the language
 - First best practice
 - Second best practice
 
-## Operators
+## 11 Operators
 
-### Precedence
+### 11.1 Precedence
 
 | Operation   | Operator | Precedence Level |
 | :---------- | :------- | :----------------|
@@ -373,7 +373,7 @@ Example for literals in the language
 
 Description how operator precedence can be changed.
 
-### Arithmetic Operators
+### 11.2 Arithmetic Operators
 
 How arithmetic operators are treated in the language.
 
@@ -386,7 +386,7 @@ How arithmetic operators are treated in the language.
 - First best practice
 - Second best practice
 
-### Comparison Operators
+### 11.3 Comparison Operators
 
 How comparison operators are treated in the language.
 
@@ -399,7 +399,7 @@ How comparison operators are treated in the language.
 - First best practice
 - Second best practice
 
-### Logical Operators
+### 11.4 Logical Operators
 
 How logical operators are treated in the language.
 
@@ -412,7 +412,7 @@ How logical operators are treated in the language.
 - First best practice
 - Second best practice
 
-### Bitwise Operators
+### 11.5 Bitwise Operators
 
 How bitwise operators are treated in the language.
 
@@ -425,7 +425,7 @@ How bitwise operators are treated in the language.
 - First best practice
 - Second best practice
 
-### Assignment Operators
+### 11.6 Assignment Operators
 
 How assignment operators are treated in the language.
 
@@ -438,7 +438,7 @@ How assignment operators are treated in the language.
 - First best practice
 - Second best practice
 
-### Ternary Operator
+### 11.7 Ternary Operator
 
 How the ternary operator is treated in the language.
 
@@ -450,9 +450,9 @@ Example for the ternary operator in the language
 - First best practice
 - Second best practice
 
-## Control Flow Structures
+## 12 Control Flow Structures
 
-### Conditions
+### 12.1 Conditions
 
 ```text
 Example for conditions in the language
@@ -462,7 +462,7 @@ Example for conditions in the language
 - First best practice
 - Second best practice
 
-### Switches
+### 12.2 Switches
 
 ```text
 Example for switches in the language
@@ -472,7 +472,7 @@ Example for switches in the language
 - First best practice
 - Second best practice
 
-### Loops
+### 12.3 Loops
 
 ```text
 Example for loops in the language
@@ -482,7 +482,7 @@ Example for loops in the language
 - First best practice
 - Second best practice
 
-### Jumps
+### 12.4 Jumps
 
 How jumps are treated in the language.
 
@@ -494,11 +494,9 @@ Example for jumps in the language
 - First best practice
 - Second best practice
 
-## Functions
+## 13 Functions
 
 How functions are treated in the language.
-
-### Basic Functions
 
 ```text
 Example for functions in the language
@@ -508,7 +506,7 @@ Example for functions in the language
 - First best practice
 - Second best practice
 
-### Default Parameters
+### 13.1 Default Parameters
 
 ```text
 Example for default parameters in the language
@@ -518,7 +516,7 @@ Example for default parameters in the language
 - First best practice
 - Second best practice
 
-### Variadic Parameters
+### 13.2 Variadic Parameters
 
 ```text
 Example for variadic parameters in the language
@@ -528,7 +526,7 @@ Example for variadic parameters in the language
 - First best practice
 - Second best practice
 
-### Generic Functions
+### 13.3 Generic Functions
 
 How generic functions are treated in the language.
 
@@ -540,7 +538,7 @@ Example for generic functions in the language
 - First best practice
 - Second best practice
 
-### Function Expressions
+### 13.4 Function Expressions
 
 How function expressions are treated in the language.
 
@@ -552,11 +550,9 @@ Example for function expressions in the language
 - First best practice
 - Second best practice
 
-## Object Orientation
+## 14 Object Orientation
 
 How object orientation in implemented in the language.
-
-### Classes and Objects
 
 ```text
 Example for classes and objects in the language
@@ -566,7 +562,7 @@ Example for classes and objects in the language
 - First best practice
 - Second best practice
 
-### Inheritance
+### 14.1 Inheritance
 
 How inheritance is treated in the language.
 
@@ -578,7 +574,7 @@ Example for inheritance in the language
 - First best practice
 - Second best practice
 
-### Access Modifiers
+### 14.2 Access Modifiers
 
 How access modifiers are treated in the language.
 
@@ -590,7 +586,7 @@ Example for classes and objects in the language
 - First best practice
 - Second best practice
 
-### Abstract Classes
+### 14.3 Abstract Classes
 
 How abstract classes are treated in the language.
 
@@ -602,7 +598,7 @@ Example for abstract classes in the language
 - First best practice
 - Second best practice
 
-### Interfaces
+### 14.4 Interfaces
 
 How interfaces are treated in the language.
 
@@ -614,11 +610,11 @@ Example for interfaces in the language
 - First best practice
 - Second best practice
 
-## Error Handling
+## 15 Error Handling
 
 How errors are treated in the language.
 
-### Error/Exception Recovery/Catching
+### 15.1 Error/Exception Recovery/Catching
 
 ```test
 Example for error/exception recovery/catching in the language
@@ -628,7 +624,7 @@ Example for error/exception recovery/catching in the language
 - First best practice
 - Second best practice
 
-### Error/Exception Raising/Throwing
+### 15.2 Error/Exception Raising/Throwing
 
 ```test
 Example for error/exception raising/throwing in the language
@@ -638,7 +634,7 @@ Example for error/exception raising/throwing in the language
 - First best practice
 - Second best practice
 
-### Error/Exception Creation
+### 15.3 Error/Exception Creation
 
 ```test
 Example for error/exception creation in the language
@@ -648,11 +644,11 @@ Example for error/exception creation in the language
 - First best practice
 - Second best practice
 
-## Containers
+## 16 Containers
 
 How containers are treated in the language.
 
-### Lists
+### 16.1 Lists
 
 How lists are treated in the language.
 
@@ -664,7 +660,7 @@ Example for list usage in the language
 - First best practice
 - Second best practice
 
-### Maps
+### 16.2 Maps
 
 How maps are treated in the language.
 
@@ -676,7 +672,7 @@ Example for map usage in the language
 - First best practice
 - Second best practice
 
-### Iterators
+### 16.3 Iterators
 
 How iterators are treated in the language.
 
@@ -688,11 +684,11 @@ Example for iterator usage in the language
 - First best practice
 - Second best practice
 
-## Streams
+## 17 IO
 
 How streams are treated in the language.
 
-### Terminal Streams
+### 17.1 Terminal
 
 How terminal streams are treated in the language.
 
@@ -704,7 +700,7 @@ Example for terminal streams usage in the language
 - First best practice
 - Second best practice
 
-### File Streams
+### 17.2 Filea
 
 How file streams are treated in the language.
 
@@ -716,7 +712,7 @@ Example for file streams usage in the language
 - First best practice
 - Second best practice
 
-## Math
+## 18 Math
 
 ```test
 Example for math utilities in the language
@@ -726,7 +722,7 @@ Example for math utilities in the language
 - First best practice
 - Second best practice
 
-## Time and Date
+## 19 Time and Date
 
 ```test
 Example for time and date utilities in the language
@@ -736,7 +732,7 @@ Example for time and date utilities in the language
 - First best practice
 - Second best practice
 
-## System
+## 20 System
 
 ```test
 Example for system utilities in the language
@@ -746,7 +742,7 @@ Example for system utilities in the language
 - First best practice
 - Second best practice
 
-## Concurrency
+## 21 Concurrency
 
 How concurrency is treated in the language
 
@@ -758,7 +754,7 @@ Example for concurrency in the language
 - First best practice
 - Second best practice
 
-## Parallelism
+## 22 Parallelism
 
 How parallelism is treated in the language
 
@@ -770,7 +766,7 @@ Example for parallelism in the language
 - First best practice
 - Second best practice
 
-## Memory Management
+## 23 Memory Management
 
 Description of how memory management is implemented in the language.
 

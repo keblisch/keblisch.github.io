@@ -31,9 +31,9 @@ public class Main {
 - TOC
 {:toc}
 
-## Backgrounds
+## 1 Backgrounds
 
-### Resources
+### 1.1 Resources
 
 - Official Java website: [https://www.java.com/en/](Java)
 - Official Java documentation: [https://docs.oracle.com/en/java/](Java Documentation)
@@ -41,7 +41,7 @@ public class Main {
 - Comprehensive Java reference:
   [https://www.w3schools.com/java/java_ref_reference.asp](Java Reference Documentation)
 
-### Advantages and Disadvantages
+### 1.2 Advantages and Disadvantages
 
 | Advantages                     | Disadvantages                                          |
 | :----------------------------- | :----------------------------------------------------- |
@@ -51,7 +51,7 @@ public class Main {
 | Large ecosystem and community  | Conventions prefer verbose coding practices            |
 | Wide platform support          |                                                        |
 
-### History
+### 1.3 History
 
 - Java was developed in the 1990s by James Gosling at Sun Microsystems
   - It was intended as a platform independent version of C++ for embedded devices
@@ -75,7 +75,7 @@ public class Main {
   - **Java SE 21** (2023): General language and feature improvements
   - **Java SE 25** (2025): General language and feature improvements
 
-## Toolchain
+## 2 Toolchain
 
 Java comes in a self-contained toolchain called the JDK (Java Development Kit). Thereby the
 official JDK is licensed proprietary by Oracle, but free versions of the JDK, called
@@ -86,7 +86,7 @@ The following JDKs are available:
 - [Temurin OpenJDK](https://adoptium.net/de/temurin/releases)
 - [Coretto OpenJDK](https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html)
 
-### Compiler
+### 2.1 Compiler
 
 Java source code files are compiled into executable Java bytecode files by the Java compiler,
 called the **JavaC**. These bytecode files are platform independent and highly optimized for
@@ -97,7 +97,7 @@ fast execution.
 javac SomeFile.java SomeOtherFile.java
 ```
 
-### Runtime
+### 2.2 Runtime
 
 Java bytecode files are JIT compiled inside the Java virtual machine, called the **JVM**. This is
 bundled inside the Java runtime environment, called the **JRE**, that also includes the
@@ -108,7 +108,7 @@ precompiled Java standard library.
 java SomeFile.class
 ```
 
-### Bundler
+### 2.3 Bundler
 
 Java bytecode files can be bundled into Jar (Java Archive) files by the **Jar** tool. This way
 entire Java projects consisting of multiple bytecode files can be distributed more easily and
@@ -135,7 +135,7 @@ java -jar App.jar
 jar tf App.jar
 ```
 
-### Build Systems
+### 2.4 Build Systems
 
 Java doesn't come with a build system or package manager, therefore multiple community driven
 projects exist:
@@ -143,7 +143,7 @@ projects exist:
 - **Maven**: Traditional build system and package manager using simple XML configurations
 - **Gradle**: Modern build system and package manager using Groovy and Kotlin as DSLs
 
-### Debuggers
+### 2.5 Debuggers
 
 Java programs can be debugged by the Java debugger, a CLI tool called the **JDB**.
 
@@ -167,7 +167,7 @@ The following commands inside the debugging sessions exist:
 | `print x`          | Show value of specified variable             |
 | `eval x + y`       | Evaluate expressions                         |
 
-### JShell
+### 2.6 JShell
 
 Java comes with a REPL that interprets Java statements on the fly inside a REPL session, called
 the **JShell**.
@@ -177,7 +177,7 @@ the **JShell**.
 jshell
 ```
 
-## Compilation and Execution
+## 3 Compilation and Execution
 
 ```mermaid
 graph TD
@@ -192,9 +192,9 @@ graph TD
 2. **JRE**: Passes compiled Java bytecode files and the precompiled standard library into the JVM
 3. **JVM**: JIT compiles the received bytecode
 
-## Syntax
+## 4 Syntax
 
-### Whitespace
+### 4.1 Whitespace
 
 Whitespace is used to separate tokens (identifiers, literals, keywords, and operators) from each
 other and as characters inside string literals. In every other case whitespace is ignored
@@ -206,7 +206,7 @@ int    x = 10;  // valid
 intx = 10;      // invalid
 ```
 
-### Statements
+### 4.2 Statements
 
 Statements are any combination of expressions that end with a semicolon `;`.
 Thereby compound statements can be formed by enclosing any number of statements inside curly
@@ -226,7 +226,7 @@ int x;
 ;
 ```
 
-### Identifiers
+### 4.3 Identifiers
 
 The following rules apply for identifiers:
   - They must start with a letter or underscore
@@ -248,7 +248,7 @@ int class;
 int my var;
 ```
 
-### Scope
+### 4.4 Scope
 
 Every compound statement forms its own scope, which can be nested indefinitely. Additionally, the
 program itself forms the global scope in which every other scope lives.
@@ -275,7 +275,7 @@ void foo()
 }
 ```
 
-### Keywords
+### 4.5 Keywords
 
 The following identifiers are reserved as keywords with special meaning:
 - `byte`
@@ -285,9 +285,9 @@ The following identifiers are reserved as keywords with special meaning:
 - `int`
 - `long`
 
-## Structure
+## 5 Structure
 
-### Files
+### 5.1 Files
 
 Java source files must contain a class or interface definition and have the file suffix `.java`.
 Thereby they can contain optional additional class definitions. Java bytecode files are
@@ -296,7 +296,7 @@ automatically named like their according Java source files and have the file suf
 <u>Best Practices</u>:
 - Java source files should be named like their contained class or interface definition
 
-### Projects
+### 5.2 Projects
 
 Java projects follow the Maven project structure per convention:
 - `src/`: Source files
@@ -308,7 +308,7 @@ Java projects follow the Maven project structure per convention:
     - `resources/`: Additional non-Java files
 - `target/`: Compiled bytecode files
 
-### Entry Point
+### 5.3 Entry Point
 
 Java requires a class with a static and public method called `main` as entry point for executable
 programs. This main method takes the program's command-line arguments as parameter/argument.
@@ -324,7 +324,7 @@ public class Main {
 <u>Best Practices</u>:
 - The class containing the main method should be named `Main` or after the program itself
 
-### Packages
+### 5.4 Packages
 
 Packages act as namespaces for Java files to group them logically. They correspond to the
 directory structure, which means that every package should be named after its current directory
@@ -357,7 +357,7 @@ new path.to.File();
 - Packages should be nested inside reversed domain names to make them unique
   (e.g. `com.google.calculator` for a calculator app by google)
 
-### Standard Library
+### 5.5 Standard Library
 
 The Java standard library is a set of precompiled Java packages that are included inside the JVM
 and are imported implicitly in every Java file.
@@ -365,11 +365,11 @@ and are imported implicitly in every Java file.
 The following packages exist in the standard library:
 - `java.lang`: Contains fundamental data structures and utilities
 
-## Comments
+## 6 Comments
 
 Comments are treated as whitespace by the Java compiler and are therefore mostly ignored.
 
-### Single-Line Comments
+### 6.1 Single-Line Comments
 
 ```java
 // this is a single-line comment
@@ -377,7 +377,7 @@ Comments are treated as whitespace by the Java compiler and are therefore mostly
 int x = 0;  // this is another single-line comment
 ```
 
-### Multi-Line Comments
+### 6.2 Multi-Line Comments
 
 ```java
 /* This
@@ -386,7 +386,7 @@ multi-line
 comment */
 ```
 
-### Documentation Comments
+### 6.3 Documentation Comments
 
 Documentation comments are used by some tools and editors to generate documentation for
 according code, but are still regular comments for the Java compiler.
@@ -435,7 +435,7 @@ public class FooBar {
 }
 ```
 
-## Variables
+## 7 Variables
 
 Variables can only exist as fields of classes.
 
@@ -464,7 +464,7 @@ foo == 1;         // shadowing is revoked when its scope is left
 <u>Best Practices</u>:
 - Variables should be named in camel case
 
-## Constants
+## 8 Constants
 
 Constants can only exist as fields of classes.
 
@@ -480,11 +480,11 @@ PI = 3.14;  // only possible once
 <u>Best Practices</u>:
 - Constants should be named in constant case
 
-## Data Types
+## 9 Data Types
 
 Data types in Java have default values that get assigned automatically to undefined variables.
 
-### Primitive Data Types
+### 9.1 Primitive Data Types
 
 | Keyword   | Representation        | Byte Size | Values                           | Default |
 | :-------- | :-------------------- | :-------- | :------------------------------- | :------ |
@@ -497,13 +497,13 @@ Data types in Java have default values that get assigned automatically to undefi
 | `boolean` | Boolean Value         | 1         | `true`, `false`                  | `false` |
 | `char`    | Unicode Character     | 2         | `'\u0000'` to `'\uffff'`         | `''`    |
 
-#### Type Conversion
+#### 9.1.1 Type Conversion
 
 Primitive data type are converted automatically in according contexts when the following applies:
 - The data type encoding is the same
 - The new data type has a the same or a bigger size as the old one
 
-#### Type Casting
+#### 9.1.2 Type Casting
 
 ```java
 // casting floating point numbers into integers
@@ -521,7 +521,7 @@ int ascii = 'A';
 char letter = (char)65;
 ```
 
-#### Data Type Wrappers
+#### 9.1.3 Data Type Wrappers
 
 Data type wrappers are objects representing primitive data types that are wrapping these. Their
 contained primitive data type is boxed und unboxed automatically in according contexts and
@@ -540,9 +540,9 @@ these require objects to implement them. Also they add some utility methods to t
 <u>Best Practices</u>:
 - Data type wrappers should only be used when they're needed, because they add additional overhead
 
-### Compound Data Types
+### 9.2 Compound Data Types
 
-#### Arrays
+#### 9.2.1 Arrays
 
 The default value of arrays are `null`.
 
@@ -588,7 +588,7 @@ int point = peaks[0][0];
 peaks[0][5] = 3;
 ```
 
-#### Strings
+#### 9.2.2 Strings
 
 Strings are stored as immutable objects inside an internal global string table, that adds new
 entries when strings are created and removes entries when strings are garbage collected. Therefore
@@ -627,7 +627,7 @@ String multi = """
 multi == "This\nis a\nmultiline\nstring";
 ```
 
-##### String Processing
+##### 9.2.2.1 String Processing
 
 ```java
 // concatenate strings
@@ -661,7 +661,7 @@ String name = "John";
 char[] letters = name.toCharArray();
 ```
 
-##### Buffered Strings
+##### 9.2.2.2 Buffered Strings
 
 Buffered strings don't use the global internal string table, but are wrapping a dynamic character
 array, that keeps track of its length and capacity and that gets reallocated when it needs to
@@ -693,7 +693,7 @@ name == "Johnny Doe";
 <u>Best Practices</u>:
 - Buffered strings should be used when strings are expected to be manipulated often
 
-#### Enums
+#### 9.2.3 Enums
 
 Enums are classes that wrap enumerations.
 
@@ -770,7 +770,7 @@ switch (request) {
 }
 ```
 
-#### Optionals
+#### 9.2.4 Optionals
 
 ```java
 import java.util.Optional;
@@ -793,7 +793,7 @@ maybeEmpty.orElse("bar") == "foo";
 maybeNotEmpty.orElse("bar") == "bar";
 ```
 
-## Literals
+## 10 Literals
 
 ```java
 // use integer literals with different bases
@@ -816,9 +816,9 @@ maybeNotEmpty.orElse("bar") == "bar";
 12L;  // `long`
 ```
 
-## Operators
+## 11 Operators
 
-### Precedence
+### 11.1 Precedence
 
 | Operation   | Operator | Precedence Level |
 | :---------- | :------- | :----------------|
@@ -827,7 +827,7 @@ maybeNotEmpty.orElse("bar") == "bar";
 
 Description how operator precedence can be changed.
 
-### Arithmetic Operators
+### 11.2 Arithmetic Operators
 
 | Operation        | Operator | Syntax  |
 | :--------------- | :------- | :-------|
@@ -844,7 +844,7 @@ Description how operator precedence can be changed.
 | Pre-Decrement    | `--`     | `--x`   |
 | Post-Decrement   | `--`     | `x--`   |
 
-### Comparison Operators
+### 11.3 Comparison Operators
 
 | Operation          | Operator | Syntax   |
 | :----------------- | :------- | :--------|
@@ -855,7 +855,7 @@ Description how operator precedence can be changed.
 | Greater Than       | `>`      | `x > y`  |
 | Greater Equal Than | `>=`     | `x >= y` |
 
-### Logical Operators
+### 11.4 Logical Operators
 
 Logical operators in Java are short circuited.
 
@@ -865,7 +865,7 @@ Logical operators in Java are short circuited.
 | OR        | `\|\|`   | `x \|\| y` |
 | NOT       | `!`      | `!x`       |
 
-### Assignment Operators
+### 11.5 Assignment Operators
 
 The left operand in assignment operations is always the assigned to variable.
 
@@ -878,7 +878,7 @@ The left operand in assignment operations is always the assigned to variable.
 | Division Assignment       | `/=`     | `x /= y` |
 | Modulo Assignment         | `%=`     | `x %= y` |
 
-### Ternary Operator
+### 11.6 Ternary Operator
 
 ```java
 boolean toCheck = true;
@@ -888,9 +888,9 @@ toCheck ? System.out.println("Is true") : System.out.println("Is false");
 <u>Best Practices</u>:
 - Ternary operations should only be used for simple and short if-else checks
 
-## Control Flow Structures
+## 12 Control Flow Structures
 
-### Conditions
+### 12.1 Conditions
 
 ```java
 int x = 9;
@@ -909,7 +909,7 @@ else {
 }
 ```
 
-### Switches
+### 12.2 Switches
 
 ```java
 // define switches without fallthroughs
@@ -943,7 +943,7 @@ switch (countdown) {
 }
 ```
 
-### Loops
+### 12.3 Loops
 
 ```java
 // define while-loops
@@ -986,7 +986,7 @@ for (int i = 0; i < 10; i++) {
 }
 ```
 
-## Functions
+## 13 Functions
 
 Functions can only exist as methods and functional interfaces of classes.
 
@@ -1004,7 +1004,7 @@ int add(int x, int y) {
 int x = add(2, 3);  // execute function with parameters nad return values
 ```
 
-### Function Overloading
+### 13.1 Function Overloading
 
 ```java
 // overload already defined functions
@@ -1024,7 +1024,7 @@ add(5, 10, 8) == 23;
 add(5.0, 10.0) == 20.0;
 ```
 
-### Generic Functions
+### 13.2 Generic Functions
 
 Generic functions are compiled into multiple overloads of the same function, whereby a version for
 each possible implementation is created.
@@ -1040,7 +1040,7 @@ T add<T, U>(T x, U y) {
 Integer x = add<Integer, Double>(12, 4.5);
 ```
 
-## Object Orientation
+## 14 Object Orientation
 
 Classes are custom compound data types with a default value of `null`.
 
@@ -1080,7 +1080,7 @@ barfoo.getFoo() == "FooBar";
 foobar instanceof FooBar == true;
 ```
 
-### Inheritance
+### 14.1 Inheritance
 
 Objects of derivations are also considered to be instances of their base classes, which enables
 polymorphism between inherited classes. Classes can only be derived from one class, but derived
@@ -1156,7 +1156,7 @@ foofoo.getBar() == "Bar";
 foofoo.getFooFoo() == "Foo Foo";
 ```
 
-### Access Modifiers
+### 14.2 Access Modifiers
 
 The following access modifiers do exist for class members and classes:
 - Default: Member and class can only be accessed inside its current package (default)
@@ -1195,7 +1195,7 @@ foobar.setFoo("FOO");
 - Members and classes should be as less privileged as possible
 - Fields should be private and only accessible from outside via getter and setter methods
 
-### Static Classes
+### 14.3 Static Classes
 
 ```java
 class John {
@@ -1229,7 +1229,7 @@ john.greet() == "Hi, I'm John";  // through objects
 <u>Best Practices</u>:
 - Static members should be accessed through their classes
 
-### Inner Classes
+### 14.4 Inner Classes
 
 ```java
 public class Foo {
@@ -1247,7 +1247,7 @@ Foo.Bar bar = foo.new Bar();
 foo.bar.name == "bar";
 ```
 
-### Abstract Classes
+### 14.5 Abstract Classes
 
 ```java
 // define class as abstract (only inheritable)
@@ -1271,7 +1271,7 @@ FooBar foobar = new FooBar();
 foobar.getFoo() == "Foo";
 ```
 
-### Generic Classes
+### 14.6 Generic Classes
 
 Generic classes are compiled into multiple overloads of the same class, whereby a version for
 each possible implementation is created.
@@ -1299,7 +1299,7 @@ foobar.bar = 12;
 foobar.getBar() == 12;
 ```
 
-### Interfaces
+### 14.7 Interfaces
 
 Implementations of interfaces are also considered to be instances of that interface, which enables
 polymorphism between implemented interfaces. Thereby implementations of interfaces that are used
@@ -1365,7 +1365,7 @@ Student jack = new Student();
 jack instanceof Person == true;
 ```
 
-#### Generic Interfaces
+#### 14.7.1 Generic Interfaces
 
 ```java
 // define generics that can be implemented by any compatible class
@@ -1387,7 +1387,7 @@ public class BarFoo implements FooBar<String, Integer> {
 ```
 
 <!--
-## Lambda Expressions
+#### 14.7.2 Functional Interfaces
 
 How function expressions are treated in the language.
 
@@ -1399,11 +1399,11 @@ Example for function expressions in the language
 - First best practice
 - Second best practice
 
-## Error Handling
+## 15 Error Handling
 
 How errors are treated in the language.
 
-### Error/Exception Recovery/Catching
+### 15.1 Error/Exception Recovery/Catching
 
 ```test
 Example for error/exception recovery/catching in the language
@@ -1413,7 +1413,7 @@ Example for error/exception recovery/catching in the language
 - First best practice
 - Second best practice
 
-### Error/Exception Raising/Throwing
+### 15.2 Error/Exception Raising/Throwing
 
 ```test
 Example for error/exception raising/throwing in the language
@@ -1423,7 +1423,7 @@ Example for error/exception raising/throwing in the language
 - First best practice
 - Second best practice
 
-### Error/Exception Creation
+### 15.3 Error/Exception Creation
 
 ```test
 Example for error/exception creation in the language
@@ -1433,11 +1433,11 @@ Example for error/exception creation in the language
 - First best practice
 - Second best practice
 
-## Containers
+## 16 Containers
 
 How containers are treated in the language.
 
-### Lists
+### 16.1 Lists
 
 How lists are treated in the language.
 
@@ -1449,7 +1449,7 @@ Example for list usage in the language
 - First best practice
 - Second best practice
 
-### Maps
+### 16.2 Maps
 
 How maps are treated in the language.
 
@@ -1461,7 +1461,7 @@ Example for map usage in the language
 - First best practice
 - Second best practice
 
-### Iterators
+### 16.3 Iterators
 
 How iterators are treated in the language.
 
@@ -1473,11 +1473,11 @@ Example for iterator usage in the language
 - First best practice
 - Second best practice
 
-## Streams
+## 17 IO
 
 How streams are treated in the language.
 
-### Terminal Streams
+### 17.1 Terminal
 
 How terminal streams are treated in the language.
 
@@ -1489,7 +1489,7 @@ Example for terminal streams usage in the language
 - First best practice
 - Second best practice
 
-### File Streams
+### 17.2 Files
 
 How file streams are treated in the language.
 
@@ -1501,7 +1501,7 @@ Example for file streams usage in the language
 - First best practice
 - Second best practice
 
-## Math
+## 18 Math
 
 ```test
 Example for math utilities in the language
@@ -1511,7 +1511,7 @@ Example for math utilities in the language
 - First best practice
 - Second best practice
 
-## Time and Date
+## 19 Time and Date
 
 ```test
 Example for time and date utilities in the language
@@ -1521,7 +1521,7 @@ Example for time and date utilities in the language
 - First best practice
 - Second best practice
 
-## System
+## 20 System
 
 ```test
 Example for system utilities in the language
@@ -1531,7 +1531,7 @@ Example for system utilities in the language
 - First best practice
 - Second best practice
 
-## Concurrency
+## 21 Concurrency
 
 How concurrency is treated in the language
 
@@ -1543,7 +1543,7 @@ Example for concurrency in the language
 - First best practice
 - Second best practice
 
-## Parallelism
+## 22 Parallelism
 
 How parallelism is treated in the language
 
@@ -1555,7 +1555,7 @@ Example for parallelism in the language
 - First best practice
 - Second best practice
 
-## Memory Management
+## 23 Memory Management
 
 Description of how memory management is implemented in the language.
 

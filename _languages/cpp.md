@@ -35,9 +35,9 @@ int main(int argc, char* argv[])
 - TOC
 {:toc}
 
-## Backgrounds
+## 1 Backgrounds
 
-### Resources
+### 1.1 Resources
 
 - Comprehensive reference documentation: [C++ Reference](https://cppreference.com/w/cpp.html)
 - Official C++ standards committee website: [ISO C++ Standard](https://isocpp.org/)
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 - Best practices by Bjarne Stroustrup and Herb Sutter:
   [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)
 
-### Advantages and Disadvantages
+### 1.2 Advantages and Disadvantages
 
 | Advantages                              | Disadvantages                      |
 | :-------------------------------------- | :--------------------------------- |
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 | Multi-paradigm support                  | Undefined behavior pitfalls        |
 | Wide platform support                   | No official and built-in toolchain |
 
-### History
+### 1.3 History
 
 - C++ was developed in 1979 by Bjarne Stroustrup at Bell Telephone Laboratories
   - It was intended as an extension of C, introducing object-oriented programming features
@@ -77,12 +77,12 @@ int main(int argc, char* argv[])
   - **C++23** (2023): `std::expected`, `std::mdspan`, improved lambda features
   - **C++26** (expected 2026): Work in progress with reflection and other proposals
 
-## Toolchain
+## 2 Toolchain
 
 - C++ is only a language specification and therefore doesn't come with an official toolchain
 - To use C++, various tools must be installed that together form a development environment
 
-### Compilers
+### 2.1 Compilers
 
 - Compilers implement C++ and are therefore required
 - Major C++ compilers include:
@@ -91,14 +91,14 @@ int main(int argc, char* argv[])
   - **MSVC**: Microsoft Visual C++, native compiler for Windows
   - **Intel C++ Compiler**: Optimized for Intel processors
 
-### Standard Library Implementations
+### 2.2 Standard Library Implementations
 
 - Different compilers come with different standard library implementations:
   - **libstdc++**: GNU's implementation, shipped with GCC/G++
   - **libc++**: LLVM's implementation, shipped with Clang
   - **MSVC STL**: Microsoft's implementation, shipped with MSVC
 
-### Build Systems
+### 2.3 Build Systems
 
 - Common C++ build systems include:
   - **Make**: Traditional build tool using Makefiles
@@ -106,21 +106,21 @@ int main(int argc, char* argv[])
   - **Ninja**: Fast build system often used with CMake
   - **Meson**: Modern build system focusing on speed and usability
 
-### Debuggers
+### 2.4 Debuggers
 
 - Common C++ debuggers include:
   - **GDB**: GNU Debugger, standard debugger for Linux
   - **LLDB**: LLVM debugger, works well with the Clang compiler
   - **Visual Studio Debugger**: Integrated debugger for Windows
 
-### Package Managers
+### 2.5 Package Managers
 
 - Common C++ package managers include:
   - **vcpkg**: Cross-platform package manager by Microsoft
   - **Conan**: Decentralized package manager with binary package support
   - **CPM**: CMake-based package manager
 
-## Compilation Process
+## 3 Compilation Process
 
 ```mermaid
 graph TD
@@ -158,9 +158,9 @@ graph TD
   - This step is canceled if references can't be resolved (e.g., undefined references or multiple
     definitions)
 
-## Syntax
+## 4 Syntax
 
-### Whitespace
+### 4.1 Whitespace
 
 - Whitespace characters include spaces, tabs, newlines, and carriage returns
 - Whitespaces are mostly ignored during compilation
@@ -178,7 +178,7 @@ intx = 10;     // invalid: missing whitespace between keyword and identifier
 "Hello World"  // whitespace preserved in string literal
 ```
 
-### Statements
+### 4.2 Statements
 
 - Statements are instructions that perform actions
 - Most statements must end with a semicolon `;` as a terminator
@@ -200,7 +200,7 @@ x = 10;        // expression statement
 if (x > 0) ;   // empty statement (likely unintended)
 ```
 
-### Identifiers
+### 4.3 Identifiers
 
 - Identifiers are names used for variables, functions, classes, namespaces, etc.
 - Rules for valid identifiers:
@@ -233,7 +233,7 @@ int Value = 20; // different variable
 int VALUE = 30; // another different variable
 ```
 
-### Keywords
+### 4.4 Keywords
 
 - Keywords are reserved words with special meaning in C++ that cannot be used as identifiers
 - C++ has approximately 90+ keywords that are reserved across all versions
@@ -331,9 +331,9 @@ int VALUE = 30; // another different variable
   - `xor`
   - `xor_eq`
 
-## Structure
+## 5 Structure
 
-### Scopes
+### 5.1 Scopes
 
 - A scope is a region of code where a name (identifier) is valid and accessible
 - Block statements (code enclosed in `{}`) create their own scopes
@@ -359,7 +359,7 @@ void foo()
 }
 ```
 
-### Entry Point
+### 5.2 Entry Point
 
 Every program must contain a main function as the entry point for execution:
 
@@ -390,7 +390,7 @@ int main()
   - Non-zero values indicate various error conditions
 - If no `return` statement is present, `main()` implicitly returns `0`
 
-### Header and Source Files
+### 5.3 Header and Source Files
 
 - C++ code is typically organized into header files and source files
   - Header files contain:
@@ -412,7 +412,7 @@ int main()
   - Definitions should be kept in `.cpp` files and declarations in `.hpp` files
   - Use forward declarations to reduce header dependencies when possible
 
-### Project Structure
+### 5.4 Project Structure
 
 - Common project directory conventions:
   - `src/`: Source files (`.cpp`)
@@ -424,12 +424,12 @@ int main()
   - `docs/`: Documentation
   - `examples/`: Example code demonstrating usage
 
-## Comments
+## 6 Comments
 
 - Comments are text annotations in source code that are ignored by the compiler
 - Used for documentation, explanations, and temporarily disabling code
 
-### Single-Line Comments
+### 6.1 Single-Line Comments
 
 - Single-line comments begin with `//` and continue until the end of the line
 
@@ -446,7 +446,7 @@ int x = 10; // This is an inline comment explaining this variable
   - Single-line comments should be used for brief explanations, inline annotations,
     and quick notes
 
-### Multi-Line Comments
+### 6.2 Multi-Line Comments
 
 - Multi-line comments begin with `/*` and end with `*/`
 - Multi-line comments can span multiple lines without repeating comment markers
@@ -469,7 +469,7 @@ int y = 20; /* Can also be used inline */
   - Multi-line comments should be used for longer explanations, function/class descriptions,
     or block documentation
 
-### Documentation Comments
+### 6.3 Documentation Comments
 
 - Documentation comments are a special comment format used by documentation generators
 - They provide structured documentation for functions, classes, and parameters
@@ -526,7 +526,7 @@ private:
 };
 ```
 
-## Namespaces
+## 7 Namespaces
 
 - Namespaces provide a way to organize code and prevent name collisions
 - Identifiers within a namespace can be accessed from outside using the scope resolution operator `::`
@@ -536,7 +536,7 @@ private:
 - **Best practices**
   - Organize your code into logical namespaces that reflect project structure
 
-### Basic Namespace Usage
+### 7.1 Basic Namespace Usage
 
 ```cpp
 // defining a namespace
@@ -578,7 +578,7 @@ int result4 = subtract(10, 5);  // all identifiers accessible without prefix
   - Don't use `using namespace` in header files - it pollutes all files that include the header
   - Avoid `using namespace std;` in production code to prevent name collisions
 
-### Nested Namespaces
+### 7.2 Nested Namespaces
 
 ```cpp
 // explicit nested namespace
@@ -610,7 +610,7 @@ cpm::function();
 - **Best practices**:
   - Use namespace aliases for deeply nested namespaces to improve readability
 
-### Anonymous Namespaces
+### 7.3 Anonymous Namespaces
 
 - Anonymous namespaces are used to have only internal linkage
   - This means that their content is only visible inside their translation unit
@@ -633,13 +633,13 @@ int publicFunction()
 - **Best practices**:
   - Use anonymous namespaces instead of `static` for internal linkage
 
-## Preprocessor Directives
+## 8 Preprocessor Directives
 
 - Preprocessor directives are executed by the preprocessor before compilation
 - They begin with `#` and do not require semicolons
 - Processed as text substitution before the compiler sees the code
 
-### Include Directives
+### 8.1 Include Directives
 
 ```cpp
 // include standard library header (searches system include paths)
@@ -655,7 +655,7 @@ int publicFunction()
   - Put `#include` directives at the beginning of files
   - Always include what you use (don't rely on transitive includes)
 
-### Include Guards
+### 8.2 Include Guards
 
 ```cpp
 // traditional include guards to prevent multiple inclusion
@@ -671,7 +671,7 @@ int publicFunction()
 - **Best practices**:
   - Use `#pragma once` in all header files (simpler and faster)
 
-### Macros
+### 8.3 Macros
 
 ```cpp
 // define simple constant macro
@@ -697,7 +697,7 @@ int maximum = MAX(10, 20); // expands to ((10) > (20) ? (10) : (20))
   - Always use parentheses in macro expressions to avoid precedence issues
   - Avoid complex macro logic and use templates or functions instead
 
-### Conditional Compilation
+### 8.4 Conditional Compilation
 
 ```cpp
 // compile code only if macro is defined
@@ -732,7 +732,7 @@ int maximum = MAX(10, 20); // expands to ((10) > (20) ? (10) : (20))
 - **Best practices**:
   - Use conditional compilation for platform-specific or debug code
 
-### Predefined Macros
+### 8.5 Predefined Macros
 
 ```cpp
 // standard predefined macros
@@ -745,7 +745,7 @@ __cplusplus // C++ standard version (e.g., 201703L for C++17)
 std::cout << "Error at " << __FILE__ << ":" << __LINE__ << std::endl;
 ```
 
-### Error and Warning Generation
+### 8.6 Error and Warning Generation
 
 ```cpp
 // generate compiler error with message
@@ -755,7 +755,7 @@ std::cout << "Error at " << __FILE__ << ":" << __LINE__ << std::endl;
 #warning "This feature is deprecated"
 ```
 
-## Variables
+## 9 Variables
 
 - Variables are named storage locations that hold values of a specific data type
 - They must be declared with a type before use and can be modified during program execution
@@ -805,15 +805,15 @@ delete heapVar; // must manually free memory
   - Create variables close to first use
   - Prefer automatic storage (stack) over dynamic storage (heap) when possible
 
-## Data Types
+## 10 Data Types
 
 - Data types determine how much memory is allocated and how the bits are interpreted for a value
 
-### Primitive Data Types
+### 10.1 Primitive Data Types
 
 - Primitive data types represent single values and have predefined sizes
 
-#### Integer Types
+#### 10.1.1 Integer Types
 
 - Integer types represent whole numbers that can be either signed or unsigned
 - Sizes of integer types vary by platform but follow guaranteed minimums
@@ -856,7 +856,7 @@ delete heapVar; // must manually free memory
   - `unsigned` types should be used for bit manipulation and when negative values are meaningless
   - `ptrdiff_t` should be used for pointer arithmetic
 
-#### Floating-Point Types
+#### 10.1.2 Floating-Point Types
 
 - Floating-point types represent real numbers with fractional parts
 - Sizes and precisions of floating-point types vary by platform but follow guaranteed minimums
@@ -872,7 +872,7 @@ delete heapVar; // must manually free memory
 - **Best practices**:
   - `double` should be used instead of `float`
 
-#### Character Types
+#### 10.1.3 Character Types
 
 - Character types represent individual characters
 - These support various character encodings as ASCII, UTF-8, UTF-16 and UTF-32
@@ -885,12 +885,12 @@ delete heapVar; // must manually free memory
 | `char16_t` | 2          | UTF-16 character                    |
 | `char32_t` | 4          | UTF-32 character                    |
 
-### Compound Data Types
+### 10.2 Compound Data Types
 
 - Compound data types consist of any number of primitive data types or even other compound
   data types
 
-#### Arrays
+#### 10.2.1 Arrays
 
 - Arrays are fixed-size collections storing multiple elements of the same type in contiguous
   memory
@@ -938,7 +938,7 @@ matrix[1][2] == 7; // access element at row 1, column 2
     - Use `.at()` with `std` containers for bounds checking
   - Store array size separately or use `std::size()` when passing arrays to functions
 
-#### Strings
+#### 10.2.2 Strings
 
 - Strings are null-terminated character arrays (they end with `\0`)
 
@@ -965,7 +965,7 @@ std::strcmp(name2, name4);  // compare strings (returns 0 if equal)
   - Pass strings by `const` reference to functions: `void func(const std::string& str)`
   - Avoid C-string functions (`strcpy`, `strcat`, etc.) due to buffer overflow risks
 
-#### Structures
+#### 10.2.3 Structures
 
 - Structures are user-defined types that group related data members of different types
 - Their members are publicly accessible by default (unlike classes)
@@ -1073,7 +1073,7 @@ c1.address.city = "Shelbyville";
   - Avoid manual memory management within structures
     - Prefer smart pointers or RAII wrappers
 
-#### Unions
+#### 10.2.4 Unions
 
 - Unions are special data structures where all members share the same memory location
 - Only one of their members can hold a value at any given time
@@ -1156,7 +1156,7 @@ FlexibleData fd2(3.14); // initializes d
   - Use unions only when necessary for memory optimization or interfacing with C code
   - Avoid unions with constructors/destructors unless necessary
 
-#### Enums
+#### 10.2.5 Enums
 
 - Enums are user-defined types representing a set of named integer constants
 - They provide type safety and readability for representing discrete values
@@ -1220,12 +1220,12 @@ enum class Byte : uint8_t
   - Specify underlying type explicitly when size matters or for forward declarations
   - Use enums for representing a fixed set of related constants (states, options, error codes)
 
-### Data Type Management
+### 10.3 Data Type Management
 
 - Multiple utilities for controlling type properties, conversions, and compile-time
   type manipulation exist
 
-#### Constants
+#### 10.3.1 Constants
 
 - Constants are immutable values that cannot be modified after initialization
 - Multiple levels of compile-time evaluation available
@@ -1270,7 +1270,7 @@ constexpr int xCoord = p.getX(); // evaluated at compile time
   - Declare variables as `const` when they shouldn't be modified after initialization
   - Use `const` references for function parameters to avoid unnecessary copies
 
-#### Volatile
+#### 10.3.2 Volatile
 
 - The `volatile` keyword tells the compiler that a variable's value may change at any time without
   any action being taken by the code
@@ -1308,7 +1308,7 @@ volatile int* volatile ptr3;     // volatile pointer to volatile int
   - `volatile` does not provide thread safety or memory ordering guarantees
   - Combine with appropriate types like `sig_atomic_t` for signal-safe operations
 
-#### Type Aliases
+#### 10.3.3 Type Aliases
 
 - Type aliases create alternative names for existing types
 
@@ -1328,7 +1328,7 @@ cstring myOtherString = "Hello!";
   - Create aliases for frequently used container types
   - Name aliases descriptively to convey their purpose
 
-#### Size and Alignment
+#### 10.3.4 Size and Alignment
 
 - Data types are aligned to ensure that data is stored in memory at addresses matching their size
   or specific boundaries
@@ -1363,7 +1363,7 @@ alignas(16) int x;
   - Remember that structure sizes include padding for alignment
   - Use `static_assert` to verify size assumptions at compile time
 
-#### Type Conversion and Casting
+#### 10.3.5 Type Conversion and Casting
 
 - Type conversions transform values from one type to another
 - Conversion can be implicit (automatic) or explicit (manual)
@@ -1443,7 +1443,7 @@ float* f = reinterpret_cast<float*>(&i); // reinterpret int bits as float
   - Avoid narrowing conversions or use explicit checks
   - Enable compiler warnings for implicit conversions (`-Wconversion`)
 
-#### Type Inference
+#### 10.3.6 Type Inference
 
 - Type inference allows the compiler to deduce types automatically
 
@@ -1486,7 +1486,7 @@ auto [x, y] = p; // x: int, y: int
   - Consider explicit types for numeric literals if precision matters
   - Enable warnings for auto type deductions that might surprise (`-Wauto-type`)
 
-#### Generic Programming (Templates)
+#### 10.3.7 Generic Programming (Templates)
 
 - Templates enable writing code that works with any type
 - They provide compile-time polymorphism without runtime overhead
@@ -1581,13 +1581,13 @@ T average(T a, T b)
   - Consider providing explicit instantiations for common types
   - Use variadic templates for flexible parameter counts
 
-## Literals
+## 11 Literals
 
 - Literals are fixed values written directly in source code
 - Their types are determined by their syntax and suffixes
 - They are evaluated at compile time
 
-### Integer Literals
+### 11.1 Integer Literals
 
 - Integer literals represent whole number values
 - Their default type is `int`, but suffixes can change the type
@@ -1631,7 +1631,7 @@ T average(T a, T b)
   - Avoid octal literals as they can be confused with decimal (leading zero)
   - Use suffixes to prevent unexpected type conversions
 
-### Floating-Point Literals
+### 11.2 Floating-Point Literals
 
 - Floating-point literals represent real numbers with fractional parts
 - Their default type is `double`, but suffixes can change the type
@@ -1668,7 +1668,7 @@ T average(T a, T b)
   - Use scientific notation for very large or very small numbers
   - Be aware that floating-point literals are approximations
 
-### Boolean Literals
+### 11.3 Boolean Literals
 
 - Boolean literals represent truth values
 
@@ -1681,7 +1681,7 @@ bool isValid = true;
 bool hasError = false;
 ```
 
-### Character Literals
+### 11.4 Character Literals
 
 - Character literals represent single characters enclosed in single quotes
 - Type is `char` by default, but prefixes can change that
@@ -1731,7 +1731,7 @@ U'A';  // char32_t (UTF-32)
   - Use Unicode escape sequences (`\u`, `\U`) for international characters
   - Be aware that character literals are integers and can be used in arithmetic
 
-### String Literals
+### 11.5 String Literals
 
 - String literals represent sequences of characters enclosed in double quotes
 - Type is array of `const char` with null terminator by default
@@ -1789,7 +1789,7 @@ const char* json = R"({
   - Break long string literals across multiple lines using adjacent string concatenation
   - Use custom delimiters in raw strings when the string contains `)"` sequence
 
-### Pointer Literals
+### 11.6 Pointer Literals
 
 ```cpp
 // null pointer literal
@@ -1809,13 +1809,13 @@ int* oldStyle2 = 0;
   - Always use `nullptr` instead of `NULL` or `0` for null pointers
   - `nullptr` is type-safe and prevents ambiguous overload resolution
 
-## Operators
+## 12 Operators
 
 - Operators perform operations on operands (values, variables, or expressions)
 - Operators have precedence rules that determine evaluation order
 - Operators can be overloaded for custom types
 
-### Operator Precedence and Parentheses
+### 12.1 Operator Precedence and Parentheses
 
 - Operators are evaluated according to precedence rules (e.g., `*` before `+`)
 - Parentheses `()` override default precedence and force evaluation of enclosed expressions first
@@ -1839,7 +1839,7 @@ if ((x > 0) && (y < 10)) { }  // clearer than: if (x > 0 && y < 10)
   - Use parentheses to clarify complex expressions
   - Don't rely on memorizing precedence rules for readability
 
-### Arithmetic Operators
+### 12.2 Arithmetic Operators
 
 - Arithmetic operators perform mathematical operations on numeric values
 - Result types depend on operand types (integer vs floating-point)
@@ -1893,7 +1893,7 @@ double d = 10.0 / 0.0;    // may produce infinity (implementation-defined)
   - Check for division by zero before dividing
   - Be aware that modulo with negative numbers may produce unexpected results
 
-### Comparison Operators
+### 12.3 Comparison Operators
 
 - Comparison operators compare values and return boolean results (`true` or `false`)
 - All comparison operators have lower precedence than arithmetic operators
@@ -1935,7 +1935,7 @@ std::strcmp(c1, c2) == 0;  // correct way to compare C-strings
   - Use `std::strcmp()` or `std::string` for string comparisons, not `==` on `char*`
   - Be aware that `==` compares pointer addresses, not pointed-to values
 
-### Logical Operators
+### 12.4 Logical Operators
 
 - Logical operators perform boolean logic operations on truth values
 - Logical AND and OR use short-circuit evaluation (right operand may not be evaluated)
@@ -1977,7 +1977,7 @@ x || y && z; // equivalent to: x || (y && z)
   - Put more likely-true conditions first in `||` chains
   - Use parentheses to clarify complex logical expressions
 
-### Bitwise Operators
+### 12.5 Bitwise Operators
 
 - Bitwise operators manipulate individual bits of integer values
 - They only work with integer types (not floating-point)
@@ -2031,7 +2031,7 @@ bool isPowerOf2 = (x != 0) && ((x & (x - 1)) == 0);
   - Be careful with right shift on negative signed integers
   - Use unsigned types for bitwise operations to avoid sign extension issues
 
-### Assignment Operators
+### 12.6 Assignment Operators
 
 - Assignment operators are assigning values to variables
   - Therefore the left operand must always be a variable
@@ -2051,7 +2051,7 @@ bool isPowerOf2 = (x != 0) && ((x & (x - 1)) == 0);
 | Left Shift Assignment       | `<<=`        | `x <<= y`  | `x = 0b01; x <<= 1; x == 0b10;`   |
 | Right Shift Assignment      | `>>=`        | `x >>= y`  | `x = 0b10; x >>= 1; x == 0b01;`   |
 
-### Ternary Operator
+### 12.7 Ternary Operator
 
 - The ternary operator is the only ternary (three-operand) operator in C++
 - It provides a concise way to write simple if-else expressions
@@ -2093,7 +2093,7 @@ else category = 4;
   - Both branches should be simple expressions, not complex statements
   - Consider using if-else if the ternary operator reduces readability
 
-### Comma Operator
+### 12.8 Comma Operator
 
 - The comma operator `,` evaluates multiple expressions sequentially
 - It returns the value of the rightmost expression
@@ -2121,13 +2121,13 @@ func((a, b)); // comma operator, only b is passed to func
   - Avoid in most other contexts as it reduces readability
   - Parentheses are required to use comma operator in most contexts
 
-## Memory Management
+## 13 Memory Management
 
 - C++ requires manual memory management, in which the following memory locations are relevant
   - **Stack**: Automatic storage for local variables (fast, limited size, auto-cleanup)
   - **Heap**: Dynamic storage requiring manual allocation/deallocation (slower, larger)
 
-### Pointers
+### 13.1 Pointers
 
 - Pointers are variables that store memory addresses of other variables
 - They enable indirect access to values, dynamic memory allocation, and efficient passing of large objects
@@ -2215,7 +2215,7 @@ int result2 = op(5, 6);
   - Prefer smart pointers over raw pointers for ownership management
   - Set pointers to `nullptr` after deleting to avoid dangling pointers
 
-### References
+### 13.2 References
 
 - References are aliases for existing variables
 - Unlike pointers, references cannot be null, cannot be reassigned, and don't require
@@ -2270,7 +2270,7 @@ int& getDanglingRef() {
   - Never return references to local variables
   - Prefer references over pointers for cleaner syntax and safety
 
-### Dynamic Memory Allocation
+### 13.3 Dynamic Memory Allocation
 
 - Dynamic memory is allocated on the heap at runtime, allowing flexible lifetimes and sizes
 - The heap has much more memory than the stack but is slower to access
@@ -2314,14 +2314,14 @@ obj->~int();                 // must manually call destructor
   - Always match `new` with `delete` and `new[]` with `delete[]`
   - Set raw pointers to `nullptr` after deletion
 
-## Control Flow Structures
+## 14 Control Flow Structures
 
 - Control flow determines the order in which statements are executed in a program
 - By default, statements execute sequentially from top to bottom
 - Control flow structures alter this default execution order based on conditions, loops, or
   explicit jumps
 
-### Conditions
+### 14.1 Conditions
 
 - Conditions allow branching of control flow to execute statements based on boolean expressions
 
@@ -2386,7 +2386,7 @@ if (auto ptr = getPointer())
   - Avoid deep nesting and prefer early returns or guard clauses
   - Use `if` with initializers to limit variable scope
 
-### Loops
+### 14.2 Loops
 
 - Loops repeatedly execute a block of statements until a condition becomes false
 
@@ -2493,7 +2493,7 @@ for (auto values = getData(); auto& val : values)
   - Keep loop bodies simple; extract complex logic to functions
   - Prefer `continue` over nested if statements for clarity
 
-### Switches
+### 14.3 Switches
 
 - Switch statements provide multi-way branching based on the value of an integral expression
 
@@ -2602,7 +2602,7 @@ switch (x)
   - Use enumerations with switch for type-safe value sets
   - Enable compiler warnings for missing enum cases (`-Wswitch`) in switches
 
-### Jumps
+### 14.4 Jumps
 
 - Jump statements unconditionally transfer control to another part of the program
 
@@ -2656,7 +2656,7 @@ for (int i = 0; i < 10 && !done; i++)
   - If using `goto`, always jump forward, never backward
   - Use descriptive labels that indicate the target purpose
 
-### Exception Handling
+### 14.5 Exception Handling
 
 - Exceptions are errors that are thrown at runtime
 - Exception handling provides a mechanism to respond to the runtime errors
@@ -2803,7 +2803,7 @@ private:
   - Document which exceptions a function may throw
   - Consider using `std::optional`, `std::expected`, or error codes for expected error cases
 
-## Functions
+## 15 Functions
 
 - Functions are reusable blocks of code that perform specific tasks and can take parameters
   and return values
@@ -2946,7 +2946,7 @@ int safeDivide(int a, int b) noexcept
   - Document preconditions, postconditions, and exceptions in comments
   - Prefer references over pointers when the argument must always be valid
 
-## Lambda Expressions
+## 16 Lambda Expressions
 
 - Lambda expressions are functions that can be used as expressions instead of statements
   - Therefore they can be passed as values to variables and functions
@@ -2974,13 +2974,13 @@ int z = 5;
 [=, &z]() -> void { z = x + y; }();
 ```
 
-## Classes
+## 17 Classes
 
 - Classes encapsulate variables and functions inside a single data structure
   - Therefore they provide a uniform interface for users
   - Thereby their variables are called properties and their functions are called methods
 
-### Creation
+### 17.1 Creation
 
 ```cpp
 #include <iostream>
@@ -3021,7 +3021,7 @@ Bar::void do()
   - Identifiers of classes should be written in Pascal case
   - Properties should be initialized to avoid the usage of undefined members
 
-### Instantiation
+### 17.2 Instantiation
 
 - Classes can be instantiated into objects, which have their class as data type
   - These objects have their own set of members that are defined in their class
@@ -3113,7 +3113,7 @@ foo.do();
     constructors and deconstructors
   - Constructors should always use initialization lists to assign arguments to properties
 
-### Const Correctness
+### 17.3 Const Correctness
 
 - Methods can be marked as constant to signify that they don't mutate their object
   - The marking of all non-mutating methods as constant is called const correctness
@@ -3142,7 +3142,7 @@ ref.add(1, 2);
 - **Best practices**:
   - Methods should always be defined as constant when they don't mutate their object
 
-### Access Modifiers
+### 17.4 Access Modifiers
 
 - The visibility of class members from outside their class can be configured with access modifiers
   - These are used like labels to apply them to every member after them
@@ -3186,7 +3186,7 @@ class FooBar;    // friend class of `Bar`
 - **Best practices**:
   - Friends of classes should be avoided to ensure encapsulation
 
-### Inheritance
+### 17.5 Inheritance
 
 - Classes can be derived from other classes as their base to inherit all of their members
 - Derivations can be modified with access modifiers to configure the access modifiers for
@@ -3243,7 +3243,7 @@ Foo* foobar = new Bar(3, 4);
   - Derivations should use the access modifier `public` to not modify the access modifiers
     of their derived members
 
-## Operation Overloading
+## 18 Operation Overloading
 
 - Operators are defined as functions that are called upon the usage of their operator with their
   operands as arguments
@@ -3308,18 +3308,18 @@ public:
   - Operator Overloads for classes should be friend functions or methods of these so they can
     access their private members
 
-## Standard Template Library (STL)
+## 19 Standard Template Library (STL)
 
 - The standard template library (STL) is C++'s standard library and provides additional
   data types, classes and functions
   - Its elements must be imported with `include` directives and are all part of the
     `std` namespace
 
-### Containers
+### 19.1 Containers
 
 - The STL provides multiple container data structures as classes
 
-#### C++-Arrays
+#### 19.1.1 C++-Arrays
 
 - C++-arrays are static sized wrappers for raw arrays
 
@@ -3345,7 +3345,7 @@ bar.size() == 5;
 bar.data();
 ```
 
-#### C++-Strings
+#### 19.1.2 C++-Strings
 
 - C++-Strings are dynamically sized wrappers for raw strings
   - Thereby they have a capacity to store the wrapped string and reallocate their memory when the
@@ -3430,7 +3430,7 @@ const char* raw = wrapped.c_str();
   - C++-strings should always be used instead of raw strings due to their enhanced security and
     useability
 
-#### Vectors
+#### 19.1.3 Vectors
 
 - Vectors are dynamically sized wrappers for raw arrays
   - Thereby they have a capacity to store the wrapped array and reallocate their memory when the
@@ -3480,7 +3480,7 @@ foo.reserve(100); // set capacity of vector in elements
   - Memory for vectors should be allocated preparatory with the method `reserve` to reduce
     the number of memory allocations
 
-#### Sets
+#### 19.1.4 Sets
 
 - Sets are unordered data structures that can't contain duplicates
   - Every containing duplicate is discarded
@@ -3523,7 +3523,7 @@ foo.first == 'a';
 foo.second == 1;
 ```
 
-#### Maps
+#### 19.1.5 Maps
 
 - Maps are unordered lists of key-value pairs
   - Thereby their key-value pairs are implemented as pairs
@@ -3556,7 +3556,7 @@ foo.erase('a');  // specify key of key-value pair to remove
 foo.clear();     // remove all elements
 ```
 
-#### Iterators
+#### 19.1.6 Iterators
 
 - Containers use iterator objects to iterate through them
   - These are wrappers for pointers pointing to elements of these containers
@@ -3613,9 +3613,9 @@ std::sort(rand.begin(), rand.end(), [](int a, int b) { return a < b; });  // cus
   - The function `remove_if` in combination with the method `erase` should be used to remove
     elements of containers to avoid iterator invalidation
 
-### Streams
+### 19.2 IO
 
-#### Terminal
+#### 19.2.1 Terminal
 
 ```cpp
 #include <iostream>
@@ -3646,7 +3646,7 @@ std::cerr << "Error " << 404 << ": Not Found" << std::endl; // > Error 404: Not 
   - `endl` should be used instead of the `\n` character for system independent newlines
   - Error messages should be printed with `cerr`
 
-#### Files
+#### 19.2.2 Files
 
 ```cpp
 #include <iostream>
@@ -3679,7 +3679,7 @@ file.close();
   - File stream objects should be checked for successful opening with the `is_open` method
   - File stream objects should be closed with the `close` method before their deletion
 
-#### Manipulators
+#### 19.2.3 Manipulators
 
 - Output streams can be manipulated by inserting stream manipulator objects into them
   - These manipulate the entire stream from the point of their insertion until another inserted
@@ -3721,7 +3721,7 @@ std::cout << std::defaultfloat << std::setprecision(5) << pi << std::endl;
 - **Best practices**:
   - Flushing of output streams should be used carefully due to potential performance losses
 
-### System
+### 19.3 System
 
 ```cpp
 #include <cstdlib>
@@ -3734,7 +3734,7 @@ exit(1);
 std::time_t currentTime = std::time(nullptr);
 ```
 
-### Math
+### 19.4 Math
 
 ```cpp
 #include <algorithm>
@@ -3780,7 +3780,7 @@ std::clamp(14.87, min, max) == 14.87;
   - The `srand` function should only be used once with the same argument at the start of the
     program to avoid conflicting behaviors
 
-### Character Manipulation
+### 19.5 Character Manipulation
 
 ```cpp
 #include <cctype>
@@ -3798,7 +3798,7 @@ std::isalnum('a') == true;
 std::isspace(' ') == true;
 ```
 
-### Smart Pointers
+### 19.6 Smart Pointers
 
 - Smart pointers are wrappers for raw pointers
   - These are keeping track of their pointed values and references to them from other
@@ -3811,7 +3811,7 @@ std::isspace(' ') == true;
 - Use raw pointers and references only for non-owning access
   - Avoid `new/delete` for ownership.
 
-#### Shared Pointers
+#### 19.6.1 Shared Pointers
 
 - Shared pointers are smart pointers that are keeping track of all instances of them pointing to
   the same memory address
