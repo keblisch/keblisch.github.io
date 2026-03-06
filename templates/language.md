@@ -89,7 +89,7 @@ How whitespace is treated in the language.
 Example for whitespace usage
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -101,7 +101,7 @@ How statements are composed in the language.
 Example for statement usage
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -113,7 +113,7 @@ How scope is treated in the language.
 Example for scope usage
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -125,7 +125,7 @@ How identifiers are composed in the language.
 Example for identifier usage
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -141,7 +141,7 @@ The following identifiers are reserved as keywords with special meaning:
 
 Description of which files are used how for the language.
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -151,7 +151,7 @@ Conventional project organization for the language:
 - `src/`: Source files
 - `build`: A conventional build file
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -163,7 +163,7 @@ Description of the language's entry point in executable programs.
 Example for the language's entry point
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -175,7 +175,7 @@ Description of the language's package/module/library system.
 Example for the language's package/module/library system
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -197,7 +197,7 @@ How comments are treated in the language.
 Example for single-line comments in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -207,7 +207,7 @@ Example for single-line comments in the language
 Example for multi-line comments in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -217,7 +217,7 @@ Example for multi-line comments in the language
 Example for documentation comments in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -227,7 +227,7 @@ Example for documentation comments in the language
 Example for variable usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -237,7 +237,7 @@ Example for variable usage in the language
 Example for constant usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -250,7 +250,7 @@ Example for constant usage in the language
 | `int`   | Integers       | 4         | Signed     | `0`, `45`, `-12`       |
 | `float` | Real Numbers   | 4         | Signed     | `0.0`, `3.89`, `-12.9` |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -264,7 +264,7 @@ How strings are treated in the language.
 Example for string usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -276,7 +276,7 @@ How arrays are treated in the language.
 Example for array usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -288,7 +288,7 @@ How structs are treated in the language.
 Example for struct usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -300,7 +300,7 @@ How enums are treated in the language.
 Example for enum usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -312,7 +312,7 @@ How data type aliases are treated in the language.
 Example for data type aliases in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -324,7 +324,7 @@ How data type conversion is treated in the language.
 Example for data type conversions in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -336,7 +336,7 @@ How data type casting is treated in the language.
 Example for data type casting in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -346,7 +346,7 @@ Example for data type casting in the language
 Example for data type size receiving in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -358,7 +358,7 @@ How literals are treated in the language.
 Example for literals in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -382,7 +382,7 @@ How arithmetic operators are treated in the language.
 | Addition    | `+`      | `x + y` |
 | Subtraction | `-`      | `x - y` |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -395,7 +395,7 @@ How comparison operators are treated in the language.
 | Equality   | `==`     | `x == y` |
 | Inequality | `!=`     | `x == y` |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -408,7 +408,7 @@ How logical operators are treated in the language.
 | AND       | `&&`     | `x && y`   |
 | OR        | `\|\|`   | `x \|\| y` |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -421,7 +421,7 @@ How bitwise operators are treated in the language.
 | Bitwise AND | `&`      | `x & y`    |
 | Bitwise OR  | `\|`     | `x \| y`   |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -434,7 +434,7 @@ How assignment operators are treated in the language.
 | Assignment          | `=`      | `x = y`  |
 | Addition Assignment | `+=`     | `x += y` |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -446,7 +446,7 @@ How the ternary operator is treated in the language.
 Example for the ternary operator in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -458,7 +458,7 @@ Example for the ternary operator in the language
 Example for conditions in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -468,7 +468,7 @@ Example for conditions in the language
 Example for switches in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -478,7 +478,7 @@ Example for switches in the language
 Example for loops in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -490,7 +490,7 @@ How jumps are treated in the language.
 Example for jumps in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -502,7 +502,7 @@ How functions are treated in the language.
 Example for functions in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -512,7 +512,7 @@ Example for functions in the language
 Example for default parameters in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -522,7 +522,7 @@ Example for default parameters in the language
 Example for variadic parameters in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -534,7 +534,7 @@ How generic functions are treated in the language.
 Example for generic functions in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -546,7 +546,7 @@ How function expressions are treated in the language.
 Example for function expressions in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -558,7 +558,7 @@ How object orientation in implemented in the language.
 Example for classes and objects in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -570,7 +570,7 @@ How inheritance is treated in the language.
 Example for inheritance in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -582,7 +582,7 @@ How access modifiers are treated in the language.
 Example for classes and objects in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -594,7 +594,7 @@ How abstract classes are treated in the language.
 Example for abstract classes in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -606,7 +606,7 @@ How interfaces are treated in the language.
 Example for interfaces in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -620,7 +620,7 @@ How errors are treated in the language.
 Example for error/exception recovery/catching in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -630,7 +630,7 @@ Example for error/exception recovery/catching in the language
 Example for error/exception raising/throwing in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -640,7 +640,7 @@ Example for error/exception raising/throwing in the language
 Example for error/exception creation in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -656,7 +656,7 @@ How lists are treated in the language.
 Example for list usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -668,7 +668,7 @@ How maps are treated in the language.
 Example for map usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -680,7 +680,7 @@ How iterators are treated in the language.
 Example for iterator usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -696,7 +696,7 @@ How terminal streams are treated in the language.
 Example for terminal streams usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -708,7 +708,7 @@ How file streams are treated in the language.
 Example for file streams usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -718,7 +718,7 @@ Example for file streams usage in the language
 Example for math utilities in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -728,7 +728,7 @@ Example for math utilities in the language
 Example for time and date utilities in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -738,7 +738,7 @@ Example for time and date utilities in the language
 Example for system utilities in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -750,7 +750,7 @@ How concurrency is treated in the language
 Example for concurrency in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -762,7 +762,7 @@ How parallelism is treated in the language
 Example for parallelism in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -776,7 +776,7 @@ Description of how memory can be manually managed in the language.
 Example for manual memory management in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 

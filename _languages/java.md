@@ -293,7 +293,7 @@ Java source files must contain a class or interface definition and have the file
 Thereby they can contain optional additional class definitions. Java bytecode files are
 automatically named like their according Java source files and have the file suffix `.class`.
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Java source files should be named like their contained class or interface definition
 
 ### 5.2 Projects
@@ -321,7 +321,7 @@ public class Main {
 }
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - The class containing the main method should be named `Main` or after the program itself
 
 ### 5.4 Packages
@@ -350,7 +350,7 @@ import path.to.*;
 new path.to.File();
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Package declarations should occur at the beginning of files
 - Package imports should occur after package declarations
 - Files from other packages should always be imported when used
@@ -461,7 +461,7 @@ int foo = 1;
 foo == 1;         // shadowing is revoked when its scope is left
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Variables should be named in camel case
 
 ## 8 Constants
@@ -477,7 +477,7 @@ final float PI;
 PI = 3.14;  // only possible once
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Constants should be named in constant case
 
 ## 9 Data Types
@@ -537,7 +537,7 @@ these require objects to implement them. Also they add some utility methods to t
 | `Boolean`   | `boolean`                      |
 | `Character` | `char`                         |
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Data type wrappers should only be used when they're needed, because they add additional overhead
 
 ### 9.2 Compound Data Types
@@ -690,7 +690,7 @@ hello.insert(4, ",ny");
 name == "Johnny Doe";
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Buffered strings should be used when strings are expected to be manipulated often
 
 #### 9.2.3 Enums
@@ -885,7 +885,7 @@ boolean toCheck = true;
 toCheck ? System.out.println("Is true") : System.out.println("Is false");
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Ternary operations should only be used for simple and short if-else checks
 
 ## 12 Control Flow Structures
@@ -1191,7 +1191,7 @@ foobar.getFoo() == "foo";
 foobar.setFoo("FOO");
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Members and classes should be as less privileged as possible
 - Fields should be private and only accessible from outside via getter and setter methods
 
@@ -1226,7 +1226,7 @@ John.greet() == "Hi, I'm John";  // through classes
 john.greet() == "Hi, I'm John";  // through objects
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - Static members should be accessed through their classes
 
 ### 14.4 Inner Classes
@@ -1395,7 +1395,7 @@ How function expressions are treated in the language.
 Example for function expressions in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1409,7 +1409,7 @@ How errors are treated in the language.
 Example for error/exception recovery/catching in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1419,7 +1419,7 @@ Example for error/exception recovery/catching in the language
 Example for error/exception raising/throwing in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1429,7 +1429,7 @@ Example for error/exception raising/throwing in the language
 Example for error/exception creation in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1445,7 +1445,7 @@ How lists are treated in the language.
 Example for list usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1457,7 +1457,7 @@ How maps are treated in the language.
 Example for map usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1469,7 +1469,7 @@ How iterators are treated in the language.
 Example for iterator usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1485,7 +1485,7 @@ How terminal streams are treated in the language.
 Example for terminal streams usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1497,7 +1497,7 @@ How file streams are treated in the language.
 Example for file streams usage in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1507,7 +1507,7 @@ Example for file streams usage in the language
 Example for math utilities in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1517,7 +1517,7 @@ Example for math utilities in the language
 Example for time and date utilities in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1527,7 +1527,7 @@ Example for time and date utilities in the language
 Example for system utilities in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1539,7 +1539,7 @@ How concurrency is treated in the language
 Example for concurrency in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1551,7 +1551,7 @@ How parallelism is treated in the language
 Example for parallelism in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 
@@ -1565,7 +1565,7 @@ Description of how memory can be manually managed in the language.
 Example for manual memory management in the language
 ```
 
-<u>Best Practices</u>:
+<u>Best practices</u>:
 - First best practice
 - Second best practice
 -->
