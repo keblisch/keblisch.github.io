@@ -408,7 +408,7 @@ int main()
   - **Source files**: `.cpp` (most common), `.cc`, `.cxx`, `.c++`
   - **Header files**: `.hpp` (C-compatible), `.h`, `.hh`, `.hxx`
 
-- **Best practices**:
+<u>Best practices</u>:
   - Definitions should be kept in `.cpp` files and declarations in `.hpp` files
   - Use forward declarations to reduce header dependencies when possible
 
@@ -442,7 +442,7 @@ int x = 10; // This is an inline comment explaining this variable
 // Line 2 of the comment
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Single-line comments should be used for brief explanations, inline annotations,
     and quick notes
 
@@ -465,7 +465,7 @@ int x = 10; // This is an inline comment explaining this variable
 int y = 20; /* Can also be used inline */
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Multi-line comments should be used for longer explanations, function/class descriptions,
     or block documentation
 
@@ -533,7 +533,7 @@ private:
 - Multiple namespace blocks with the same name are considered part of the same namespace
 - Namespaces can be nested and aliased for convenience
 
-- **Best practices**
+<u>Best practices</u>
   - Organize your code into logical namespaces that reflect project structure
 
 ### 7.1 Basic Namespace Usage
@@ -574,7 +574,7 @@ using namespace math;
 int result4 = subtract(10, 5);  // all identifiers accessible without prefix
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Don't use `using namespace` in header files - it pollutes all files that include the header
   - Avoid `using namespace std;` in production code to prevent name collisions
 
@@ -607,7 +607,7 @@ namespace cpm = company::project::module;
 cpm::function();
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use namespace aliases for deeply nested namespaces to improve readability
 
 ### 7.3 Anonymous Namespaces
@@ -630,7 +630,7 @@ int publicFunction()
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use anonymous namespaces instead of `static` for internal linkage
 
 ## 8 Preprocessor Directives
@@ -651,7 +651,7 @@ int publicFunction()
 #include "utilities/helper.h"
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Put `#include` directives at the beginning of files
   - Always include what you use (don't rely on transitive includes)
 
@@ -668,7 +668,7 @@ int publicFunction()
 #pragma once
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `#pragma once` in all header files (simpler and faster)
 
 ### 8.3 Macros
@@ -691,7 +691,7 @@ int maximum = MAX(10, 20); // expands to ((10) > (20) ? (10) : (20))
 #undef SQUARE
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Prefer `const` variables and `inline` functions over macros when possible
   - Use all caps for macro names to distinguish them from regular code
   - Always use parentheses in macro expressions to avoid precedence issues
@@ -729,7 +729,7 @@ int maximum = MAX(10, 20); // expands to ((10) > (20) ? (10) : (20))
 #endif
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use conditional compilation for platform-specific or debug code
 
 ### 8.5 Predefined Macros
@@ -796,7 +796,7 @@ int* heapVar = new int(100);
 delete heapVar; // must manually free memory
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Identifiers of variables with primitive data types should be written in camel case
   - Variables should always be initialized to avoid undefined behavior
   - Prefer uniform initialization `{}` to prevent narrowing conversions
@@ -847,7 +847,7 @@ delete heapVar; // must manually free memory
   - Thereby `bool` represents boolean values
   - Thereby `char` is also a character type
 
-- **Best practices**:
+<u>Best practices</u>:
   - `int` should be used for general-purpose integers when size doesn't matter
   - Fixed-width types (`int32_t`, `uint64_t`, etc.) should be used when exact size is relevant
   - `size_t` should be used for sizes, indices and counts
@@ -869,7 +869,7 @@ delete heapVar; // must manually free memory
 | `double`      | At least 8 | ~15-17                     |
 | `long double` | At least 8 | ~15-21                     |
 
-- **Best practices**:
+<u>Best practices</u>:
   - `double` should be used instead of `float`
 
 #### 10.1.3 Character Types
@@ -931,7 +931,7 @@ int matrix[3][4] = {
 matrix[1][2] == 7; // access element at row 1, column 2
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Always initialize arrays to avoid undefined behavior from garbage values
   - Prefer `std::array` (fixed size) or `std::vector` (dynamic size) over C-arrays
   - Never access elements beyond array bounds
@@ -959,7 +959,7 @@ std::strcat(name4, " Doe"); // concatenate strings (unsafe)
 std::strcmp(name2, name4);  // compare strings (returns 0 if equal)
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Prefer `std::string` over C-style strings for safety and convenience
   - Use `.at()` instead of `[]` when bounds checking is needed
   - Pass strings by `const` reference to functions: `void func(const std::string& str)`
@@ -1061,7 +1061,7 @@ Customer c1{"Alice", {"123 Main St", "Springfield", 12345}};
 c1.address.city = "Shelbyville";
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Identifiers of structures should be written in Pascal case
   - Always initialize structures to avoid undefined behavior with uninitialized members
   - Prefer uniform initialization `{}` over copy-list-initialization `=` to prevent narrowing
@@ -1148,7 +1148,7 @@ FlexibleData fd1(42);   // initializes i
 FlexibleData fd2(3.14); // initializes d
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Identifiers of unions should be written in Pascal case
   - Prefer `std::variant` over unions for type-safe alternatives
   - Always track which member is active using a discriminator
@@ -1213,7 +1213,7 @@ enum class Byte : uint8_t
 };
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Identifiers of enumerations should be written in Pascal case
   - Enumerator names should be written in Pascal case or CONSTANT_CASE depending on convention
   - Prefer `enum class` over plain `enum` to avoid naming conflicts and implicit conversions
@@ -1264,7 +1264,7 @@ constexpr Point p(10, 20);       // created at compile time
 constexpr int xCoord = p.getX(); // evaluated at compile time
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use constant case for compile-time constants and configuration values
   - Prefer `constexpr` over `const` when values can be computed at compile time
   - Declare variables as `const` when they shouldn't be modified after initialization
@@ -1300,7 +1300,7 @@ int* volatile ptr2;              // volatile pointer to int
 volatile int* volatile ptr3;     // volatile pointer to volatile int
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `volatile` for hardware registers in embedded systems
   - Use `volatile` for variables modified by signal handlers
   - Use `volatile` for memory-mapped I/O operations
@@ -1322,7 +1322,7 @@ using cstring = const char*;
 cstring myOtherString = "Hello!";
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Prefer `using` over `typedef` for consistency and template support
   - Use type aliases to simplify complex type declarations
   - Create aliases for frequently used container types
@@ -1356,7 +1356,7 @@ size_t doubleAlign = alignof(4.31); // typically 8
 alignas(16) int x;
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `std::size()`instead of manual sizeof calculations for arrays
   - Be aware that `sizeof(array_parameter)` gives pointer size, not array size
   - Use `sizeof` for buffer allocation and memory calculations
@@ -1433,7 +1433,7 @@ float* f = reinterpret_cast<float*>(&i); // reinterpret int bits as float
 // *f has undefined value, not 42.0!
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Prefer C++ casts (`static_cast`, etc.) over C-style casts for clarity and safety
   - Use `static_cast` for well-defined conversions (numeric, pointer upcast)
   - Use `dynamic_cast` for safe downcasting in polymorphic hierarchies
@@ -1477,7 +1477,7 @@ Point p{10, 20};
 auto [x, y] = p; // x: int, y: int
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `auto` for complex type names
   - Use `auto` to avoid redundancy
   - Use `decltype(auto)` when you need to preserve exact return types
@@ -1574,7 +1574,7 @@ T average(T a, T b)
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Rely on template argument deduction to reduce verbosity
   - Document template requirements clearly or use concepts
   - Avoid excessive template complexity
@@ -1624,7 +1624,7 @@ T average(T a, T b)
 0x00FF'ABCD; // hexadecimal with separator
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use digit separators `'` for large numbers to improve readability
   - Use hexadecimal for bit masks and flags
   - Use binary literals for bit patterns when clarity is important
@@ -1662,7 +1662,7 @@ T average(T a, T b)
 0x1.fp10; // double (1984.0 in decimal)
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `F` suffix for float literals to avoid implicit double-to-float conversions
   - Prefer `double` over `float` for general-purpose floating-point arithmetic
   - Use scientific notation for very large or very small numbers
@@ -1725,7 +1725,7 @@ U'A';  // char32_t (UTF-32)
 '\U00000041'; // char ('A')
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use escape sequences for non-printable characters
   - Prefer named escape sequences (`\n`, `\t`) over numeric codes for readability
   - Use Unicode escape sequences (`\u`, `\U`) for international characters
@@ -1782,7 +1782,7 @@ const char* json = R"({
 })";
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use raw string literals for paths, regex patterns, and embedded code to avoid escaping
   - Use `std::string` (with `"text"s` suffix) instead of `const char*` for easier manipulation
   - Prefer UTF-8 encoding (`u8""`) for international text
@@ -1805,7 +1805,7 @@ int* oldStyle1 = NULL;
 int* oldStyle2 = 0;
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Always use `nullptr` instead of `NULL` or `0` for null pointers
   - `nullptr` is type-safe and prevents ambiguous overload resolution
 
@@ -1835,7 +1835,7 @@ int* oldStyle2 = 0;
 if ((x > 0) && (y < 10)) { }  // clearer than: if (x > 0 && y < 10)
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use parentheses to clarify complex expressions
   - Don't rely on memorizing precedence rules for readability
 
@@ -1887,7 +1887,7 @@ int result = 10 / 0;      // undefined behavior
 double d = 10.0 / 0.0;    // may produce infinity (implementation-defined)
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Be explicit with floating-point literals to avoid unintended integer division: `x / 2.0` not `x / 2`
   - Prefer pre-increment `++i` over post-increment `i++` for better performance with complex types
   - Check for division by zero before dividing
@@ -1930,7 +1930,7 @@ c1 == c2;  // may be true or false (compares addresses, not content)
 std::strcmp(c1, c2) == 0;  // correct way to compare C-strings
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `std::abs(a - b) < epsilon` for floating-point comparisons
   - Use `std::strcmp()` or `std::string` for string comparisons, not `==` on `char*`
   - Be aware that `==` compares pointer addresses, not pointed-to values
@@ -1971,7 +1971,7 @@ if (!vec.empty()) { } // check if container has elements
 x || y && z; // equivalent to: x || (y && z)
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Rely on short-circuit evaluation for null checks and bounds checking
   - Put cheaper/faster conditions first in `&&` chains
   - Put more likely-true conditions first in `||` chains
@@ -2024,7 +2024,7 @@ a ^= b;  // a = (a ^ b) ^ original a = original b
 bool isPowerOf2 = (x != 0) && ((x & (x - 1)) == 0);
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use bitwise operators for flags, permissions, and bit manipulation
   - Use shifts for efficient multiplication/division by powers of 2
   - Prefer named constants for bit masks
@@ -2086,7 +2086,7 @@ else if (score >= 70) category = 3;
 else category = 4;
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use for simple conditional assignments
   - Avoid nesting ternary operators deeply (use if-else for complex logic)
   - Add parentheses around condition for clarity: `(x > 0) ? a : b`
@@ -2116,7 +2116,7 @@ func(a, b);   // separate arguments, not comma operator
 func((a, b)); // comma operator, only b is passed to func
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Main legitimate use is in for loop initialization/iteration
   - Avoid in most other contexts as it reduces readability
   - Parentheses are required to use comma operator in most contexts
@@ -2205,7 +2205,7 @@ BinaryOp op = add;
 int result2 = op(5, 6);
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Always initialize pointers
   - Use `nullptr` when pointers shouldn't point to a valid address yet
   - Prefer `nullptr` over `NULL` or `0` for type safety and clarity
@@ -2264,7 +2264,7 @@ int& getDanglingRef() {
 // int& bad = getDanglingRef();  // undefined behavior
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use references instead of pointers when the value must always be valid (never null)
   - Use `const` references for function parameters to avoid unnecessary copies
   - Never return references to local variables
@@ -2309,7 +2309,7 @@ int* obj = new(ptr) int(42); // construct int at existing address
 obj->~int();                 // must manually call destructor
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Avoid `new[]`, use `std::vector`, `std::array`, or `std::unique_ptr<T[]>` instead
   - Always match `new` with `delete` and `new[]` with `delete[]`
   - Set raw pointers to `nullptr` after deletion
@@ -2379,7 +2379,7 @@ if (auto ptr = getPointer())
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Always use braces `{}` even for single-line statements to prevent errors
   - Keep conditions simple and readable, extract complex logic to named boolean variables
   - Order conditions from most likely to least likely for better performance
@@ -2482,7 +2482,7 @@ for (auto values = getData(); auto& val : values)
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `for` loops when iteration count is known
   - Use `while` loops when condition is complex or iteration count is unknown
   - Use `do-while` loops when loop body must execute at least once
@@ -2592,7 +2592,7 @@ switch (x)
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Always include `break` at the end of each case unless fall-through is intentional
   - Use `[[fallthrough]]` attribute to document intentional fall-through
   - Always include a `default` case for completeness and debugging
@@ -2648,7 +2648,7 @@ for (int i = 0; i < 10 && !done; i++)
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Avoid `goto`, use structured control flow instead
   - Prefer early returns, break, continue, or flags over `goto`
   - Extract nested loops into functions to avoid needing `goto`
@@ -2788,7 +2788,7 @@ private:
 };
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Catch exceptions by const reference to avoid object slicing and unnecessary copies
   - Order catch blocks from most specific to most general exception types
   - Use standard exception classes when appropriate
@@ -2935,7 +2935,7 @@ int safeDivide(int a, int b) noexcept
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use `const` references for read-only parameters to avoid unnecessary copies
   - Pass small types by value and large types by const reference
   - Use `noexcept` for functions that won't throw exceptions to enable optimizations
@@ -3017,7 +3017,7 @@ Bar::void do()
 }
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Identifiers of classes should be written in Pascal case
   - Properties should be initialized to avoid the usage of undefined members
 
@@ -3107,7 +3107,7 @@ foo.x = 10;
 foo.do();
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Identifiers of objects should be written in camel case
   - Constructors and deconstructors should always be defined, even if they are only standard
     constructors and deconstructors
@@ -3139,7 +3139,7 @@ const Math& ref = m;
 ref.add(1, 2);
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Methods should always be defined as constant when they don't mutate their object
 
 ### 17.4 Access Modifiers
@@ -3183,7 +3183,7 @@ void barfoo(int in) {} // friend function of `Bar`
 class FooBar;    // friend class of `Bar`
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Friends of classes should be avoided to ensure encapsulation
 
 ### 17.5 Inheritance
@@ -3239,7 +3239,7 @@ public:
 Foo* foobar = new Bar(3, 4);
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Derivations should use the access modifier `public` to not modify the access modifiers
     of their derived members
 
@@ -3302,7 +3302,7 @@ public:
 };
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Dummy parameters should be keywords of data types to guarantee that they aren't used
   - Operator overloads should be used to make reference data types compatible with operators
   - Operator Overloads for classes should be friend functions or methods of these so they can
@@ -3426,7 +3426,7 @@ std::string wrapped = "Hello";
 const char* raw = wrapped.c_str();
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - C++-strings should always be used instead of raw strings due to their enhanced security and
     useability
 
@@ -3472,7 +3472,7 @@ foo.max_size(); // get maximal possible capacity of vector in elements
 foo.reserve(100); // set capacity of vector in elements
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - C++-arrays should be used instead of vectors whenever practicable due to more efficient
     memory management
   - Vectors should be created using initializations or their constructor to allocate needed
@@ -3609,7 +3609,7 @@ std::sort(rand.begin(), rand.end());                                      // asc
 std::sort(rand.begin(), rand.end(), [](int a, int b) { return a < b; });  // custom ordering
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - The function `remove_if` in combination with the method `erase` should be used to remove
     elements of containers to avoid iterator invalidation
 
@@ -3642,7 +3642,7 @@ std::getline(std::cin, input); // save read line into variable
 std::cerr << "Error " << 404 << ": Not Found" << std::endl; // > Error 404: Not Found\n
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - `endl` should be used instead of the `\n` character for system independent newlines
   - Error messages should be printed with `cerr`
 
@@ -3675,7 +3675,7 @@ file.is_open() == true; // may be false if opening failed
 file.close();
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - File stream objects should be checked for successful opening with the `is_open` method
   - File stream objects should be closed with the `close` method before their deletion
 
@@ -3718,7 +3718,7 @@ std::cout << std::fixed << std::setprecision(3) << pi << std::endl;
 std::cout << std::defaultfloat << std::setprecision(5) << pi << std::endl;
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Flushing of output streams should be used carefully due to potential performance losses
 
 ### 19.3 System
@@ -3774,7 +3774,7 @@ std::clamp(45.1, min, max) == 20.0;
 std::clamp(14.87, min, max) == 14.87;
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - The argument for the `srand` function should be the `time` function to set an ever changing
     system seed
   - The `srand` function should only be used once with the same argument at the start of the
@@ -3805,7 +3805,7 @@ std::isspace(' ') == true;
     smart pointers
   - These are managing the creation and deletion of their pointed values
 
-- **Best practices**:
+<u>Best practices</u>:
   - Smart pointers should always be used instead of pointers and references due to their
     enhanced security and usability
 - Use raw pointers and references only for non-owning access
@@ -3832,7 +3832,7 @@ std::shared_ptr<int> foobar; // null pointer
 foobar = std::shared_ptr<int>(new int(3));
 ```
 
-- **Best practices**:
+<u>Best practices</u>:
   - Use shared pointers only when shared ownership is required
   - Shared pointers should be initialized with the `make_shared` function due to their enhanced
     performance and security
