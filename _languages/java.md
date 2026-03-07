@@ -395,10 +395,13 @@ according code, but are still regular comments for the Java compiler.
 /**
  * Some random class.
  *
+ * @param <T> usage of generic
+ *
  * @author John Doe
  * @version 1.0.0
+ * @since 2020-12-31
  */
-public class FooBar {
+public class FooBar<T> {
 
     /**
      * Some random field.
@@ -432,6 +435,25 @@ public class FooBar {
         return x + y;
     }
 
+}
+
+/**
+ * Some random enum.
+ *
+ * @author John Doe
+ * @version 1.0.0
+ * @since 2020-12-31
+ */
+public enum BarFoo {
+    /**
+     * Some enum element.
+     */
+    FOO,
+
+    /**
+     * Some other enum element.
+     */
+    BAR
 }
 ```
 
@@ -1004,6 +1026,9 @@ int add(int x, int y) {
 int x = add(2, 3);  // execute function with parameters nad return values
 ```
 
+<u>Best practices</u>:
+- Methods should be named in camel case
+
 ### 13.1 Function Overloading
 
 ```java
@@ -1079,6 +1104,9 @@ barfoo.getFoo() == "FooBar";
 // check if objects are instances of classes
 foobar instanceof FooBar == true;
 ```
+
+<u>Best practices</u>:
+- Classes should be named in pascel case
 
 ### 14.1 Inheritance
 
@@ -1292,11 +1320,14 @@ class FooBar<T, U> {
 }
 
 // implement generics by inserting any compatible classes
-FooBar foobar = new FooBar<String, Integer>();
+FooBar<String, Integer> foobar = new FooBar<String, Integer>();
 foobar.foo = "Foo";
 foobar.getFoo() == "Foo";
 foobar.bar = 12;
 foobar.getBar() == 12;
+
+// infer implementations of generics
+FooBar<String, Integer> barfoo = new FooBar<>();
 ```
 
 ### 14.7 Interfaces
@@ -1364,6 +1395,9 @@ jonny.walk(10.0) == 9.0;
 Student jack = new Student();
 jack instanceof Person == true;
 ```
+
+<u>Best practices</u>:
+- Interfaces should be named in camel case
 
 #### 14.7.1 Generic Interfaces
 
@@ -1557,142 +1591,344 @@ class MyException extends Exception {
 }
 ```
 
-<!--
-## 17 Containers
+## 17 Collections
 
-How containers are treated in the language.
+All collections in Java implement the `java.util.Collection` interface.
 
 ### 17.1 Lists
 
-How lists are treated in the language.
+All list types in Java implement the `java.util.List` interface, which itself extends the
+`java.util.Collection` interface. This interface defines common methods for lists, so that they
+share an API, but can be implemented differently.
 
-```test
-Example for list usage in the language
+```java
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+// create lists
+List<Integer> array = new ArrayList<>();  // list implemented as dynamic array
+List<Integer> list = new LinkedList<>();  // list implemented as linked list
+
+// create prefilled lists
+ArrayList<Integer> fromArgs = Arrays.asList(5, 8, 5);                  // create from arguments
+LinkedList<Integer> fromArray = Arrays.asList({5, 8, 5});              // create from array
+List<Integer> fromList = new LinkedList<>(array);                      // create from other list
+List<Integer> fromSet = new LinkedList<>(new HashSet<Integer>(5, 2));  // create from set
+
+// add elements to lists
+list.add(5);
+list.add(-8);
+
+// get elements from lists by their index
+list.get(0) == 5;
+list.get(1) == -8;
+list.get(2);  // throws IndexOutOfBoundsException
+
+// get indices of first occurring list elements
+list.indexOf(-8) == 1;
+list.indexOf(10) == -1;  // element not found
+
+// get indices of last occurring list elements
+list.lastIndexOf(-8) == 1;
+list.lastIndexOf(10) == -1;  // element not found
+
+// get sizes of lists
+list.size() = 2;
+
+// remove elements from lists
+list.remove(1);                   // remove by index
+list.remove(Integer.valueOf(5));  // remove by value (first occurence)
+
+// get list iterators
+Iterator<Integer> = list.iterator();
+
+ArrayList<Integer> list = Arrays.fromArgs(5, 8, 5);
+
+// call functions on all list elements
+list.forEach((e) -> System.out.println(e));  // implement `Consumer` functional interface
+list.forEach(System.out::println);           // pass predefined function
+
+// sort lists
+Collection.sort(list);                         // sort in ascending natural order
+list.sort((first, second) -> first - second);  // implement `Comparator` functional interface
+
+// create natural orders for classes as list elements
+public class Foo implements Comparable<Foo> {
+    public String foo;
+
+    // implement `compareTo` method that creates natural order in sorting
+    public int compareTo(Foo that) {
+        return this.foo.length() - that.foo.length();
+    }
+}
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 17.2 Sets
 
-### 17.2 Maps
+All sets types in Java implement the `java.util.Set` interface, which itself extends the
+`java.util.Collection` interface. This interface defines common methods for sets, so that they
+share an API, but can be implemented differently.
 
-How maps are treated in the language.
+```java
+import java.util.Collection;
+import java.util.Comparable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
-```test
-Example for map usage in the language
+// create sets
+Set<Integer> hash = new HashSet<>();          // set implemented as unordered hash set
+Set<Integer> linked = new LinkedHashSet<>();  // set implemented as ordered linked hash set
+Set<Integer> tree = new TreeSet<>();          // set implemented as ordered tree set
+
+// create prefilled sets
+HashSet<Integer> fromArgs = Arrays.asSet(5, 8, 5);                    // create from arguments
+LinkedList<Integer> fromArray = Arrays.asSet({5, 8, 5});              // create from array
+Set<Integer> fromSet = new HashSet<>(linked);                         // create from other set
+Set<Integer> fromList = new HashSet<>(new ArrayList<Integer>(1, 2));  // create from list
+
+// add elements to sets
+hash.add(5);
+hash.add(-8);
+
+// get sizes of sets
+hash.size() = 2;
+
+// get set iterators
+Iterator<Integer> = hash.iterator();
+
+// call functions on all set elements
+hash.forEach((e) -> System.out.println(e));  // implement `Consumer` functional interface
+hash.forEach(System.out::println);           // pass predefined function
+
+// sort ordered sets
+Collection.sort(new TreeSet<Integer>());       // sort in ascending natural order
+hash.sort((first, second) -> first - second);  // implement `Comparator` functional interface
+
+// create natural orders for classes as set elements
+public class Foo implements Comparable<Foo> {
+    public String foo;
+
+    // implement `compareTo` method that creates natural order in sorting
+    public int compareTo(Foo that) {
+        return this.foo.length() - that.foo.length();
+    }
+}
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 17.3 Maps
 
-### 17.3 Iterators
+All maps types in Java implement the `java.util.Map` interface, which itself extends the
+`java.util.Collection` interface. This interface defines common methods for maps, so that they
+share an API, but can be implemented differently.
 
-How iterators are treated in the language.
+```java
+import java.util.HashMap;
+import java.util.HashTable;
+import java.util.Set;
 
-```test
-Example for iterator usage in the language
+// create maps
+Map<String, Integer> map = new HashMap<>();      // implemented as unordered thread unsafe hash map
+Map<String, Integer> table = new HashTable<>();  // implemented as ordered thread safe hash table
+
+// add key-value pairs to maps
+map.put("first", 5);
+map.put("second", -8);
+
+// update key-value pairs in maps
+map.put("first", 3);
+
+// get values from maps by their key
+list.get("first") == 3;
+list.get("second") == -8;
+list.get("third") == null;
+
+// remove key-value pairs from maps
+map.remove("second") == -8;   // get removed value
+map.remove("third") == null;  // get null when key didn't exist
+map.clear();                  // remove all values
+
+// get all keys from maps
+Set<String> keys = map.keySet();
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 17.4 Streams
+
+Streams are wrappers for collection elements that can perform actions on copies of them that don't
+mutate the original collection. Thereby streams can only be transformed once and are invalidated
+after they were transformed.
+
+```java
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.stream.Stream;
+
+// create streams from collections
+Stream<Integer> stream = Arrays.fromArgs(5, 8, 5, 12, 7).stream();
+
+// perform operations on streams
+Stream<Integer> result = stream
+    .filter((e) -> e % 2 == 0)  // filter stream elements with predicate
+    .map((e) -> e + 10)         // apply function on each stream element
+    .sorted();                  // sort stream elements in ascending natural order
+
+// transform streams
+int sum = result.sum();                                      // sum values
+int prod = result.reduce(0, (carry, elem) -> carry * elem);  // reduce into single value
+ArrayList<Integer> list = result.toList();                   // convert into list
+HashSet<Integer> set = result.toSet();                       // convert into set
+
+// perform operations on streams in parallel threads
+int fastSum = Arrays.fromArgs(5, 8, 5, 12, 7).parallelStream()
+    .filter((e) -> e % 2 == 0)
+    .map((e) -> e + 10)
+    .sorted()
+    .sum();
+```
 
 ## 18 IO
 
-How streams are treated in the language.
-
 ### 18.1 Terminal
 
-How terminal streams are treated in the language.
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
-```test
-Example for terminal streams usage in the language
+// print to stdout
+System.out.print("Hello");  // print string
+System.out.print(4);        // print string representation
+
+// print to stdout with appended line breaks
+System.out.print("Hello");  // print string
+System.out.print(4);        // print string representation
+
+// read tokens from stdin
+Scanner tokenScanner = new Scanner(System.in);  // create scanner of stdin
+String token = tokenScanner.next();             // read next token from stdin
+tokenScanner.close();                           // close scanner of stdin
+
+// read lines from stdin
+Scanner lineScanner = new Scanner(System.in);  // create scanner of stdin
+String line = lineScanner.nextLine();          // read next line from stdin
+lineScanner.close();                           // close scanner of stdin
+
+// read lines buffered from stdin
+InputStreamReader in = new InputStreamReader(System.in);  // create reader of stdin
+BufferedReader reader = new BufferedReader(in);           // create buffered reader of stdin reader
+String line = reader.readLine();                          // read next line from buffered reader
+reader.close();                                           // close buffered reader
+
+// automatically close resources
+try (Scanner scanner = new Scanner(System.in)) {
+    System.out.println(scanner.next());
+}
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Stdin should be read with buffered readers when many readings are performed
 
 ### 18.2 Files
 
-How file streams are treated in the language.
+```java
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
-```test
-Example for file streams usage in the language
+// create file object
+File file = new File("path/to/some/file.txt");
+
+// read tokens from stdin
+Scanner tokenScanner = new Scanner(file);       // create scanner of file
+String token = tokenScanner.next();             // read next token from file
+tokenScanner.close();                           // close scanner of file
+
+// read lines from file
+Scanner lineScanner = new Scanner(file);       // create scanner of file
+String line = lineScanner.nextLine();          // read next line from file
+lineScanner.close();                           // close scanner of file
+
+// read lines buffered from file
+InputStreamReader in = new InputStreamReader(file);       // create reader of file
+BufferedReader reader = new BufferedReader(in);           // create buffered reader of file reader
+String line = reader.readLine();                          // read next line from buffered reader
+reader.close();                                           // close buffered reader
+
+// read files as streams
+InputStream input = getClass().getClassLoader().getResourceAsStream("path/to/some/file.txt");
+Scanner scanner = new Scanner(input);
+String token = scanner.next();
+scanner.close();
+input.close();
+
+// automatically close resources
+try (Scanner scanner = new Scanner(file)) {
+    System.out.println(scanner.next());
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Files should be read with buffered readers when many readings are performed
+- Files should be read as streams when they're large to avoid memory overflows
 
-## 19 Math
+## 19 Threads
 
-```test
-Example for math utilities in the language
+Threads can be in one of the following states:
+- **New**: Thread has been newly created
+- **Runnable**: Thread has been started
+- **Running**: Thread is currently executing
+- **Waiting**: Thread execution has been halted
+- **Dead**: Thread has been terminated
+
+```java
+public class Counter {
+    public int count = 0;
+
+    // lock method for other threads while it is being executed
+    public synchronized void increment() {
+        this.count++;
+    }
+}
+Counter counter = new Counter();
+
+// create threads via inheritance
+public class Foo extends Thread {
+    // override `run` method that is used to run in new thread
+    @Override
+    public void run() {
+        counter.increment();
+    }
+}
+Foo foo = new Foo();  // instantiate thread
+foo.start();          // run thread
+
+// create thread by implementing the `Runnable` functional interface
+Thread bar = new Thread(() -> counter.increment());
+bar.start();  // run thread
+
+// halt current thread until specified thread has been finished
+foo.join();
+
+// pause current thread for some amount of milliseconds
+Thread.sleep(1000);
+
+// manage thread priorities (from 1 as lowest to 10 as highest)
+foo.getPriority() == 5;  // get priority
+foo.setPriority(10);     // set priority
+
+// manage thread names
+foo.getName() == "Foo";  // get name
+foo.setName("FooBar");   // set name
+
+// access main thread
+Thread current = Thread.currentThread();
 ```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 20 Time and Date
-
-```test
-Example for time and date utilities in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 21 System
-
-```test
-Example for system utilities in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 22 Concurrency
-
-How concurrency is treated in the language
-
-```test
-Example for concurrency in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 23 Parallelism
-
-How parallelism is treated in the language
-
-```test
-Example for parallelism in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 24 Memory Management
-
-Description of how memory management is implemented in the language.
-
-Description of how memory can be manually managed in the language.
-
-```text
-Example for manual memory management in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
--->
 
 {% endraw %}
