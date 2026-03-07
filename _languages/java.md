@@ -13,9 +13,9 @@ title: Java
 Java is a purely object oriented language that provides high-level abstractions inside a platform
 independent runtime environment.
 
-| Paradigms       | Typing           | Memory Management | Execution                          |
-| :-------------- | :--------------- | :-----------------| :--------------------------------- |
-| Object Oriented | Strong<br>Static | Garbage Collected | Compiled into interpreted bytecode |
+| Paradigms       | Typing           | Memory Management | Execution                           |
+| :-------------- | :--------------- | :-----------------| :---------------------------------- |
+| Object Oriented | Strong<br>Static | Garbage Collected | Compiled into JIT compiled bytecode |
 
 ```java
 public class Main {
@@ -35,7 +35,7 @@ public class Main {
 
 ### 1.1 Resources
 
-- Official Java website: [https://www.java.com/en/](Java)
+- Official Java website: [https://www.oracle.com/java/](Java)
 - Official Java documentation: [https://docs.oracle.com/en/java/](Java Documentation)
 - Official Java tutorial: [https://docs.oracle.com/javase/tutorial/index.html](The Java Tutorial)
 - Comprehensive Java reference:
@@ -89,12 +89,12 @@ The following JDKs are available:
 ### 2.1 Compiler
 
 Java source code files are compiled into executable Java bytecode files by the Java compiler,
-called the **JavaC**. These bytecode files are platform independent and highly optimized for
+called the **Javac**. These bytecode files are platform independent and highly optimized for
 fast execution.
 
 ```bash
 # compile Java source files into according Jva bytecode files
-javac SomeFile.java SomeOtherFile.java
+javac SomeFile SomeOtherFile
 ```
 
 ### 2.2 Runtime
@@ -105,28 +105,28 @@ precompiled Java standard library.
 
 ```bash
 # execute Java bytecode file
-java SomeFile.class
+java SomeFile
 ```
 
 ### 2.3 Bundler
 
 Java bytecode files can be bundled into Jar (Java Archive) files by the **Jar** tool. This way
 entire Java projects consisting of multiple bytecode files can be distributed more easily and
-even executed directly. Thereby Jar files can also contain other Jar files as dependencies.
+even executed directly.
 
-To make Jar files executable they must contain a `MANIFEST.txt` file which specifies metadata
-including the class containing the main method. This file can be generated automatically or
-created and included manually.
+To make Jar files executable they must contain a `META-INF/MANIFEST.MF` file which specifies
+metadata including the class containing the main method. This file can be generated automatically
+or created and included manually.
 
 ```bash
 # bundle Java bytecode files into Jar file
-jar cf App.jar Main.class Util.class OtherApp.jar
+jar cf App.jar Main.class Util.class
 
 # bundle Java bytecode files into executable Jar file
 jar cfe App.jar Main Main.class Util.class
 
-# bundle Java bytecode files into executable Jar file with manually created MANIFEST.txt file
-jar cf App.jar Main.class Util.class MANIFEST.txt
+# bundle Java bytecode files into executable Jar file with manually created manifest file
+jar cfm App.jar MANIFEST.MF Main.class Util.class
 
 # execute executable Jar file
 java -jar App.jar
@@ -197,8 +197,8 @@ graph TD
 ### 4.1 Whitespace
 
 Whitespace is used to separate tokens (identifiers, literals, keywords, and operators) from each
-other and as characters inside string literals. In every other case whitespace is ignored
-entirely by the Java compiler.
+other and as characters inside string literals. Outside of these whitespace has no meaning and is
+ignored by the Java compiler.
 
 ```java
 int x=10;       // valid
@@ -208,9 +208,9 @@ intx = 10;      // invalid
 
 ### 4.2 Statements
 
-Statements are any combination of expressions that end with a semicolon `;`.
-Thereby compound statements can be formed by enclosing any number of statements inside curly
-braces `{}`, which are then treated as a single statement.
+Statements are predefined control structures, definitions and any combination of expressions that
+end with a semicolon `;`. Thereby compound statements can be formed by enclosing any number of
+statements inside curly braces `{}`, which are then treated as a single statement.
 
 ```java
 // line statement
@@ -229,7 +229,8 @@ int x;
 ### 4.3 Identifiers
 
 The following rules apply for identifiers:
-  - They must start with a letter or underscore
+  - They mustn't start with digit
+  - They mustn't only contain underscores
   - They may contain letters, digits, and underscores
   - They cannot be predefined keywords
   - They are case-sensitive
@@ -289,24 +290,16 @@ The following identifiers are reserved as keywords with special meaning:
 
 ### 5.1 Files
 
-Java source files must contain a class or interface definition and have the file suffix `.java`.
-Thereby they can contain optional additional class definitions. Java bytecode files are
-automatically named like their according Java source files and have the file suffix `.class`.
+Java source files must contain a class, interface, enum or annotation definition and have the file
+suffix `.java`. Thereby they can contain optional additional definitions, but they must include
+exactly one public definition.
 
-<u>Best practices</u>:
-- Java source files should be named like their contained class or interface definition
+Java source and bytecode files Java must be named like their according public definitions. Java
+bytecode files have the file suffix `.class`.
 
 ### 5.2 Projects
 
-Java projects follow the Maven project structure per convention:
-- `src/`: Source files
-  - `main/`: Program files
-    - `java/`: Java source files
-    - `resources/`: Additional non-Java files
-  - `test/`: Test files
-    - `java/`: Java source files
-    - `resources/`: Additional non-Java files
-- `target/`: Compiled bytecode files
+Java projects follow the project structures of their according build tool.
 
 ### 5.3 Entry Point
 
@@ -414,7 +407,7 @@ public class FooBar<T> {
     /**
      * Does some random stuff.
      * 
-     * <p>Example:</p>
+     * <pre>Example:</p>
      * <p>{@code
      * int result = fb.bar(2, 3);
      * result == 5;
@@ -459,7 +452,7 @@ public enum BarFoo {
 
 ## 7 Variables
 
-Variables can only exist as fields of classes.
+Variables can only exist inside of classes.
 
 ```java
 // declare variables
@@ -488,7 +481,7 @@ foo == 1;         // shadowing is revoked when its scope is left
 
 ## 8 Constants
 
-Constants can only exist as fields of classes.
+Constants can only exist inside of classes.
 
 ```java
 // initialize constant
@@ -508,22 +501,21 @@ Data types in Java have default values that get assigned automatically to undefi
 
 ### 9.1 Primitive Data Types
 
-| Keyword   | Representation        | Byte Size | Values                           | Default |
-| :-------- | :-------------------- | :-------- | :------------------------------- | :------ |
-| `byte`    | Signed Integer        | 1         | $-2^{7}$ to $2^{7}-1$            | `0`     |
-| `short`   | Signed Integer        | 2         | $-2^{15}$ to $2^{15}-1$          | `0`     |
-| `int`     | Signed Integer        | 4         | $-2^{31}$ to $2^{31}-1$          | `0`     |
-| `long`    | Signed Integer        | 8         | $-2^{63}$ to $2^{63}-1$          | `0`     |
-| `float`   | Floating Point Number | 4         | $\approx$ 7 digits               | `0.0`   |
-| `double`  | Floating Point Number | 8         | $\approx$ 15 digits              | `0.0`   |
-| `boolean` | Boolean Value         | 1         | `true`, `false`                  | `false` |
-| `char`    | Unicode Character     | 2         | `'\u0000'` to `'\uffff'`         | `''`    |
+| Keyword   | Representation        | Byte Size | Values                           | Default    |
+| :-------- | :-------------------- | :-------- | :------------------------------- | :--------- |
+| `byte`    | Signed Integer        | 1         | $-2^{7}$ to $2^{7}-1$            | `0`        |
+| `short`   | Signed Integer        | 2         | $-2^{15}$ to $2^{15}-1$          | `0`        |
+| `int`     | Signed Integer        | 4         | $-2^{31}$ to $2^{31}-1$          | `0`        |
+| `long`    | Signed Integer        | 8         | $-2^{63}$ to $2^{63}-1$          | `0`        |
+| `float`   | Floating Point Number | 4         | $\approx$ 7 digits               | `0.0`      |
+| `double`  | Floating Point Number | 8         | $\approx$ 15 digits              | `0.0`      |
+| `boolean` | Boolean Value         | 1         | `true`, `false`                  | `false`    |
+| `char`    | Unicode Character     | 2         | `'\u0000'` to `'\uffff'`         | `'\u0000'` |
 
 #### 9.1.1 Type Conversion
 
-Primitive data type are converted automatically in according contexts when the following applies:
-- The data type encoding is the same
-- The new data type has a the same or a bigger size as the old one
+Primitive data type are converted automatically in according contexts when the new data type is
+of the same or a larger size as the original data type.
 
 #### 9.1.2 Type Casting
 
@@ -536,7 +528,7 @@ Primitive data type are converted automatically in according contexts when the f
 
 // casting number data types into smaller number data types
 (byte)46 == 46
-(byte)257 == 257 % 127
+(byte)1 == 257 % 127
 
 // casting characters into unicode values and vice versa
 int ascii = 'A';
@@ -552,12 +544,17 @@ therefore they can be used in place of any primitive data type.
 Data type wrappers have the benefit that they can be used for generic classes and methods, because
 these require objects to implement them. Also they add some utility methods to the data types.
 
-| Wrapper     | Wrapped Primitives             |
-| :---------- | :----------------------------- |
-| `Integer`   | `byte`, `short`, `int`, `long` |
-| `Double`    | `float`, `double`              |
-| `Boolean`   | `boolean`                      |
-| `Character` | `char`                         |
+
+| Wrapper     | Wrapped Primitive             |
+| :---------- | :---------------------------- |
+| `Byte`      | `byte`                        |
+| `Short`     | `short`                       |
+| `Integer`   | `int`                         |
+| `Long`      | `long`                        |
+| `Float`     | `float`                       |
+| `Double`    | `double`                      |
+| `Boolean`   | `boolean`                     |
+| `Character` | `char`                        |
 
 <u>Best practices</u>:
 - Data type wrappers should only be used when they're needed, because they add additional overhead
@@ -592,8 +589,8 @@ matrix = {
     {2, 3, 4, 5},
     {3, 4, 5, 6}
 };
-int row = matrix[0];
-matrix[0] = {4, 2, 3, 1};
+int[] row = matrix[0];
+matrix[0] = new int[]{4, 2, 3, 1};
 int cell = matrix[0][0];
 matrix[0][5] = 3;
 
@@ -604,10 +601,10 @@ peaks = {
     {2, 3, 4, 5},
     {3, 4, 5}
 };
-int line = peaks[0];
-peaks[0] = {4, 2};
+int[] line = peaks[0];
+peaks[0] = new int[]{4, 2};
 int point = peaks[0][0];
-peaks[0][5] = 3;
+peaks[0][4] = 3;
 ```
 
 #### 9.2.2 Strings
@@ -628,9 +625,8 @@ String firstName = "John";            // literal syntax
 String lastName = new String("Doe");  // object syntax
 
 // create strings from character arrays
-char[] letters = {'J', 'o', 'h' 'n'};
+char[] letters = {'J', 'o', 'h', 'n'};
 String name = new String(letters);
-name == "John"
 
 // format strings
 String pitch = String.format(
@@ -652,8 +648,13 @@ multi == "This\nis a\nmultiline\nstring";
 ##### 9.2.2.1 String Processing
 
 ```java
+// comparing strings
+String name = "John";
+name == "John";
+name.euqlas("John");
+
 // concatenate strings
-"Foo" + "Bar" = "FooBar";         // operator syntax
+"Foo" + "Bar" == "FooBar";        // operator syntax
 "Bar".concat("Foo") == "BarFoo";  // method syntax
 
 // get string size
@@ -665,7 +666,7 @@ multi == "This\nis a\nmultiline\nstring";
 
 // convert case
 "Hello, World!".toLowerCase() == "hello, world!";
-"Hello, World!".toLowerCase() == "HELLO, WORLD!";
+"Hello, World!".toUpperCase() == "HELLO, WORLD!";
 
 // check for substrings
 "Hello, World!".contains("Hello") == true;
@@ -687,11 +688,8 @@ char[] letters = name.toCharArray();
 
 Buffered strings don't use the global internal string table, but are wrapping a dynamic character
 array, that keeps track of its length and capacity and that gets reallocated when it needs to
-grow beyond its capacity. They're completely compatible with regular strings and can be used
-in their place.
-
-Buffered strings have the benefit that they're more flexible and that they can be more performant
-in cases where many string manipulations are performed.
+grow beyond its capacity. They have the benefit that they're more flexible and that they can be
+more performant in cases where many string manipulations are performed.
 
 ```java
 // create buffered strings
@@ -708,8 +706,8 @@ name.append("Doe");
 name == "John Doe";
 
 // insert substrings into buffered strings
-hello.insert(4, ",ny");
-name == "Johnny Doe";
+name.insert(4, ",ny");
+name.equals("Johnny Doe");
 ```
 
 <u>Best practices</u>:
@@ -729,7 +727,7 @@ enum Status {
     FAILURE,  // 2
     PENDING   // 3
 }
-Status request = State.RUNNING;  // assign enum element
+Status request = Status.RUNNING;  // assign enum element
 request.ordinal() == 0;          // get value of assigned enum element
 
 // use enums with custom values
@@ -805,10 +803,13 @@ Optional<String> maybeNotEmpty = Optional.ofNullable(null);
 Optional<String> notEmpty = Optional.of("foo");
 
 // check wether optional contains value
-maybeEmpty.get() == true;
+maybeEmpty.isPresent() == true;
 
 // check wether optional contains `null`
-maybeNotEmpty.empty() == false;
+maybeNotEmpty.isEmpty() == true;
+
+// get contained value
+maybeEmpty.get() == "foo";
 
 // return values of optionals or alternative values if empty
 maybeEmpty.orElse("bar") == "foo";
@@ -820,7 +821,7 @@ maybeNotEmpty.orElse("bar") == "bar";
 ```java
 // use integer literals with different bases
 0b10011011;  // binary
-0o1772;      // octal
+01772;       // octal
 0xF12A2;     // hexadecimal
 
 // use separators in number literals
@@ -842,10 +843,10 @@ maybeNotEmpty.orElse("bar") == "bar";
 
 ### 11.1 Precedence
 
-| Operation   | Operator | Precedence Level |
-| :---------- | :------- | :----------------|
-| Addition    | `+`      | 2                |
-| Subtraction | `-`      | 1                |
+| Category       | Operators     | Precedence Level |
+| :------------- | :------------ | :----------------|
+| Multiplicative | `*`, `/`, `%` | 2                |
+| Additive       | `+`, `-`      | 1                |
 
 Description how operator precedence can be changed.
 
@@ -871,7 +872,7 @@ Description how operator precedence can be changed.
 | Operation          | Operator | Syntax   |
 | :----------------- | :------- | :--------|
 | Equality           | `==`     | `x == y` |
-| Inequality         | `!=`     | `x == y` |
+| Inequality         | `!=`     | `x != y` |
 | Less Than          | `<`      | `x < y`  |
 | Less Equal Than    | `<=`     | `x <= y` |
 | Greater Than       | `>`      | `x > y`  |
@@ -889,7 +890,7 @@ Logical operators in Java are short circuited.
 
 ### 11.5 Assignment Operators
 
-The left operand in assignment operations is always the assigned to variable.
+The left operand of an assignment must be a variable or assignable expression.
 
 | Operation                 | Operator | Syntax   |
 | :------------------------ | :------- | :--------|
@@ -904,7 +905,7 @@ The left operand in assignment operations is always the assigned to variable.
 
 ```java
 boolean toCheck = true;
-toCheck ? System.out.println("Is true") : System.out.println("Is false");
+String result = toCheck ? System.out.println("Is true") : System.out.println("Is false");
 ```
 
 <u>Best practices</u>:
@@ -988,7 +989,7 @@ for (int i = 0; i < 10; i++) {
 }
 
 // define enhanced-for-loops that loop through arrays and collections
-int nums[] = new int[5];
+int[] nums = new int[5];
 for (int n : nums) {
     System.out.println("Current number: " + n);
 }
@@ -1003,7 +1004,7 @@ for (int i = 0; i < 10; i++) {
 // skip loop iterations
 for (int i = 0; i < 10; i++) {
     if (i % 2 == 0) {
-        break; // skip iteration immediately
+        continue; // skip iteration immediately
     }
 }
 ```
@@ -1051,12 +1052,9 @@ add(5.0, 10.0) == 20.0;
 
 ### 13.2 Generic Functions
 
-Generic functions are compiled into multiple overloads of the same function, whereby a version for
-each possible implementation is created.
-
 ```java
 // define generics that can be implemented by any compatible class
-T add<T, U>(T x, U y) {
+<T, U> T add(T x, U y) {
     System.out.println(y);
     return x;
 }
@@ -1067,7 +1065,7 @@ Integer x = add<Integer, Double>(12, 4.5);
 
 ## 14 Object Orientation
 
-Classes are custom compound data types with a default value of `null`.
+Classes are custom compound data types with a default value of `null` for their objects.
 
 ```java
 // define classes
@@ -1137,10 +1135,10 @@ public class Bar extends Foo {
         this.bar = bar;
     }
 
-    // override inherited methods (parameters and return types must match or be compatible)
+    // override inherited methods (parameters and return types must match or be subtypes)
     @Override // annotate as override for compile-time checking
-    public StringBuffer getFoo() {
-        return new StringBuffer(this.foo);
+    public String getFoo() {
+        return new String(this.foo);
     }
 
     // mark methods as final (not overridable)
@@ -1150,9 +1148,9 @@ public class Bar extends Foo {
 }
 
 // mark classes as final (not derivable)
-public final class BarFoo extends FooBar {
-    public BarFoo(String foo, String bar) {
-        super(foo, bar);
+public final class FooBar extends Bar {
+    public void greet() {
+        System.out.println("Hello!");
     }
 }
 
@@ -1171,7 +1169,7 @@ FooBar foobar = (FooBar)foo;
 // check if objects are instances of base classes
 barfoo instanceof Foo == true;
 
-// derive classes anonymously for one-time usage
+// derive classes anonymously for one-time usage (must have default constructors)
 FooBar foofoo = new FooBar() {
     private String foofoo = "Foo Foo";
 
@@ -1272,7 +1270,7 @@ public class Foo {
 // access inner classes
 Foo foo = new Foo();
 Foo.Bar bar = foo.new Bar();
-foo.bar.name == "bar";
+bar.name == "bar";
 ```
 
 ### 14.5 Abstract Classes
@@ -1280,10 +1278,10 @@ foo.bar.name == "bar";
 ```java
 // define class as abstract (only inheritable)
 public abstract class Foo {
-    private String foo = "Foo";
+    protected String foo = "Foo";
 
     // define method as abstract (must be overriden)
-    public abstract String getFoo() {}
+    public abstract String getFoo();
 }
 
 // derive from abstract clases
@@ -1300,9 +1298,6 @@ foobar.getFoo() == "Foo";
 ```
 
 ### 14.6 Generic Classes
-
-Generic classes are compiled into multiple overloads of the same class, whereby a version for
-each possible implementation is created.
 
 ```java
 // define generics that can be implemented by any compatible class
@@ -1381,7 +1376,7 @@ jane.greet() == "Hi!";
 jane.pass() == "Bye!";
 
 // abstract classes don't have to implement interface methods, only their derivations
-public abstract class Person implements Human {}
+public abstract class Pupil implements Human {}
 
 // implement interfaces anonymously for one-time usage
 Person jonny = new Person() {
@@ -1439,11 +1434,11 @@ Greeter hi = (String name) -> {
 hi.greet("John") == "Hi John!";
 
 // implement functional interfaces by providing inline lambda expressions
-Greeter hey = (String name) -> return "Hey " + name "!";
+Greeter hey = (String name) -> "Hey " + name "!";
 greeter.hey("Jane") == "Hey Jane!";
 
 // implement functional interfaces by providing shortened inline lambda expressions
-Greeter hello = (name) -> "Hello " + name "!";
+Greeter hello = name -> "Hello " + name "!";
 greeter.hello("Jonny") == "Hello Jonny!";
 ```
 
@@ -1468,7 +1463,7 @@ public class Foo {
 
     // override inherited comparison method
     @Override
-    public boolean compare(Foo other) {
+    public boolean equals(Foo other) {
         return this.foo == other.foo;
     }
 
@@ -1482,19 +1477,16 @@ public class Foo {
 Foo foo = new Foo();
 Foo bar = new Foo();
 
-String.format("%v", foo) == "Foo{foo: Foo}";  // use custom string representations
-foo == bar == true;                           // compare objects based on custom criterias
+String.format("%s", foo) == "Foo{foo: Foo}";  // use custom string representations
+foo.equals(bar= == true;                      // compare objects based on custom criterias
 foo.hashCode() == 3;                          // compute custom hash codes
 ```
 
-<u>Best practices</u>:
-- The hash code generation method shouldn't be overriden, because many internal processes depend
-  on it
-
 ## 15 Annotations
 
-Annotations are shorthand syntax for wrapping code around classes, intefaces, fields and methods to
-add aditional checks or functionality to them. Thereby the following distinction exists:
+Annotations are metadata attached to program elements (classes, methods, fields, etc.) that can be
+processed by the compiler, tools, or at runtime via reflection. Thereby the following distinction
+exists:
 - Compile-time annotations add additional metadata and/or compile-time checks and are optional
 - Runtime annotations add additional features and are therefore mandatory to access these features
 
@@ -1509,7 +1501,7 @@ public interface Greeter {
 @Deprecated  // Mark classes as deprecated (compile-time)
 public class Person {
     @Deprecated  // Mark fields as deprecated (compile-time)
-    private String name;
+    protected String name;
 
     @Deprecated  // Mark methods as deprecated (compile-time)
     public String getName() {
@@ -1518,9 +1510,6 @@ public class Person {
 }
 
 public class John extends Person {
-    @Override  // Mark fields as overriding inherited fields (compile-time)
-    public String name = "John";
-
     @Override    // Mark methods as overriding inherited methods (compile-time)
     public String getName() {
         return this.name;
@@ -1543,28 +1532,28 @@ exist:
 | `ClassNotFoundException`         | Accessed invalid class identifier  | Yes     |
 | `InterruptedException`           | Interrupted thread execution       | Yes     |
 | `ArithmeticException`            | Used invalid arithmetic expression | No      |
-| `ArrayIndexOutOfBoundsException` | Accessedd invalid array index      | No      |
+| `ArrayIndexOutOfBoundsException` | Accessed invalid array index       | No      |
 | `NullPointerException`           | Accessed null pointer              | No      |
 
 ### 16.1 Catching Exceptions
 
 ```java
-try {  // only executes until exception is thrown
+// only executes until exception is thrown
+try {
     int x = 5 / 0;
 }
-catch (ArithmeticException e) {          // only executes when specified exception is thrown
-    System.out.println(e.getMessage());  // print message of exception
-    e.printStackTrace();                 // print stack trace of exception
-}
-catch (ArrayIndexOutOfBoundsException e) {  // only executes when specified exception is thrown
+// only executes when one of the specified exceptions is thrown
+catch (ArithmeticException | ArrayIndexOutOfBoundsException e) {
     System.out.println(e.getMessage());     // print message of exception
     e.printStackTrace();                    // print stack trace of exception
 }
-catch (Exception e) {                    // only executes when yet uncatched exception is thrown
+// only executes when yet uncatched exception is thrown
+catch (Exception e) {
     System.out.println(e.getMessage());  // print message of exception
     e.printStackTrace();                 // print stack trace of exception
 }
-finally {  // always executes
+// always executes
+finally {
     System.out.println("Everything handled!");
 }
 ```
@@ -1603,21 +1592,23 @@ share an API, but can be implemented differently.
 
 ```java
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 // create lists
 List<Integer> array = new ArrayList<>();  // list implemented as dynamic array
 List<Integer> list = new LinkedList<>();  // list implemented as linked list
 
 // create prefilled lists
-ArrayList<Integer> fromArgs = Arrays.asList(5, 8, 5);                  // create from arguments
-LinkedList<Integer> fromArray = Arrays.asList({5, 8, 5});              // create from array
-List<Integer> fromList = new LinkedList<>(array);                      // create from other list
-List<Integer> fromSet = new LinkedList<>(new HashSet<Integer>(5, 2));  // create from set
+List<Integer> fromArgs = Arrays.asList(5, 8, 5);                   // create from arguments
+int[] arr = {5, 8, 5};
+List<Integer> fromArray = Arrays.asList(arr);                      // create from array
+List<Integer> fromList = new LinkedList<>(array);                  // create from other list
+List<Integer> fromSet = new LinkedList<>(new HashSet<Integer>());  // create from set
 
 // add elements to lists
 list.add(5);
@@ -1637,23 +1628,23 @@ list.lastIndexOf(-8) == 1;
 list.lastIndexOf(10) == -1;  // element not found
 
 // get sizes of lists
-list.size() = 2;
+list.size() == 2;
 
 // remove elements from lists
 list.remove(1);                   // remove by index
 list.remove(Integer.valueOf(5));  // remove by value (first occurence)
 
 // get list iterators
-Iterator<Integer> = list.iterator();
+Iterator<Integer> iterator = list.iterator();
 
-ArrayList<Integer> list = Arrays.fromArgs(5, 8, 5);
+List<Integer> list = Arrays.asList(5, 8, 5);
 
 // call functions on all list elements
 list.forEach((e) -> System.out.println(e));  // implement `Consumer` functional interface
 list.forEach(System.out::println);           // pass predefined function
 
 // sort lists
-Collection.sort(list);                         // sort in ascending natural order
+Collections.sort(list);                         // sort in ascending natural order
 list.sort((first, second) -> first - second);  // implement `Comparator` functional interface
 
 // create natural orders for classes as list elements
@@ -1674,7 +1665,6 @@ All sets types in Java implement the `java.util.Set` interface, which itself ext
 share an API, but can be implemented differently.
 
 ```java
-import java.util.Collection;
 import java.util.Comparable;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -1685,31 +1675,27 @@ import java.util.TreeSet;
 // create sets
 Set<Integer> hash = new HashSet<>();          // set implemented as unordered hash set
 Set<Integer> linked = new LinkedHashSet<>();  // set implemented as ordered linked hash set
-Set<Integer> tree = new TreeSet<>();          // set implemented as ordered tree set
+Set<Integer> tree = new TreeSet<>();          // set implemented as sorted tree set
 
 // create prefilled sets
-HashSet<Integer> fromArgs = Arrays.asSet(5, 8, 5);                    // create from arguments
-LinkedList<Integer> fromArray = Arrays.asSet({5, 8, 5});              // create from array
-Set<Integer> fromSet = new HashSet<>(linked);                         // create from other set
-Set<Integer> fromList = new HashSet<>(new ArrayList<Integer>(1, 2));  // create from list
+int[] arr = {5, 8, 5};
+Set<Integer> fromArray = Arrays.asSet(arr);                       // create from array
+Set<Integer> fromSet = new HashSet<>(linked);                     // create from other set
+Set<Integer> fromList = new HashSet<>(new ArrayList<Integer>());  // create from list
 
 // add elements to sets
 hash.add(5);
 hash.add(-8);
 
 // get sizes of sets
-hash.size() = 2;
+hash.size() == 2;
 
 // get set iterators
-Iterator<Integer> = hash.iterator();
+Iterator<Integer> iterator = hash.iterator();
 
 // call functions on all set elements
 hash.forEach((e) -> System.out.println(e));  // implement `Consumer` functional interface
 hash.forEach(System.out::println);           // pass predefined function
-
-// sort ordered sets
-Collection.sort(new TreeSet<Integer>());       // sort in ascending natural order
-hash.sort((first, second) -> first - second);  // implement `Comparator` functional interface
 
 // create natural orders for classes as set elements
 public class Foo implements Comparable<Foo> {
@@ -1724,18 +1710,17 @@ public class Foo implements Comparable<Foo> {
 
 ### 17.3 Maps
 
-All maps types in Java implement the `java.util.Map` interface, which itself extends the
-`java.util.Collection` interface. This interface defines common methods for maps, so that they
-share an API, but can be implemented differently.
+All maps types in Java implement the `java.util.Map` interface. This interface defines common
+methods for maps, so that they share an API, but can be implemented differently.
 
 ```java
 import java.util.HashMap;
-import java.util.HashTable;
+import java.util.Hashtable;
 import java.util.Set;
 
 // create maps
 Map<String, Integer> map = new HashMap<>();      // implemented as unordered thread unsafe hash map
-Map<String, Integer> table = new HashTable<>();  // implemented as ordered thread safe hash table
+Map<String, Integer> table = new Hashtable<>();  // implemented as ordered thread safe hash table
 
 // add key-value pairs to maps
 map.put("first", 5);
@@ -1745,9 +1730,9 @@ map.put("second", -8);
 map.put("first", 3);
 
 // get values from maps by their key
-list.get("first") == 3;
-list.get("second") == -8;
-list.get("third") == null;
+map.get("first") == 3;
+map.get("second") == -8;
+map.get("third") == null;
 
 // remove key-value pairs from maps
 map.remove("second") == -8;   // get removed value
@@ -1770,7 +1755,7 @@ import java.util.HashSet;
 import java.util.stream.Stream;
 
 // create streams from collections
-Stream<Integer> stream = Arrays.fromArgs(5, 8, 5, 12, 7).stream();
+Stream<Integer> stream = Arrays.asList(5, 8, 5, 12, 7).stream();
 
 // perform operations on streams
 Stream<Integer> result = stream
@@ -1779,17 +1764,16 @@ Stream<Integer> result = stream
     .sorted();                  // sort stream elements in ascending natural order
 
 // transform streams
-int sum = result.sum();                                      // sum values
-int prod = result.reduce(0, (carry, elem) -> carry * elem);  // reduce into single value
-ArrayList<Integer> list = result.toList();                   // convert into list
-HashSet<Integer> set = result.toSet();                       // convert into set
+Stream<Integer> toReduce= Arrays.fromArgs(5, 8, 5, 12, 7).stream();
+int prod = toReduce.reduce(0, (carry, elem) -> carry * elem);  // reduce into single value
+Stream<Integer> toList = Arrays.fromArgs(5, 8, 5, 12, 7).stream();
+ArrayList<Integer> toList = result.toList();                   // convert into list
 
 // perform operations on streams in parallel threads
 int fastSum = Arrays.fromArgs(5, 8, 5, 12, 7).parallelStream()
     .filter((e) -> e % 2 == 0)
     .map((e) -> e + 10)
-    .sorted()
-    .sum();
+    .sorted();
 ```
 
 ## 18 IO
@@ -1806,8 +1790,8 @@ System.out.print("Hello");  // print string
 System.out.print(4);        // print string representation
 
 // print to stdout with appended line breaks
-System.out.print("Hello");  // print string
-System.out.print(4);        // print string representation
+System.out.println("Hello");  // print string
+System.out.println(4);        // print string representation
 
 // read tokens from stdin
 Scanner tokenScanner = new Scanner(System.in);  // create scanner of stdin
@@ -1832,13 +1816,14 @@ try (Scanner scanner = new Scanner(System.in)) {
 ```
 
 <u>Best practices</u>:
-- Stdin should be read with buffered readers when many readings are performed
+- Stdin should be read with buffered readers when performance is critical
 
 ### 18.2 Files
 
 ```java
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Scanner;
@@ -1863,7 +1848,7 @@ String line = reader.readLine();                          // read next line from
 reader.close();                                           // close buffered reader
 
 // read files as streams
-InputStream input = getClass().getClassLoader().getResourceAsStream("path/to/some/file.txt");
+InputStream input = FileInputStream(file);
 Scanner scanner = new Scanner(input);
 String token = scanner.next();
 scanner.close();
@@ -1872,6 +1857,7 @@ input.close();
 // automatically close resources
 try (Scanner scanner = new Scanner(file)) {
     System.out.println(scanner.next());
+}
 ```
 
 <u>Best practices</u>:
@@ -1881,11 +1867,12 @@ try (Scanner scanner = new Scanner(file)) {
 ## 19 Threads
 
 Threads can be in one of the following states:
-- **New**: Thread has been newly created
-- **Runnable**: Thread has been started
-- **Running**: Thread is currently executing
-- **Waiting**: Thread execution has been halted
-- **Dead**: Thread has been terminated
+- **NEW**: Thread has been newly created
+- **RUNNABLE**: Thread is executing
+- **BLOCKED**: Thread waits for monitor lock
+- **WAITING**: Thread execution has been halted
+- **TIMED_WAITING**: Thread waits for timeout
+- **TERMINATED**: Thread has been terminated
 
 ```java
 public class Counter {
@@ -1922,6 +1909,11 @@ Thread.sleep(1000);
 // manage thread priorities (from 1 as lowest to 10 as highest)
 foo.getPriority() == 5;  // get priority
 foo.setPriority(10);     // set priority
+
+// thread priority constants
+Thread.MIN_PRIORITY == 1;
+Thread.NORM_PRIORITY == 5;
+Thread.MAX_PRIORITY == 10;
 
 // manage thread names
 foo.getName() == "Foo";  // get name
