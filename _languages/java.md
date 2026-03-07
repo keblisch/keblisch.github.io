@@ -544,7 +544,6 @@ therefore they can be used in place of any primitive data type.
 Data type wrappers have the benefit that they can be used for generic classes and methods, because
 these require objects to implement them. Also they add some utility methods to the data types.
 
-
 | Wrapper     | Wrapped Primitive             |
 | :---------- | :---------------------------- |
 | `Byte`      | `byte`                        |
