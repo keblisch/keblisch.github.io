@@ -10,6 +10,8 @@ url: ""
 collections:
   languages:
     output: true
+  libraries:
+    output: true
   frameworks:
     output: true
   tools:
@@ -43,7 +45,7 @@ just_the_docs:
   collections:
     languages:
       name: Languages
-    Libraries:
+    libraries:
       name: Libraries
     frameworks:
       name: Frameworks

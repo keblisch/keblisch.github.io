@@ -12,9 +12,9 @@ title: Library Template
 
 Short description of the tool.
 
-| Language | License            | Current Version |
-| :--------| :----------------- | :-------------- |
-|          |                    |                 |
+| Language  | Implementation | License | Current Version |
+| :-------- | :------------- | :------ | :-------------- |
+|           |                |         |                 |
 
 ## Table of Contents
 {: .no_toc .text-delta }

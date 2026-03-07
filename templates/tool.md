@@ -13,7 +13,7 @@ title: Tool Template
 Short description of the tool.
 
 | Usage | Implementation | License            | Current Version |
-| :-----| :--------------| :----------------- | :-------------- |
+| :-----| :------------- | :----------------- | :-------------- |
 |       |                |                    |                 |
 
 ## Table of Contents
