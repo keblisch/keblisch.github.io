@@ -1,10 +1,10 @@
 # Programming Notes
 
-This repository provides a GitHub pages application that collects concise notes on programming
-languages, frameworks, and development tools. They aim to serve as simple references for
-programmers with some experience in the respective topics, not introductory tutorials or full
-technical documentation. Each note includes a Resources section with links for different
-audiences.
+This repository provides a GitHub pages application that collects concise notes
+on programming topics. They aim to serve as simple references for programmers
+with some experience in the respective topics, not introductory tutorials or
+full technical documentation. Each note includes a Resources section with links
+for different audiences.
 
 ## Disclaimer
 
@@ -16,11 +16,13 @@ additions and revisions may occur at any time.
 ## How to Contribute
 
 Because this site is a personal collection of notes, major
-additions or rewrites are unlikely to be accepted. However, factual corrections or clarifications
-to the notes, as well as improvements to the source code, are very welcome. Suggestions
-for overall improvements or future additions are also appreciated.
+additions or rewrites are unlikely to be accepted. However, factual corrections
+or clarifications to the notes, as well as improvements to the source code, are
+very welcome. Suggestions for overall improvements or future additions are also
+appreciated.
 
-To contribute your improvements or ideas, you can either open an issue or message the author
-directly via [kevin.blischke@proton.me](mailto:kevin.blischke@proton.me). Pull requests for the
-repository are also accepted when they only contain small corrections or improvements to the
-notes or source code.
+To contribute your improvements or ideas, you can either open an issue or
+message the author directly via
+[kevin.blischke@proton.me](mailto:kevin.blischke@proton.me). Pull requests for the
+repository are also accepted when they only contain small corrections or
+improvements to the notes or source code.

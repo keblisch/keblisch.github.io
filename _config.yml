@@ -1,7 +1,5 @@
 title: Programming Notes
-description: >-
-  A collection of notes, code snippets, and references for programming
-  languages, frameworks, and development tools.
+description: A collection of notes, code snippets, and references for programming topics.
 
 github_username: keblisch
 email: kevin.blischke@proton.me
@@ -45,6 +43,8 @@ just_the_docs:
   collections:
     languages:
       name: Languages
+    Libraries:
+      name: Libraries
     frameworks:
       name: Frameworks
     tools:
