@@ -13,9 +13,9 @@ title: Maven
 Maven is a build automation and dependency management tool for Java projects that uses a
 standardized project structure and XML configurations.
 
-| Current Version | Usage            | Implementation |
-| :-------------- | :--------------- | :--------------|
-| 3.9.11          | CLI              | Java           |
+| Usage            | Implementation | License            | Current Version |
+| :--------------- | :--------------| :----------------- | :-------------- |
+| CLI              | Java           | Apache License 2.0 | 3.9.11          |
 
 ## Table of Contents
 {: .no_toc .text-delta }
@@ -37,7 +37,7 @@ standardized project structure and XML configurations.
     - `resources/`: Contains additional files for tests
 - `target/`: Contains build files of project
 
-## 1.2 Creation
+### 1.2 Creation
 
 Maven projects can be generated programmatically from the command-line with templates which are
 called archetypes:

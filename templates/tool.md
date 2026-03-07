@@ -12,9 +12,9 @@ title: Tool Template
 
 Short description of the tool.
 
-| Current Version | Usage                | Implementation           |
-| :-------------- | :------------------- | :----------------------- |
-| 1.0.0           | How the tool is used | Which technology is used |
+| Usage | Implementation | License            | Current Version |
+| :-----| :--------------| :----------------- | :-------------- |
+|       |                |                    |                 |
 
 ## Table of Contents
 {: .no_toc .text-delta }
