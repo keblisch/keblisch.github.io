@@ -653,8 +653,10 @@ name == "John";
 name.euqlas("John");
 
 // concatenate strings
-"Foo" + "Bar" == "FooBar";        // operator syntax
-"Bar".concat("Foo") == "BarFoo";  // method syntax
+String foobar = "Foo" + "Bar";  // operator syntax
+foobar.equals("FooBar");
+foobar = "Bar".concat("Foo")    // method syntax
+foobar.equals("FooBar");
 
 // get string size
 "John".length() == 4;
