@@ -8,3 +8,6 @@ vendor
 # Editors
 .idea/
 .vscode/
+
+# Housekeeping
+notes.md
