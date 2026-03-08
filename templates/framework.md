@@ -1,16 +1,16 @@
 ---
 layout: base
-title: Library Template
+title: Framework Template
 ---
 
 <!-- markdownlint-disable MD013 MD033 MD032 MD029 MD025 MD022 MD007 -->
 
 {% raw %}
 
-# Library Template
+# Framework Template
 {: .no_toc }
 
-Short description of the library.
+Short description of the framework.
 
 | Language  | Implementation | License | Current Version |
 | :-------- | :------------- | :------ | :-------------- |
@@ -24,10 +24,10 @@ Short description of the library.
 
 ## Installation
 
-How to integrate the library into projects.
+How to integrate the framework into projects.
 
 ## Content
 
-Description of the library.
+Description of the framework.
 
 {% endraw %}
