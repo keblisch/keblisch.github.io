@@ -71,7 +71,6 @@ verify(mockedList).clear();
 
 ```java
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 // create mock objects of classes
 List mockedList = mock();
