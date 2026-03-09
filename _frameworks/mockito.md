@@ -22,9 +22,15 @@ Mockito is a testing framework for Java that generates stubs and mocks for depen
 - TOC
 {:toc}
 
-## 1 Installation
+## 1 Resources
 
-### 1.1 Maven
+- Official website: [Mockito framework site](https://site.mockito.org/)
+- Official documentation:
+  [Mockito Javadoc](https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html)
+
+## 2 Installation
+
+### 2.1 Maven
 
 This must be added to the `pom.xml` file:
 
@@ -39,7 +45,7 @@ This must be added to the `pom.xml` file:
 </dependencies>
 ```
 
-### 1.2 Gradle
+### 2.2 Gradle
 
 This must be added to the `build.gradle` or `build.gradle.kts` file:
 
@@ -49,7 +55,7 @@ dependencies {
 }
 ```
 
-## 2 Mocking
+## 3 Mocking
 
 ```java
 import static org.mockito.Mockito.mock;
@@ -67,7 +73,7 @@ verify(mockedList).add("one");
 verify(mockedList).clear();
 ```
 
-## 3 Stubbing
+## 4 Stubbing
 
 ```java
 import static org.mockito.Mockito.mock;

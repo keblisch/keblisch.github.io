@@ -22,6 +22,13 @@ Short description of the tool.
 - TOC
 {:toc}
 
+## 1 Resources
+
+- Some link to a resource
+- Some link to another resource
+
+## 2 Content
+
 Description of the tool.
 
 {% endraw %}

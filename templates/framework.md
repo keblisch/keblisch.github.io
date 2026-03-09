@@ -22,11 +22,16 @@ Short description of the framework.
 - TOC
 {:toc}
 
-## Installation
+## 1 Resources
+
+- Some link to a resource
+- Some link to another resource
+
+## 2 Installation
 
 How to integrate the framework into projects.
 
-## Content
+## 3 Content
 
 Description of the framework.
 

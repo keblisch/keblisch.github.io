@@ -22,9 +22,14 @@ Lombok is a library that automatically generates Java code to reduce boilerplate
 - TOC
 {:toc}
 
-## 1 Installation
+## 1 Resources
 
-### 1.1 Maven
+- Official website: [Project Lombok](https://projectlombok.org/)
+- Official documentation: [Lombok Stable](https://projectlombok.org/features/)
+
+## 2 Installation
+
+### 2.1 Maven
 
 This must be added to the dependencies in the `pom.xml` file:
 
@@ -55,7 +60,7 @@ This must be added to the plugins in the `pom.xml` file for Java SE 23 or higher
 </plugin>
 ```
 
-### 1.2 Gradle
+### 2.2 Gradle
 
 This must be added to the dependencies in the `build.gradle` or `build.gradle.kts` file:
 
@@ -66,7 +71,7 @@ testCompileOnly("org.projectlombok:lombok:1.18.42")
 testAnnotationProcessor("org.projectlombok:lombok:1.18.42")
 ```
 
-## 2 Non-Null Checks
+## 3 Non-Null Checks
 
 ```java
 import lombok.NonNull;
@@ -93,7 +98,7 @@ catch (NullPointerException e) {
 }
 ```
 
-## 3 Getters and Setters
+## 4 Getters and Setters
 
 ```java
 import lombok.Getter;
@@ -124,7 +129,7 @@ bar.getBar().equals("Bar");
 bar.setBar("BAR");
 ```
 
-## 4 Object Class Methods
+## 5 Object Class Methods
 
 ```java
 import lombok.EqualsAndHashCode;
@@ -151,7 +156,7 @@ foobar.equals(new FooBar("Foo", "Bar")) == true;
 foobar.hashCode();
 ```
 
-## 5 Constructors
+## 6 Constructors
 
 ```java
 import lombok.AllArgsConstructor;
@@ -174,7 +179,7 @@ FooBar bar = new FooBar("Bar");
 FooBar foobar = new FooBar("Foo", "Bar");
 ```
 
-## 6 Data Classes
+## 7 Data Classes
 
 ```java
 import lombok.Data;

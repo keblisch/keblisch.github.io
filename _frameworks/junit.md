@@ -22,9 +22,14 @@ JUnit is a testing framework for Java.
 - TOC
 {:toc}
 
-## 1 Installation
+## 1 Resources
 
-### 1.1 Maven
+- Official website: [JUnit](https://junit.org/)
+- Official documentation: [JUnit User Guide](https://docs.junit.org/6.0.3/overview.html)
+
+## 2 Installation
+
+### 2.1 Maven
 
 This must be added to the `pom.xml` file:
 
@@ -50,7 +55,7 @@ This must be added to the `pom.xml` file:
 </dependencies>
 ```
 
-### 1.2 Gradle
+### 2.2 Gradle
 
 This must be added to the `build.gradle` or `build.gradle.kts` file:
 
@@ -69,7 +74,7 @@ test {
 }
 ```
 
-## 2 Test Methods
+## 3 Test Methods
 
 Tests are implemented as methods of dedicated test classes.
 
@@ -124,7 +129,7 @@ class SomeTest {
 }
 ```
 
-## 3 Lifecycle Methods
+## 4 Lifecycle Methods
 
 ```java
 import static org.junit.jupiter.api.Assertions.fail;
@@ -166,7 +171,7 @@ class SomeTest {
 }
 ```
 
-## 4 Assertions
+## 5 Assertions
 
 The result of assertions decide whether test methods will pass or fail.
 
