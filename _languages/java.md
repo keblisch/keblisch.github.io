@@ -93,7 +93,7 @@ called the **Javac**. These bytecode files are platform independent and highly o
 fast execution.
 
 ```bash
-# compile Java source files into according Jva bytecode files
+# compile Java source files into according Java bytecode files
 javac SomeFile SomeOtherFile
 ```
 
@@ -294,7 +294,7 @@ Java source files must contain a class, interface, enum or annotation definition
 suffix `.java`. Thereby they can contain optional additional definitions, but they must include
 exactly one public definition.
 
-Java source and bytecode files Java must be named like their according public definitions. Java
+Java source and bytecode files  must be named like their according public definitions. Java
 bytecode files have the file suffix `.class`.
 
 ### 5.2 Projects
@@ -514,7 +514,7 @@ Data types in Java have default values that get assigned automatically to undefi
 
 #### 9.1.1 Type Conversion
 
-Primitive data type are converted automatically in according contexts when the new data type is
+Primitive data types are converted automatically in according contexts when the new data type is
 of the same or a larger size as the original data type.
 
 #### 9.1.2 Type Casting
@@ -566,44 +566,44 @@ The default value of arrays are `null`.
 
 ```java
 // declare arrays
-char letters[];
+char[] letters;
 
 // initialize arrays with specified size and default values
-double reals[] = new double[5];
+double[] reals = new double[5];
 
 // initialize arrays with specified size and values
-int nums[] = {1, 3, 5, 8, 11};
+int[] nums = {1, 3, 5, 8, 11};
 
 // access array elements
-int x = nums[0];
-nums[1] = 4;
+int x = nums[0];  // get array element
+nums[1] = 4;      // assign array element
 
 // get array length
 nums.length == 5;
 
 // using multi-dimensional arrays
-int matrix[][] = new int[4][4];
-matrix = {
+int[][] matrix = new int[4][4];     // create
+matrix = {                          // initialize
     {1, 2, 3, 4},
     {2, 3, 4, 5},
     {3, 4, 5, 6}
 };
-int[] row = matrix[0];
-matrix[0] = new int[]{4, 2, 3, 1};
-int cell = matrix[0][0];
-matrix[0][5] = 3;
+int[] row = matrix[0];              // get row
+matrix[0] = new int[]{4, 2, 3, 1};  // assign row
+int cell = matrix[0][0];            // get cell
+matrix[0][5] = 3;                   // assign cell
 
 // using jagged arrays
-int peaks[][] = new int[3][];
-peaks = {
+int[][] peaks = new int[3][];  // create
+peaks = {                      // initialize
     {1, 2},
     {2, 3, 4, 5},
     {3, 4, 5}
 };
-int[] line = peaks[0];
-peaks[0] = new int[]{4, 2};
-int point = peaks[0][0];
-peaks[0][4] = 3;
+int[] line = peaks[0];         // get row
+peaks[0] = new int[]{4, 2};    // assign row
+int point = peaks[0][0];       // get cell
+peaks[0][4] = 3;               // assign cell
 ```
 
 #### 9.2.2 Strings
@@ -849,7 +849,7 @@ maybeNotEmpty.orElse("bar") == "bar";
 | Multiplicative | `*`, `/`, `%` | 2                |
 | Additive       | `+`, `-`      | 1                |
 
-Description how operator precedence can be changed.
+The precedence of expressions can be maximized by surrounding them in parenthesis `()`.
 
 ### 11.2 Arithmetic Operators
 
