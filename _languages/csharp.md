@@ -899,10 +899,6 @@ PrintNumbers();
 PrintNumbers(1, 2, 3, 4, 5);
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
 ### 12.5 Pass by Reference
 
 ```csharp
