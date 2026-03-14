@@ -56,13 +56,13 @@ Console.WriteLine("Hello, World!");
   became cross-platform
 - In 2020 .NET Core and the .NET Framework were unified into the modern .NET platform
 - Important C# language versions include:
-  - **C# 2.0 (2005)**: Generics, nullable types, iterators, anonymous methods
-  - **C# 3.0 (2007)**: LINQ, lambda expressions, extension methods, implicitly typed variables
-  - **C# 5.0 (2012)**: Async/await asynchronous programming model
-  - **C# 7.0 (2017)**: Pattern matching, tuples, local functions
-  - **C# 9.0 (2020)**: Record types, init-only properties, improved pattern matching
-  - **C# 10 (2021)**: Global using directives, file-scoped namespaces
-  - **C# 12 (2023)**: Primary constructors, collection expressions, general language improvements
+  - **C# 2.0** (2005): Generics, nullable types, iterators, anonymous methods
+  - **C# 3.0** (2007): LINQ, lambda expressions, extension methods, implicitly typed variables
+  - **C# 5.0** (2012): Async/await asynchronous programming model
+  - **C# 7.0** (2017): Pattern matching, tuples, local functions
+  - **C# 9.0** (2020): Record types, init-only properties, improved pattern matching
+  - **C# 10** (2021): Global using directives, file-scoped namespaces
+  - **C# 12** (2023): Primary constructors, collection expressions, general language improvements
 
 ## 2 Toolchain
 
@@ -105,10 +105,10 @@ configure the build process, dependencies, and project metadata. MSBuild is seam
 into the .NET CLI.
 
 ```bash
-# create new C# console application in current directory
+# create new C# application with console template in current directory
 dotnet new console -n SomeApp
 
-# create new C# console application in specific directory
+# create new C# application with console template in specific directory
 dotnet new console -o ./path/to/SomeApp
 
 # clean build outputs
@@ -418,7 +418,7 @@ int add(int x, int y)
 
 ## 7 Variables
 
-Variables can only exist as local variables of functions and class fields.
+Variables can only exist as class fields or local variables of functions.
 
 ```csharp
 // declare variables
@@ -445,7 +445,7 @@ int? something = null;
 
 ## 8 Constants
 
-Constants can only exist as local constants of functions and class fields.
+Constants can only exist as class fields or local constants of functions.
 
 ```csharp
 // initialize constant
@@ -594,38 +594,53 @@ associated with them, they get the value `null`.
 
 ```csharp
 // create strings
-string name = "John Doe";                       // string literal
-string path = @"C:\Users\john";                 // raw string literal (verbatim string)
-string diff = $"3 - 4 = {3 - 4}";               // string template
+string name = "John Doe";          // string literal
+string path = @"C:\Users\john";    // raw string literal (verbatim string)
+string diff = $"3 - 4 = {3 - 4}";  // string template
 string json = """
 {
   "name": "John"
 }
-""";                                            // multi-line string
+""";                               // multi-line string
+```
 
-// concatenate strings
+##### 9.2.1.1 String Concatenation
+
+```csharp
 "Hello" + ", " + "World!" == "Hello, World!";
+
 "1" + 2 + (1 + 2) + "4" + 5 == "12345";
+```
 
+##### 9.2.1.2 String Formatting
+
+```csharp
 // format strings
-string sum = string.Format("{0} + {1}", 3, 4);  // format string
-$"{12588.1234:N2}" == "12,588.12";              // format numbers
-$"{93.679:P2}" == "93.68%";                     // format percentages
-$"{5120.312:P2}" == "$5,120.31";                // format dollars
+string sum = string.Format("{0} + {1}", 3, 4);  // format method
+string diff = $"3 - 4 = {3 - 4}";               // string template
+
+// use format specifiers
+$"{12588.1234:N2}" == "12,588.12";  // format numbers
+$"{93.679:P2}" == "93.68%";         // format percentages
+$"{5120.312:P2}" == "$5,120.31";    // format dollars
+
+// remove whitespace
 string someId = "  12abc34  ";
-someId.Trim() == "12abc34";                     // remove surrounding whitespace
-someId.TrimStart() == "12abc34  ";              // remove trailing whitespace
-someId.TrimEnd() == "  12abc34";                // remove beginning whitespace
+someId.Trim() == "12abc34";         // remove surrounding whitespace
+someId.TrimStart() == "12abc34  ";  // remove trailing whitespace
+someId.TrimEnd() == "  12abc34";    // remove beginning whitespace
+
+// add paddings
 string someNum = "15";
-someNum.PadLeft(5) == "   15";                  // padd string left with whitespace
-someNum.PadRight(5) == "15   ";                 // padd string right with whitespace
-someNum.PadLeft(5, '0') == "00015";             // padd string left with specific character
-someNum.PadRight(5, '0') == "15000";            // padd string right specific character
+someNum.PadLeft(5) == "   15";        // padd string left with whitespace
+someNum.PadRight(5) == "15   ";       // padd string right with whitespace
+someNum.PadLeft(5, '0') == "00015";   // padd string left with specific character
+someNum.PadRight(5, '0') == "15000";  // padd string right specific character
+```
 
-// convert strings in character arrays and vice-versa
-char[] nameLetters = name.ToCharArray();        // from string to character array
-string restoredName = new string(nameLetters);  // from character array to string
+##### 9.2.1.3 String Parsing
 
+```csharp
 // parse numbers from strings
 int.Parse("23") == 23;
 
@@ -634,23 +649,47 @@ int x = 0;
 bool success = int.TryParse("23", out x);
 x == 23;
 success == true;  // indicates whether number could be parsed
+```
 
-// get informations about strings
+##### 9.2.1.4 String Checking
+
+```csharp
+// get indices of occuring characters
 string firstName = "Jonny";
-firstName.IndexOf('n') == 2;         // get index of first occurence of character
-firstName.LastIndexOf('n') == 3;     // get index of last occurence of character
+firstName.IndexOf('n') == 2;      // get index of first occurence
+firstName.LastIndexOf('n') == 3;  // get index of last occurence
 char[] letters = { 'o', 'n' };
 firstName.IndexOfAny(letters) == 1;  // get index of first occuring character
-firstName.Substring(1, 3) == "onn";  // get substring of 3 characters starting at index 1
 
-// manipulate strings
-string[] abc = { "a", "b", "c" };
-string list = String.Join(",", abc);              // combine strings with separator
-string[] items = list.Split(",");                 // split string at every occurence of ","
-string message = "Hello there!";
-message.Remove(5, 7) == "Hello";                  // remove 7 characters starting at index 5
-message.Replace("!", "...") == "Hello there...";  // replace substring "!" with "..."
+// get substrings
+firstName.Substring(1, 3) == "onn";  // 3 characters starting at index 1
+```
 
+##### 9.2.1.5 String Manipulation
+
+```csharp
+// convert cases
+string name = "John";
+name.ToUpper() == "JOHN";
+name.ToLower() == "john";
+
+// convert strings in character arrays and vice-versa
+string[] letters = { "a", "b", "c" };
+string abc = new string(letters);  // from character array to string
+abc == "abc";
+letters = abc.ToCharArray();       // from string to character array
+
+// combine strings with separator
+string String.Join(", ", letters) == "a, b, c";
+
+// split strings at specified substrings
+letters = abc.Split(", ");
+
+// remove substrings
+abc.Remove(1, 2) == "a";  // 2 characters starting from index 1
+
+// replace substrings
+abc.Replace("bc", "aa") == "aaa";
 ```
 
 #### 9.2.2 Arrays
@@ -674,45 +713,93 @@ int[] nums = [ 1, 3, 5, 8, 11 ];                 // collection expression
 // access array elements
 int x = nums[0];  // get array element
 nums[1] = 4;      // assign array element
-
-// use multi-dimensional arrays
-int matrix[,] = new int[4,4];        // create
-matrix = {                           // initialize
-    { 1, 2, 3, 4 },
-    { 2, 3, 4, 5 },
-    { 3, 4, 5, 6 }
-};
-int[] row = matrix[0];                // get row
-matrix[0] = { 4, 2, 3, 1 };           // assign row
-int cell = matrix[0,0];               // get cell
-matrix[0,5] = 3;                      // assign cell
-
-// use jagged arrays
-int peaks[][] = new int[3][];  // create
-peaks = {                      // initialize
-    { 1, 2 },
-    { 2, 3, 4, 5 },
-    { 3, 4, 5 }
-};
-int[] line = peaks[0];         // get row
-peaks[0] = { 4, 2 };           // assign row
-int point = peaks[0,0];        // get cell
-peaks[0,4] = 3;                // assign cell
-
-// get informations about arrays
-nums.Length == 5;          // get number of elements
-nums.Contains(5) == true;  // check for existence of element
-
-// manipulate arrays
-int[] foo = { 5, 2, 9, 4 };
-Array.Sort(foo);           // sort in natural ascending order
-Array.Reverse(foo);        // reverse order
-Array.Resize(ref foo, 4);  // resize to 4 elements by truncating elements at the end
-Array.Clear(foo, 1, 2);    // replace 2 elements starting from index 1 by default values
 ```
 
 <u>Best practices</u>:
 - Implicit array initialization or collection expressions should be used to initialize arrays
+
+##### 9.2.2.1 Array Checking
+
+```csharp
+int[] nums = { 1, 2, 3, 4, 5 };
+
+// get number of elements in arrays
+nums.Length == 5;
+
+// check whether arrays contain elements
+nums.Contains(5) == true;
+
+// get specific values from arrays
+nums.Max() == 5;  // get largest value
+nums.Min() == 1;  // get smallest value
+```
+
+##### 9.2.2.2 Array Manipulation
+
+```csharp
+int[] nums = { 5, 2, 9, 4 };
+
+// sort arrays
+Array.Sort(nums);  // ascending natural order
+
+// reverse array order
+Array.Reverse(nums);
+
+// resize arrays
+Array.Resize(ref nums, 4);  // resize to 4 elements by truncating elements at the end
+Array.Resize(ref nums, 8);  // resize to 8 elements by adding default values at the end
+
+// remove array elements
+Array.Clear(nums, 1, 2);  // replace 2 elements starting from index 1 by default values
+```
+
+##### 9.2.2.3 Multi-Dimensional Arrays
+
+```csharp
+// create multi-dimensional arrays
+int matrix[,] = new int[4,4];
+
+// initialize multi-dimensional arrays
+matrix = {
+    { 1, 2, 3, 4 },
+    { 2, 3, 4, 5 },
+    { 3, 4, 5, 6 }
+};
+
+// access rows
+int[] row = matrix[0];       // get row
+matrix[0] = { 4, 2, 3, 1 };  // assign row
+
+// access cells
+int cell = matrix[0,0];  // get cell
+matrix[0,5] = 3;         // assign cell
+
+// get multi-dimensional array sizes
+matrix.GetLength(0) == 3;  // number of elements in first dimension
+matrix.GetLength(1) == 4;  // number of elements in second dimension
+```
+
+##### 9.2.2.4 Jagged Arrays
+
+```csharp
+// create jagged arrays
+int peaks[][] = new int[3][];
+
+// create jagged arrays
+peaks = {
+    { 1, 2 },
+    { 2, 3, 4, 5 },
+    { 3, 4, 5 }
+};
+
+// acces rows
+int[] line = peaks[0];  // get row
+peaks[0] = { 4, 2 };    // assign row
+
+// access cells
+int point = peaks[0,0];  // get cell
+peaks[0,4] = 3;          // assign cell
+```
 
 ## 10 Operators
 
@@ -832,6 +919,7 @@ switch (x)
     // optional default case
     default:
         Console.WriteLine("x isn't 1, 2 or 3");
+        break;
 }
 
 // define switches with fallthroughs
@@ -849,6 +937,7 @@ switch (countdown)
         goto default;
     default:
         Console.WriteLine("RING!!!");
+        break;
 }
 ```
 
@@ -905,7 +994,7 @@ for (int i = 0; i < 10; i++)
 
 ## 12 Functions
 
-Functions can only exist as methods of classes.
+Functions can only exist as class methods or as local functions of class methods.
 
 ```csharp
 // define functions without parameters and return values
@@ -1011,12 +1100,26 @@ arr[0] == 2;
 
 // pass primitive data types by reference
 int x = 5;
-void Dec(ref int num)
+void Dec(ref int num)  // reference must be initialized
 {
-    num -= 1;
+    num -= 1;  // manipulate passed variable
 }
 Dec(ref x);
 x == 4;
+
+// pass read-only reference
+double[] decimals = { 1.3, 6.9, 4.0 };
+double Sum(in double[] nums)  // make reference immutable
+{
+    double sum = 0;
+    foreach (double num in nums)
+    {
+        sum += num;
+    }
+    return sum;
+}
+Sum(decimals) == 12.2;
+arr[0] == 1.3;
 ```
 
 ### 12.6 Output Parameters
@@ -1026,7 +1129,7 @@ x == 4;
 int x = 5;
 void Square(int value, out int result)
 {
-    result = value * value;
+    result = value * value;  // required assignment to output parameter
 }
 Square(10, out x);
 x == 100;
@@ -1236,6 +1339,9 @@ string? input = Console.ReadLine();  // returns null when no input could be read
 
 // read characters from stdin
 char? key = Console.ReadKey();  // returns null when no input could be read
+
+// clear stdout
+Console.Clear();
 ```
 
 <!--
@@ -1250,17 +1356,16 @@ Example for file streams usage in the language
 <u>Best practices</u>:
 - First best practice
 - Second best practice
+-->
+## 15 Math
 
-## 18 Math
-
-```test
-Example for math utilities in the language
+```csharp
+// generate random numbers
+var random = new Random();
+int num = random.Next(1, 11);  // get random number between 1 and 10
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
+<!--
 ## 19 Time and Date
 
 ```test
@@ -1280,31 +1385,16 @@ Example for system utilities in the language
 <u>Best practices</u>:
 - First best practice
 - Second best practice
+-->
 
-## 21 Concurrency
+## 16 Threads
 
-How concurrency is treated in the language
-
-```test
-Example for concurrency in the language
+```csharp
+// pause current thread
+Thread.Sleep(1000);  // in milliseconds
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 22 Parallelism
-
-How parallelism is treated in the language
-
-```test
-Example for parallelism in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
+<!--
 ## 23 Memory Management
 
 Description of how memory management is implemented in the language.
