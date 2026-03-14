@@ -30,19 +30,39 @@ Console.WriteLine("Hello, World!");
 
 ### 1.1 Resources
 
-- Some link to a resource
-- Some link to another resource
+- Official website: [https://learn.microsoft.com/dotnet/csharp/](C#)
+- Official documentation: [https://learn.microsoft.com/dotnet/csharp/](C# Guide)
+- Official tutorial: [https://learn.microsoft.com/dotnet/csharp/tour-of-csharp/](A Tour of C#)
+- Comprehensive reference: [https://www.w3schools.com/cs/](C# Reference Documentation)
 
 ### 1.2 Advantages and Disadvantages
 
-| Advantages                    | Disadvantages                    |
-| :---------------------------- | :------------------------------- |
-| Some language advantage       | Some language disadvantage       |
-| Some other language advantage | Some other language disadvantage |
+| Advantages                        | Disadvantages                                    |
+| :-------------------------------- | :----------------------------------------------- |
+| Official and integrated toolchain | Strong dependency on the .NET ecosystem          |
+| Automatic memory management       | Higher runtime overhead than low-level languages |
+| Strong typing and type safety     | Frequent language and framework changes          |
+| Large standard library            | Less portable outside the .NET runtime           |
 
 ### 1.3 History
 
-Short overview of the history of the language.
+- C# was developed by Anders Hejlsberg at Microsoft in the late 1990s
+  - It was designed as a modern, object-oriented language for Microsoft's .NET platform
+  - The language was heavily influenced by C++ and Java
+- The first official version of C# was released in 2002 together with the .NET Framework 1.0
+  - Thereby the .NET Framework provides its runtime environment and base class libraries
+- C# was standardized by ECMA and ISO shortly after its initial release
+- With the release of .NET Core in 2016 the .NET ecosystem, and therefore also C#,
+  became cross-platform
+- In 2020 .NET Core and the .NET Framework were unified into the modern .NET platform
+- Important C# language versions include:
+  - **C# 2.0 (2005)**: Generics, nullable types, iterators, anonymous methods
+  - **C# 3.0 (2007)**: LINQ, lambda expressions, extension methods, implicitly typed variables
+  - **C# 5.0 (2012)**: Async/await asynchronous programming model
+  - **C# 7.0 (2017)**: Pattern matching, tuples, local functions
+  - **C# 9.0 (2020)**: Record types, init-only properties, improved pattern matching
+  - **C# 10 (2021)**: Global using directives, file-scoped namespaces
+  - **C# 12 (2023)**: Primary constructors, collection expressions, general language improvements
 
 ## 2 Toolchain
 
@@ -253,45 +273,94 @@ The following identifiers are reserved as keywords with special meaning:
 
 ### 5.1 Files
 
-C# source files must contain a class, interface, enum or annotation definition and have the file
-suffix `.cs`. Thereby they can contain optional additional definitions, but they must include
-exactly one public definition. .NET assemblies have the file suffix `.dll`.
+C# source files must contain a class, interface, enum, struct or record definition and have the
+file suffix `.cs`. They may contain additional internal or private definitions, but typically only
+one public type is defined per file.
+
+Compiled .NET assemblies have the file suffix `.dll` (libraries) or `.exe` (executables).
 
 ### 5.2 Projects
 
+C# projects are typically organized using the .NET project system and defined by a `.csproj` file.
+The project file describes dependencies, build settings and target frameworks.
+
 Conventional project organization for the language:
+
 - `src/`: Source files
-- `build`: A conventional build file
+- `build/` or `bin/`: Build outputs
+- `.csproj`: Project configuration file
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+
+- Only one public type should be defined per file
+- Files should be named after their contained public type
+- Source files should be organized into directories that reflect their namespaces
 
 ### 5.3 Entry Point
 
-Description of the language's entry point in executable programs.
+C# programs start execution in a `Main` method. This method must be `static` and is usually
+located in a class named `Program`. The method can optionally accept command-line arguments.
 
-```text
-Example for the language's entry point
+```csharp
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.WriteLine($"First command-line argument: {args[0]}");
+    }
+}
+```
+
+Top-level statements can be used to omit the explicit `Main` method in simple programs. In this
+case, the compiler automatically generates the entry point.
+
+```csharp
+Console.WriteLine("Hello World");
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- The class containing the entry point should be named `Program`
+- Top-level statements should be used for simple single-file projects
 
-### 5.4 Packages/Modules/libraries
+### 5.4 Namespaces
 
-Description of the language's package/module/library system.
+All public types are available inside their entire projects. Therefore namespaces are used to
+group related types and avoid naming conflicts.
 
-```text
-Example for the language's package/module/library system
+```csharp
+// declare file contents as part of namespaces
+namespace MyApp;
+
+// declare file contents as part of nested namespaces
+namespace MyApp.Utilities;
+
+// import types from namespaces
+using System;
+
+// import specific types from namespaces
+using System.Text.StringBuilder;
+
+// use fully qualified names instead of importing from namespaces
+System.Console.WriteLine("Hello");
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Namespaces should be named in pascel case
+- Imports should be placed at the top of files
+- Namespace declarations should be placed after imports
+- Namespaces should reflect their project structure
 
-### 5.5 Standard Library
+### 5.5 Libraries
+
+Libraries in .NET are compiled assemblies, which are reusable compiled units containing
+types and resources. Assemblies typically have the file suffix `.dll` and can be referenced by
+other projects.
+
+Libraries can be distributed through package managers such as NuGet or referenced directly as
+project or assembly dependencies. Once a library is referenced in a project, the types it exposes
+can be accessed through their namespaces.
+
+### 5.6 Standard Library
 
 C# uses the .NET Class Library as its standard library, which is a collection of precompiled
 packages that contain classes for fundamental operations. The .NET Class Library is part of the
@@ -300,6 +369,16 @@ packages that contain classes for fundamental operations. The .NET Class Library
 The following classes exist in the .NET Class Library:
 - `Math`: Math utilities
 - `System`: Interaction with system resources
+
+Many namespaces of the standard library are imported implicitly inside the entire project to
+reduce boilerplate code. Which namespaces are imported is dependant on the used project template,
+but these are included most of the time:
+- `System`
+- `System.Collections.Generic`
+- `System.IO`
+- `System.Linq`
+- `System.Threading`
+- `System.Threading.Tasks`
 
 ## 6 Comments
 
@@ -322,6 +401,21 @@ multi-line
 comment */
 ```
 
+### 6.3 Documentation Comments
+
+Documentation comments are used by some tools and editors to generate documentation for
+according code, but are still regular comments for the C# compiler.
+
+```csharp
+/// <summary>
+/// Adds two numbers.
+/// </summary>
+int add(int x, int y)
+{
+    return x + y;
+}
+```
+
 ## 7 Variables
 
 Variables can only exist as local variables of functions and class fields.
@@ -340,7 +434,8 @@ int y = 12;
 var z = 12.3;
 
 // create nullable variables
-string? something;
+string? someone = null;
+int? something = null;
 ```
 
 <u>Best practices</u>:
@@ -372,18 +467,18 @@ Primitive data types have default values that get assigned to non-initialized va
 
 Integers have the default value `0`.
 
-| Keyword   | .NET Struct    | Byte Size   | Signedness      |
-| :-------- | :------------- | :---------- | :-------------- |
-| `sbyte`   | System.SByte   | 1           | Signed          |
-| `byte`    | System.Byte    | 1           | Unsigned        |
-| `short`   | System.Int16   | 1           | Signed          |
-| `ushort`  | System.UInt16  | 2           | Unsigned        |
-| `int`     | System.Int32   | 4           | Signed          |
-| `uint`    | System.UInt32  | 4           | Unsigned        |
-| `long`    | System.Int64   | 8           | Signed          |
-| `ulong`   | System.UInt64  | 8           | Unsigned        |
-| `nint`    | System.IntPtr  | Native Size | Signed          |
-| `nuint`   | System.UIntPtr | Native Size | Unsigned        |
+| Keyword   | .NET Struct      | Byte Size   | Signedness      |
+| :-------- | :--------------- | :---------- | :-------------- |
+| `sbyte`   | `System.SByte`   | 1           | Signed          |
+| `byte`    | `System.Byte`    | 1           | Unsigned        |
+| `short`   | `System.Int16`   | 1           | Signed          |
+| `ushort`  | `System.UInt16`  | 2           | Unsigned        |
+| `int`     | `System.Int32`   | 4           | Signed          |
+| `uint`    | `System.UInt32`  | 4           | Unsigned        |
+| `long`    | `System.Int64`   | 8           | Signed          |
+| `ulong`   | `System.UInt64`  | 8           | Unsigned        |
+| `nint`    | `System.IntPtr`  | Native Size | Signed          |
+| `nuint`   | `System.UIntPtr` | Native Size | Unsigned        |
 
 Integer types are converted automatically in according contexts when the new data type is
 of the same or a larger size as the original data type.
@@ -411,11 +506,11 @@ Convert.ToDouble(12) == 12.0;  // Conversion class
 
 Real numbers have the default value `0.0`.
 
-| Keyword   | .NET Struct    | Byte Size | Representation          |
-| :-------- | :------------- | :-------- | :---------------------- |
-| `float`   | System.Single  | 4         | IEEE-754 Floating Point |
-| `double`  | System.Double  | 8         | IEEE-754 Floating Point |
-| `decimal` | System.Decimal | 16        | Base-10 Decimal         |
+| Keyword   | .NET Struct      | Byte Size | Representation          |
+| :-------- | :--------------- | :-------- | :---------------------- |
+| `float`   | `System.Single`  | 4         | IEEE-754 Floating Point |
+| `double`  | `System.Double`  | 8         | IEEE-754 Floating Point |
+| `decimal` | `System.Decimal` | 16        | Base-10 Decimal         |
 
 `float` and `double` are converted automatically into each other in according contexts when the
 convsersion doesn't cause loss of precision.
@@ -449,9 +544,9 @@ Convert.ToInt32(12.8) == 13;
 
 Booleans have the default value `false`.
 
-| Keyword  | .NET Struct    | Byte Size | Values          |
-| :------- | :------------- | :-------- | :-------------- |
-| `bool`   | System.Boolean | 1         | `true`, `false` |
+| Keyword  | .NET Struct      | Byte Size | Values          |
+| :------- | :--------------- | :-------- | :-------------- |
+| `bool`   | `System.Boolean` | 1         | `true`, `false` |
 
 ```csharp
 // use boolean literals
@@ -463,9 +558,9 @@ false;
 
 Characters have the default value `''`.
 
-| Keyword  | .NET Struct | Byte Size | Representation   |
-| :------- | :---------- | :-------- | :--------------- |
-| `char`   | System.Char | 2         | UTF-16 Code Unit |
+| Keyword  | .NET Struct   | Byte Size | Representation   |
+| :------- | :------------ | :-------- | :--------------- |
+| `char`   | `System.Char` | 2         | UTF-16 Code Unit |
 
 ```csharp
 // use character literals
@@ -1138,6 +1233,9 @@ Console.WriteLine(4);        // print string representation
 
 // read lines from stdin
 string? input = Console.ReadLine();  // returns null when no input could be read
+
+// read characters from stdin
+char? key = Console.ReadKey();  // returns null when no input could be read
 ```
 
 <!--
