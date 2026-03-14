@@ -440,24 +440,35 @@ int? something = null;
 
 <u>Best practices</u>:
 - Local variables should be named in camel case
-- Private fields should be named in camel case with a leading underscore
-- Public fields should be named in pascel case
+- Private or protected fields should be named in camel case with a leading underscore
+- Public or internal fields should be named in pascel case
 
 ## 8 Constants
 
 Constants can only exist as class fields or local constants of functions.
 
 ```csharp
-// initialize constant
+// initialize compile-time constants
 const float Euler = 2.71;
+
+// create readonly variables as runtime constants
+readonly float Pi;  // can be declared before initialized
+Pi = 3.14;          // can only be initialized once
 ```
 
 <u>Best practices</u>:
-- Constants should be named in pascel case
+- Compile-time constants should be named in pascel case
+- Private or protected runtime constants should be named in camel case with a leading underscore
+- Public or internal runtime constants should be named in pascel case
 
 ## 9 Data Types
 
 Data types are aliases for .NET structs.
+
+```csharp
+// check if values are instances of data types
+(13 is int) == true;
+```
 
 ### 9.1 Primitive Data Types
 
@@ -493,9 +504,13 @@ int.MaxValue == 2147483647;
 uint.MinValue == 0;
 uint.MaxValue == 4294967295;
 
-// cast integers into floating point numbers
-(double)12 == 12.0             // operation
+// cast integers into other data types
+(double)12 == 12.0             // operation syntax
 Convert.ToDouble(12) == 12.0;  // Conversion class
+
+// cast integers safely into other data types
+(12 as double) == 12.0;
+(12 as string) == null;
 
 // cast integer types into smaller integer types
 (byte)46 == 46
@@ -534,6 +549,10 @@ double.MaxValue == 1.79769313486232E+308;
 (int)12.3 == 12;        // from real number to integer
 (float)1000000000.0;    // from double to float
 (decimal)13.45;         // from floating point to decimal
+
+// cast real numbers safely into other data types
+(12.0 as int) == 12;
+(12.0 as char) == null;
 
 // round real numbers to integers
 Convert.ToInt32(12.3) == 12;
@@ -578,6 +597,11 @@ char.IsLetter('A') == true;
 // cast characters into unicode values and vice versa
 (int)'A' == 65;
 (char)65 == 'A';
+
+// cast characters safely into unicode values and vice versa
+('A' as int) == 65;
+(65 as char) == 'A';
+(12.3 as char) == null;
 ```
 
 ### 9.2 Reference Data Types
@@ -663,6 +687,9 @@ firstName.IndexOfAny(letters) == 1;  // get index of first occuring character
 
 // get substrings
 firstName.Substring(1, 3) == "onn";  // 3 characters starting at index 1
+
+// check whether string is null or empty
+string.IsNullOrEmpty("") == true;
 ```
 
 ##### 9.2.1.5 String Manipulation
@@ -863,7 +890,7 @@ The left operand of an assignment must be a variable or assignable expression.
 | Division Assignment       | `/=`     | `x /= y` |
 | Modulo Assignment         | `%=`     | `x %= y` |
 
-### 10.6 Conditional Operator
+### 10.6 Ternary Operator
 
 ```csharp
 bool toCheck = true;
@@ -1125,79 +1152,598 @@ arr[0] == 1.3;
 ### 12.6 Output Parameters
 
 ```csharp
-// define parameters as outputs
 int x = 5;
+
+// define parameters as outputs
 void Square(int value, out int result)
 {
     result = value * value;  // required assignment to output parameter
 }
+
 Square(10, out x);
 x == 100;
 ```
 
-<!--
-## 13 Object Orientation
+### 12.7 Expression Bodied Functions
 
-How object orientation in implemented in the language.
+Expression bodied functions allow the usage of lambda expressions and therefore the utilization
+of functional programming patterns.
 
 ```csharp
-// instantiate objects of classes
-FooBar foobar = new FooBar();  // constructor invocation
-FooBar barfoo = new();         // target-typed constructor invocation
+// define expression bodied functions without parameters and return values
+int greet() => Console.WriteLine("Hello!");
+greet();
+
+// define expression bodied functions with parameters and return values
+int add(int x, int y) => x + y;
+add(4, 3) == 7;
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Expression bodied functions should only be used to express simple logic
+
+## 13 Object Orientation
+
+Classes are custom reference data types. Therefore they are stored in heap memory per default,
+but might be stored in stack memory instead in case of some JIT compilation optimizations. If
+they don't have a value associated with them, they get the value `null`.
+
+```csharp
+// define classes
+class FooBar
+{
+
+    // define class fields
+    string Foo;
+
+    // define class constructors
+    FooBar(string foo)
+    {
+        this.Foo = foo;  // access members of classes inside class definitions themselves
+    }
+
+    // overload constructors
+    FooBar(string foo, string bar) : this(foo)  // call other constructors
+    {
+        this.Foo += bar;  // access members of classes inside class definitions themselves
+    }
+
+    // define class finalizers (deconstructors)
+    ~FooBar()
+    {
+        Console.WriteLine("Object was destroyed.");
+    }
+
+    // define class methods
+    string GetFoo()
+    {
+        return this.Foo;  // access members of classes inside class definitions themselves
+    }
+}
+
+// instantiate objects of classes
+FooBar foo = new FooBar("Foo");
+FooBar foobar = new FooBar("Foo", "Bar");
+FooBar foofoo = new("Foo", "Foo");  // shorthand construction syntax
+
+// access members of objects
+foobar.Foo == "Foo";
+barfoo.GetFoo() == "FooBar";
+```
+
+Classes without defined constrcutors get a default constructor, which don't take any arguments.
+
+<u>Best practices</u>:
+- Classes should be named in pascel case
 
 ### 13.1 Inheritance
 
-How inheritance is treated in the language.
+Objects of derivations are also considered to be instances of their base classes, which enables
+polymorphism between inherited classes. Classes can only be derived from one class, but derived
+classes can also be derived from. Thereby derived objects that are used as instances of base
+classes can only use members defined for these base classes.
 
-```text
-Example for inheritance in the language
+```csharp
+public class Foo {
+    protected String foo;
+
+    public Foo(String foo) {
+        this.foo = foo;
+    }
+
+    public String getFoo() {
+        return this.foo;
+    }
+}
+
+// derive classes
+public class Bar extends Foo {
+    protected String bar;
+
+    public Bar(String foo, String bar) {
+        super(foo);  // call constructors of base classes
+        this.bar = bar;
+    }
+
+    // override inherited methods (parameters and return types must match or be subtypes)
+    @Override // annotate as override for compile-time checking
+    public String getFoo() {
+        return new String(this.foo);
+    }
+
+    // mark methods as final (not overridable)
+    public final String getBar() {
+        return this.bar;
+    }
+}
+
+// mark classes as final (not derivable)
+public final class FooBar extends Bar {
+    public void greet() {
+        System.out.println("Hello!");
+    }
+}
+
+// access members of base class from derived class instances
+BarFoo barfoo = new BarFoo("Foo", "Bar");
+barfoo.getFoo() == "Foo";
+barfoo.getBar() == "Bar";
+
+// upcast instances to base classes
+Foo foo = new BarFoo("Foo", "Bar");
+foo.GetFoo() == "Foo";  // can only access members of "Foo"
+
+// downcast instances to derived classes
+FooBar foobar = foo as FooBar;
+foobar == null;  // check whether downcast was successfull
+
+// check if objects are instances of base classes
+(barfoo is Foo) == true;
+
+// derive classes anonymously for one-time usage (must have default constructors)
+FooBar foofoo = new FooBar() {
+    private String foofoo = "Foo Foo";
+
+    public String getFooFoo() {
+        return this.foofoo;
+    }
+};
+foofoo.getFoo() == "Foo";
+foofoo.getBar() == "Bar";
+foofoo.getFooFoo() == "Foo Foo";
 ```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
 
 ### 13.2 Access Modifiers
 
-How access modifiers are treated in the language.
+The following access modifiers do exist for class members and classes:
+- `internal` (default): Member and class can only be accessed inside their current assembly
+- `public`: Member and class can be freely accessed
+- `private`: Member can only be accessed inside its class and class can only be accessed inside
+             its file
+- `protected`: Member can only be accessed inside its class or classes derived from it
 
-```text
-Example for classes and objects in the language
+```csharp
+// define internal classes
+internal class FooBar
+{
+    // define protected members
+    protected string _foo = "Foo";
+
+    // define internal members
+    internal string Bar = "Bar";
+    string BarBar = "BarBar";
+
+    // define public members
+    public string GetFoo()
+    {
+        return this._foo;
+    }
+}
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Members and classes should be as less privileged as possible
+- Private or protected fields should be named in camel case with leading underscores
 
-### 13.3 Abstract Classes
+### 13.3 Properties
 
-How abstract classes are treated in the language.
+```csharp
+public class FooBar
+{
+    // define backing fields for properties
+    private string _foo;
+    private string _bar;
 
-```text
-Example for abstract classes in the language
+    // define properties for private fields
+    public string Foo { get => this._foo; set => this._foo = value; }
+
+    // define properties with custom logic for private fields
+    public string Bar
+    {
+        get
+        {
+            return this._bar;
+        }
+        set
+        {
+            this._bar = value;
+        }
+    }
+
+    // define properties with implicit (internally managed) backing fields
+    public string FooFoo { get; set; }
+}
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
+- Properties should be named in pascel case
+- Properties should be preferred over public fields
+- Propertiec with implicit backing fields should be used when no custom logic is required
 
-### 13.4 Interfaces
+### 13.4 Static Classes and Members
 
-How interfaces are treated in the language.
+Static classes and members are created once at the start of programs and live for their entire
+durations. This can improve or worsen memory-efficiency, depending on the use-case.
 
-```text
-Example for interfaces in the language
+```csharp
+public class Foo
+{
+    // define static fields
+    public static string Name = "Foo";
+
+    // define static methods
+    public static string GetName()
+    {
+        return Name;  // access static fields inside static methods
+    }
+}
+
+Foo myFoo = new();
+
+// access static fields
+Foo.name == "Foo";    // through classes
+myFoo.name == "Foo";  // through objects
+
+// call static methods
+Foo.GetName() == "Foo";    // through classes
+myFoo.GetName() == "Foo";  // through objects
+
+// define static methods that can only be used statically (not be constructed)
+public static class Bar
+{
+    public static string Name = "Foo";
+
+    public static string GetName()
+    {
+        return Name;
+    }
+}
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
--->
+- Static members should be accessed through their classes
+
+### 13.5 Inner Classes
+
+```csharp
+public class Foo
+{
+    public string Name = "Foo";
+
+    // define inner classes
+    public class Bar {
+        public String Name = "Bar";
+    }
+}
+
+// access inner classes
+Foo.Bar bar = new Foo.Bar();  // construct inner classes
+bar.Name == "Bar";            // access members of inner classes
+```
+
+### 13.6 Abstract Classes
+
+```java
+// define class as abstract (only inheritable)
+public abstract class Foo {
+    protected String foo = "Foo";
+
+    // define method as abstract (must be overriden)
+    public abstract String getFoo();
+}
+
+// derive from abstract clases
+public class FooBar extends Foo {
+    // override abstract classes
+    @Override
+    public String getFoo {
+        return this.foo;
+    }
+}
+
+FooBar foobar = new FooBar();
+foobar.getFoo() == "Foo";
+```
+
+### 13.7 Partial Classes
+
+Partial classes are classes that can be defined at different places, even among different files.
+Thereby partial classes can also partially define methods across their definitions.
+
+```csharp
+// define classes partially
+public partial class FooBar
+{
+    public string Foo { foo; bar; }
+
+    // define methods partially (provide method signature)
+    public partial string GetFooBar();
+}
+
+// define classes partially
+public partial class FooBar
+{
+    public string Bar { foo; bar; }
+
+    // define methods partially (provide method implementation)
+    public partial string GetFooBar()
+    {
+        return "FOO BAR";
+    }
+}
+
+// use partially defined classes as a whole
+FooBar foobar = new();
+foobar.Foo = "FOO";
+foobar.Bar = "BAR";
+foobar.GetFooBar() == "FOO BAR";
+```
+
+### 13.8 Indexers
+
+Indexers allow classes to be indexed like arrays and collections.
+
+```csharp
+public class SomeList
+{
+    private int[] _nums = { 1, 2, 3, 4, 5 };
+
+    // define indexer methods for classes
+    public int this[int index] { get => this._nums[index]; set => this._nums[index] = value }
+}
+
+// access indexers of classes
+SomeList list = new();
+list[1] = 13;
+list[1] == 13;
+```
+
+### 13.9 Operator Overloading
+
+Operators can be overloaded with custom functionality for classes to make them compatible with
+these operators.
+
+```csharp
+public class FooBar
+{
+    public string Name { get; set;}
+
+    public FooBar(string name)
+    {
+        this.Name = name;
+    }
+
+    // overload operators for classes
+    public static FooBar operator +(FooBar left, FooBar right)
+    {
+        return new FooBar($"{left.Name}{right.Name}");
+    }
+    public static FooBar operator +(string left, FooBar right)
+    {
+        return new FooBar($"{left}{right.Name}");
+    }
+    public static FooBar operator +(FooBar left, string right)
+    {
+        return new FooBar($"{left.Name}{right}");
+    }
+}
+
+FooBar foo = new("Foo");
+FooBar bar = new("Bar");
+
+// use overloaded operators on classes
+FooBar foobar = foo + bar;    // use first overload
+foobar.Name == "FooBar";
+FooBar foofoo = foo + "Foo";  // use second overload
+foofoo.Name == "FooFoo";
+FooBar barbar = "Bar" + bar;  // use third overload
+barbar.Name == "BarBar";
+```
+
+### 13.10 Generic Classes
+
+```java
+// define generics that can be implemented by any compatible class
+class FooBar<T, U> {
+    T foo;
+    U bar;
+
+    T getFoo() {
+        return foo;
+    }
+
+    U getBar() {
+        return bar;
+    }
+}
+
+// implement generics by inserting any compatible classes
+FooBar<String, Integer> foobar = new FooBar<String, Integer>();
+foobar.foo = "Foo";
+foobar.getFoo() == "Foo";
+foobar.bar = 12;
+foobar.getBar() == 12;
+
+// infer implementations of generics
+FooBar<String, Integer> barfoo = new FooBar<>();
+```
+
+### 14.7 Interfaces
+
+Implementations of interfaces are also considered to be instances of that interface, which enables
+polymorphism between implemented interfaces. Thereby implementations of interfaces that are used
+instance of specific interfaces can only use members defined by that interface.
+
+```java
+// define interfaces
+public interface Person {
+    // initialize static properties that are inherited
+    double BASE_DISTANCE = 10.0;  // public, static and final
+
+    // declare methods that must be implemented
+    double walk(double distance);  // public
+}
+
+public interface Greeter {
+    // declare methods with default implementations that don't have to be implemented
+    default String greet() {
+        return "Hi";
+    }
+}
+
+// derive interfaces
+public interface Talker extends Greeter {
+    String pass();
+}
+
+// implement interfaces
+public class Student implements Person, Talker {
+    @Override
+    public double walk(double distance) {
+        return BASE_DISTANCE + distance;
+    }
+
+    // "greet" method is implemented per default
+
+    @Override
+    public String pass() {
+        return "Bye!";
+    }
+}
+
+// access members of interfaces from implementations
+Person john = new Student();  // can only use members declared by "Person"
+john.walk(5.0) == 15.0;
+Talker jane = new Student();  // can only use members declared by "Talker"
+jane.greet() == "Hi!";
+jane.pass() == "Bye!";
+
+// abstract classes don't have to implement interface methods, only their derivations
+public abstract class Pupil implements Human {}
+
+// implement interfaces anonymously for one-time usage
+Person jonny = new Person() {
+    public double walk(double distance) {
+        return distance - 1.0;
+    }
+};
+jonny.walk(10.0) == 9.0;
+
+// check if objects implement interfaces
+Student jack = new Student();
+jack instanceof Person == true;
+```
+
+<u>Best practices</u>:
+- Interfaces should be named in camel case
+
+#### 14.7.1 Generic Interfaces
+
+```java
+// define generics that can be implemented by any compatible class
+public interface FooBar<T, U> {
+    T foo(T some);
+    U bar(U thing);
+}
+
+// implement generics by inserting any compatible classes
+public class BarFoo implements FooBar<String, Integer> {
+    public String foo(String some) {
+        return some;
+    }
+
+    public Integer bar(Integer thing) {
+        return thing;
+    }
+}
+```
+
+#### 14.7.2 Functional Interfaces
+
+Functional interfaces allow the usage of lambda expressions as values for them and therefore
+the utilization of functional programming patterns.
+
+```java
+// define functional interfaces
+@FunctionalInterface  // enable compile-time checks
+public interface Greeter {
+    String greet(String name);  // declare single method for interface
+}
+
+// implement functional interfaces by providing lambda expressions
+Greeter hi = (String name) -> {
+    return "Hi " + name + "!";
+};
+hi.greet("John") == "Hi John!";
+
+// implement functional interfaces by providing inline lambda expressions
+Greeter hey = (String name) -> "Hey " + name "!";
+greeter.hey("Jane") == "Hey Jane!";
+
+// implement functional interfaces by providing shortened inline lambda expressions
+Greeter hello = name -> "Hello " + name "!";
+greeter.hello("Jonny") == "Hello Jonny!";
+```
+
+<u>Best practices</u>:
+- Lambda expressions should be written in the shortest possible way to make the most out of their
+  enhanced readability capabilities
+
+### 14.8 Object Class
+
+Every class in Java is a derivation of the `Object` class. Therefore every class is guaranteed to
+have its members and polymorphism is possible between every class if used as the `Object` type.
+
+```java
+public class Foo {
+    public String foo = "Foo";
+
+    // override inherited string representation method
+    @Override
+    public String toString() {
+        return "Foo{ foo: " + this.foo + " }";
+    }
+
+    // override inherited comparison method
+    @Override
+    public boolean equals(Foo other) {
+        return this.foo == other.foo;
+    }
+
+    // override inherited hash generation method
+    @Override
+    public int hashCode() {
+        return this.foo.length;
+    }
+}
+
+Foo foo = new Foo();
+Foo bar = new Foo();
+
+String.format("%s", foo) == "Foo{foo: Foo}";  // use custom string representations
+foo.equals(bar= == true;                      // compare objects based on custom criterias
+foo.hashCode() == 3;                          // compute custom hash codes
+```
 
 ## 13 Exceptions
 
@@ -1338,10 +1884,21 @@ Console.WriteLine(4);        // print string representation
 string? input = Console.ReadLine();  // returns null when no input could be read
 
 // read characters from stdin
-char? key = Console.ReadKey();  // returns null when no input could be read
+Console.ReadKey();  // returns null when no input could be read
 
-// clear stdout
+// clear terminals
 Console.Clear();
+
+// set terminal foreground colors
+Console.ForegroundColor = Console.Black;
+Console.ForegroundColor = Console.White;
+Console.ForegroundColor = Console.Red;
+Console.ForegroundColor = Console.Green;
+Console.ForegroundColor = Console.Blue;
+Console.ForegroundColor = Console.Yellow;
+Console.ForegroundColor = Console.Purple;
+Console.ForegroundColor = Console.Orange;
+Console.ForegroundColor = Console.Cyan;
 ```
 
 <!--
