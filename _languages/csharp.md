@@ -333,6 +333,12 @@ namespace MyApp;
 // declare file contents as part of nested namespaces
 namespace MyApp.Utilities;
 
+// declare specific custom types as part of namespaces
+namespace MyOtherApp
+{
+    // type definitions go here
+}
+
 // import types from namespaces
 using System;
 
@@ -611,8 +617,9 @@ char.IsLetter('A') == true;
 #### 9.1.5 Structs
 
 Structs are custom compound types that can store any number of data inside them. Thereby they act
-similiar to classes by supporting optional access modifiers, methods, properties, constructors
-and inheritance.
+similiar to classes by supporting optional methods, properties, constructors and inheritance.
+
+As custom types structs adhere to access modifiers like classes.
 
 | Keyword  | .NET Struct     | Byte Size                      | Implementation           |
 | :------- | :-------------- | :----------------------------- | :----------------------- |
@@ -669,6 +676,8 @@ vec.Normalize(10.0);                // method
 
 Enums are custom compound types that can store only one of a set of predefined constants. Thereby
 these are zero-indexed integers per default.
+
+As custom types structs adhere to access modifiers like classes.
 
 | Keyword | .NET Struct   | Byte Size            |
 | :------ | :------------ | :------------------- |
