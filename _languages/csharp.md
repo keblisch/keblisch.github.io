@@ -1865,12 +1865,13 @@ public abstract class Siren : IPerson, IFish
 ## 14 Null
 
 The absence of values is represented by the value `null`, but which causes runtime errors when
-referenced directly. Thereby reference data types are always null when they don't reference an
-existing value.
+referenced directly.
+
+Reference data types are always null when they don't reference an existing value.
 
 ```csharp
 // create nullable types
-string? someone = null;  // optional for reference data type
+string? someone = null;
 int? something = null;
 
 // check whether nullable types are null
@@ -1944,7 +1945,26 @@ catch (ArithmeticException e)
 }
 ```
 
-### 15.3 Checked Contexts
+### 15.3 Custom Exceptions
+
+```csharp
+// create custom exceptions by deriving from base exception class
+public class SomethingWentWrongException : Exception
+{
+    // create constructors that call base exception constructor
+    public SomethingWentWrongException() : base() { }
+
+    // create constructors that call base exception constructor
+    public SomethingWentWrongException(string message) : base(message) { }
+
+    // create constructors that call base exception constructor
+    public SomethingWentWrongException(string message, Exception innerException)
+        : base(message, innerException)
+    { }
+}
+```
+
+### 15.4 Checked Contexts
 
 Some exceptions can only occur in checked contexts by code that wouldn't be considered to cause
 runtime errors otherwise.
@@ -2116,7 +2136,7 @@ Console.ForegroundColor = Console.Orange;
 Console.ForegroundColor = Console.Cyan;
 ```
 
-### 17.2 Filea
+### 17.2 Files
 
 ```csharp
 // append text to files (automatically create files when they don't exist)
