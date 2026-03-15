@@ -432,10 +432,6 @@ int y = 12;
 
 // infer data types
 var z = 12.3;
-
-// create nullable variables
-string? someone = null;
-int? something = null;
 ```
 
 <u>Best practices</u>:
@@ -1152,35 +1148,67 @@ arr[0] == 1.3;
 ### 12.6 Output Parameters
 
 ```csharp
-int x = 5;
-
 // define parameters as outputs
 void Square(int value, out int result)
 {
     result = value * value;  // required assignment to output parameter
 }
 
+// pass output arguments
+int x = 5;
 Square(10, out x);
 x == 100;
+
+// initialize output arguments
+Square(4, out int y);
+y == 16;
 ```
 
-### 12.7 Expression Bodied Functions
+### 12.7 Lambda Expressions
 
-Expression bodied functions allow the usage of lambda expressions and therefore the utilization
-of functional programming patterns.
+Variables and arguments holding lambda expressions are called delegates.
 
 ```csharp
-// define expression bodied functions without parameters and return values
+// define lambda expressions with return values
+Func<int, int, int> add = (x, y) => x + y;  // multiple parameters
+add(4, 3) == 7;
+Func<int, int> inc = n => n++;              // single parameters
+inc(3) == 4;
+Func<int> one = () => 1;                    // no parameters
+one() == 1;
+
+// define lambda expressions without return values
+Action<string, string> hi = (a, b) => Console.Write($"Hi {a} and {b}!");  // multiple parameters
+hi("John", "Jane");
+Action<string> hello = name => Console.WriteLine($"Hello {name}!");       // single parameters
+hello("John");
+Action hey = () => Console.WriteLine("Hey!");                             // no parameters
+hey();
+
+// define lambda expressions that return booleans
+Predicate<int, int> isEqual = (x, y) => x == y;  // multiple parameters
+isEqual(3, 3) == true;
+Predicate<int> isPositive = n => n >= 0;         // single parameters
+isPositive(3) == true;
+Predicate beTrue = () => true;                   // no parameters
+beTrue() == true;
+
+// use lambdas with multiple statements
+Func<int, int> logAndInc = n =>
+{
+    Console.WriteLine(n);
+    return n++;
+}
+
+// define functions as expression bodied functions
 int greet() => Console.WriteLine("Hello!");
 greet();
-
-// define expression bodied functions with parameters and return values
 int add(int x, int y) => x + y;
 add(4, 3) == 7;
 ```
 
 <u>Best practices</u>:
-- Expression bodied functions should only be used to express simple logic
+- Lambda expressions should only be used to express simple logic
 
 ## 13 Object Orientation
 
@@ -1588,7 +1616,7 @@ foobar.getBar() == 12;
 FooBar<String, Integer> barfoo = new FooBar<>();
 ```
 
-### 14.7 Interfaces
+### 13.11 Interfaces
 
 Implementations of interfaces are also considered to be instances of that interface, which enables
 polymorphism between implemented interfaces. Thereby implementations of interfaces that are used
@@ -1657,8 +1685,6 @@ jack instanceof Person == true;
 <u>Best practices</u>:
 - Interfaces should be named in camel case
 
-#### 14.7.1 Generic Interfaces
-
 ```java
 // define generics that can be implemented by any compatible class
 public interface FooBar<T, U> {
@@ -1678,74 +1704,27 @@ public class BarFoo implements FooBar<String, Integer> {
 }
 ```
 
-#### 14.7.2 Functional Interfaces
+## 14 Null
 
-Functional interfaces allow the usage of lambda expressions as values for them and therefore
-the utilization of functional programming patterns.
+The absence of values is represented by the value `null`, but which causes runtime errors when
+referenced directly. Thereby reference data types are always null when they don't reference an
+existing value.
 
-```java
-// define functional interfaces
-@FunctionalInterface  // enable compile-time checks
-public interface Greeter {
-    String greet(String name);  // declare single method for interface
-}
+```csharp
+// create nullable types
+string? someone = null;  // optional for reference data type
+int? something = null;
 
-// implement functional interfaces by providing lambda expressions
-Greeter hi = (String name) -> {
-    return "Hi " + name + "!";
-};
-hi.greet("John") == "Hi John!";
+// check whether nullable types are null
+int? someValue = null;
+someValue.HasValue == true;
 
-// implement functional interfaces by providing inline lambda expressions
-Greeter hey = (String name) -> "Hey " + name "!";
-greeter.hey("Jane") == "Hey Jane!";
-
-// implement functional interfaces by providing shortened inline lambda expressions
-Greeter hello = name -> "Hello " + name "!";
-greeter.hello("Jonny") == "Hello Jonny!";
+// get value of nullable types
+int? someOtherValue = 13;
+someOtherValue.Value == 13;
 ```
 
-<u>Best practices</u>:
-- Lambda expressions should be written in the shortest possible way to make the most out of their
-  enhanced readability capabilities
-
-### 14.8 Object Class
-
-Every class in Java is a derivation of the `Object` class. Therefore every class is guaranteed to
-have its members and polymorphism is possible between every class if used as the `Object` type.
-
-```java
-public class Foo {
-    public String foo = "Foo";
-
-    // override inherited string representation method
-    @Override
-    public String toString() {
-        return "Foo{ foo: " + this.foo + " }";
-    }
-
-    // override inherited comparison method
-    @Override
-    public boolean equals(Foo other) {
-        return this.foo == other.foo;
-    }
-
-    // override inherited hash generation method
-    @Override
-    public int hashCode() {
-        return this.foo.length;
-    }
-}
-
-Foo foo = new Foo();
-Foo bar = new Foo();
-
-String.format("%s", foo) == "Foo{foo: Foo}";  // use custom string representations
-foo.equals(bar= == true;                      // compare objects based on custom criterias
-foo.hashCode() == 3;                          // compute custom hash codes
-```
-
-## 13 Exceptions
+## 15 Exceptions
 
 Exceptions are generated by the .NET runtime or programs themselves when runtime errors occur.
 Every exception is derived from the `System.Exception` class.
@@ -1760,7 +1739,7 @@ Every exception is derived from the `System.Exception` class.
 | `NullReferenceException`     | Referenced a value that is null                             |
 | `OverflowException`          | Used value that is larger than its type in checked contexts |
 
-### 13.1 Catching Exceptions
+### 15.1 Catching Exceptions
 
 ```csharp
 // only executes until exception is thrown
@@ -1787,7 +1766,7 @@ finally
 }
 ```
 
-### 13.2 Throwing Exceptions
+### 15.2 Throwing Exceptions
 
 ```csharp
 // throw exceptions
@@ -1807,7 +1786,7 @@ catch (ArithmeticException e)
 }
 ```
 
-### 13.3 Checked Contexts
+### 15.3 Checked Contexts
 
 Some exceptions can only occur in checked contexts by code that wouldn't be considered to cause
 runtime errors otherwise.
@@ -1827,49 +1806,121 @@ catch (OverflowException e)
 }
 ```
 
-<!--
-## 16 Containers
-
-How containers are treated in the language.
+## 16 Collections
 
 ### 16.1 Lists
 
-How lists are treated in the language.
+Lists are implemented as array lists. Therefore they keep track of the actual size and memory
+capacity of their underlying arrays and reallocate them if they need to grow in capacity.
 
-```test
-Example for list usage in the language
+```csharp
+// create lists
+List<int> nums = new List<int>();
+
+// initialize lists
+List<float> grades = new List<float>{ 3.1, 1.2 };  // array initialization syntax
+List<string> names = [ "John", "Jane" ];           // collection expression syntax
+
+// add elements to lists
+nums.add(5);         // append
+nums.Insert(1, -8);  // insert at specific index
+
+// assign new values to indices
+nums[0] = 4;
+
+// get elements from lists by their index
+list[0] == 4;
+list[1] == -8;
+
+// remove elements from lists
+bool wasFound = list.remove(-8);  // remove first occurence of element
+list.Clear();                     // remove all elements
+
+// get size and capacity of lists
+nums.Count == 2;
+nums.Capacity;
+
+// check whether lists contain certain elements
+nums.Any(x => x % 2 == 0) == true;
+
+// get list elements fullfilling predicates
+int even = nums.Find(x => x % 2 == 0);            // first element fullfilling predicate
+List<int> evens = nums.FindAll(x => x % 2 == 0);  // all elements fullfilling predicate
+
+// sort lists
+nums.Sort();  // sort in natural ascending order
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 16.2 Dictionaries
 
-### 16.2 Maps
+Dictionaries are implemented as hash maps and therefore contain unordered key-value pairs.
+They also keep track of the number of their elements and their available capacity. When their
+capacity needs to grow, they reallocate their stored key-value pairs.
 
-How maps are treated in the language.
+```csharp
+// create dictionaries
+Dictionary<string, float> grades = new Dictionary<string, float>();
 
-```test
-Example for map usage in the language
+// initialize dictionaries
+Dictionary<int, string> menu = new Dictionary<int, string>{
+    [1] = "Pizza",
+    [3] = "Burger"
+};
+
+// add elements to dictionaries
+grades.add("John", 1.8);
+grades.add("Jane", 2.1);
+
+// add elements safely to dictionaries
+bool added = grades.TryAdd("John", 1.8);
+
+// assign new values to keys
+grades["John"] = 1.7;
+
+// get elements from dictionaries by their key
+grades["John"] == 1.8;
+grades["Jane"] == 2.1;
+
+// get elements safely from dictionaries by their key
+bool exists = grades.TryGet("John", out float grade);
+
+// remove elements from dictionaries
+bool wasFound = grades.Remove("John");  // remove value with specific key
+grades.Clear();                         // remove all elements
+
+// get size and capacity of dictionaries
+grades.Count == 5;
+grades.Capacity;
+
+// check whether dictionaries contain keys
+grade.ContainsKey("John") == true;
+
+// iterate over dictionaries
+foreach (KeyValuePair<string, float> grade in grades)
+{
+    Console.WriteLine($"{grade.Key}: {grade.Value}");
+}
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 16.3 LINQ
 
-### 16.3 Iterators
+LINQ stands for "Language Integrated Query" and enables an easy way to process arrays and
+collections. This is done by transforming these into implementations of the `IEnumerable`
+interface, on which many operations can be performed and that are converted back into any other
+desired data structure at the end.
 
-How iterators are treated in the language.
+```csharp
+List<int> nums = [ 1, 5, 9, 3, 7 ];
 
-```test
-Example for iterator usage in the language
+// filter collections by predicates
+IEnumerable<int> filtered = nums.Where(x => x >= 5);
+
+// convert enumerables into other collections
+int[] myArray = filtered.ToArray();
+List<int> myList = filtered.ToList();
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
--->
-
-## 14 IO
+## 17 IO
 
 ```csharp
 // print to stdout
@@ -1885,6 +1936,10 @@ string? input = Console.ReadLine();  // returns null when no input could be read
 
 // read characters from stdin
 Console.ReadKey();  // returns null when no input could be read
+
+// print to debug listener
+Debug.Write("Debugging...");
+Console.WriteLine("Debugging...");
 
 // clear terminals
 Console.Clear();
@@ -1914,7 +1969,7 @@ Example for file streams usage in the language
 - First best practice
 - Second best practice
 -->
-## 15 Math
+## 18 Math
 
 ```csharp
 // generate random numbers
@@ -1944,7 +1999,7 @@ Example for system utilities in the language
 - Second best practice
 -->
 
-## 16 Threads
+## 19 Threads
 
 ```csharp
 // pause current thread
