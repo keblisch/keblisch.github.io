@@ -273,9 +273,8 @@ The following identifiers are reserved as keywords with special meaning:
 
 ### 5.1 Files
 
-C# source files must contain a class, interface, enum, struct or record definition and have the
-file suffix `.cs`. They may contain additional internal or private definitions, but typically only
-one public type is defined per file.
+C# source files must contain at least one public or internal custom data type (class, interface,
+enum, struct) and have the file suffix `.cs`. They may contain additional definitions.
 
 Compiled .NET assemblies have the file suffix `.dll` (libraries) or `.exe` (executables).
 
@@ -407,12 +406,20 @@ Documentation comments are used by some tools and editors to generate documentat
 according code, but are still regular comments for the C# compiler.
 
 ```csharp
-/// <summary>
-/// Adds two numbers.
-/// </summary>
-int add(int x, int y)
+/// <summary>Represents some class.</summary>
+public class FooBar
 {
-    return x + y;
+    /// <summary>Holds some value.</summary>
+    public int Foo = 0;
+
+    /// <summary>Does some things.</summary>
+    /// <param name="x">The first parameter.</param>
+    /// <param name="y">The second parameter.</param>
+    /// <returns>A result of type <c>int</c>.</returns>
+    public int Bar(int x, int y)
+    {
+        return x + y;
+    }
 }
 ```
 
@@ -466,9 +473,10 @@ Data types are aliases for .NET structs.
 (13 is int) == true;
 ```
 
-### 9.1 Primitive Data Types
+### 9.1 Value Types
 
-Primitive data types have default values that get assigned to non-initialized variables.
+Value types have default values that get assigned to non-initialized variables and they are
+stored in stack memory per default.
 
 #### 9.1.1 Integers
 
@@ -600,7 +608,107 @@ char.IsLetter('A') == true;
 (12.3 as char) == null;
 ```
 
-### 9.2 Reference Data Types
+#### 9.1.5 Structs
+
+Structs are custom compound types that can store any number of data inside them. Thereby they act
+similiar to classes by supporting optional access modifiers, methods, properties, constructors
+and inheritance.
+
+| Keyword  | .NET Struct     | Byte Size                      | Implementation           |
+| :------- | :-------------- | :----------------------------- | :----------------------- |
+| `struct` | `System.Struct` | Sum of the size of all members | Continous area of memory |
+
+```csharp
+// define structs
+public struct Point
+{
+    public int X;
+    public int Y;
+}
+
+// declare structs
+Point p;
+
+// access struct fields
+p.X = 10;   // assign value
+p.X == 10;  // get value
+
+// define structs with class features
+public struct Vector
+{
+    // define properties
+    public double X { get; set; }
+    public double Y { get; set; }
+
+    // define constrcutors
+    public Point(double x, double y)
+    {
+        this.X = x;
+        this.Y = y;
+    }
+
+    // define methods
+    public void Normalize(double length)
+    {
+        this.X /= length;
+        this.Y /= length;
+    }
+}
+
+// use class features of structs
+Vector vec = new Vector(1.0, 3.4);  // constructor
+vec.X == 1.0;                       // property
+vec.X = 7.8;
+vec.Normalize(10.0);                // method
+```
+
+<u>Best practices</u>:
+- Structs should be used instead of classes when their objects need to be leightweight
+
+#### 9.1.6 Enums
+
+Enums are custom compound types that can store only one of a set of predefined constants. Thereby
+these are zero-indexed integers per default.
+
+| Keyword | .NET Struct   | Byte Size            |
+| :------ | :------------ | :------------------- |
+| `enum`  | `System.Enum` | Underlying data type |
+
+```csharp
+// define enums
+public enum Day { Mo, Tu, We, Th, Fr, Sa, Su };
+
+// define enums with custom values (every element must be the same data type)
+public enum Month
+{
+    Jan = "1",
+    Feb = "2",
+    Mar = "3",
+    Apr = "4",
+    May = "5",
+    Jun = "6",
+    Jul = "7",
+    Aug = "8",
+    Sep = "9",
+    Oct = "10",
+    Nov = "11",
+    Dec = "12"
+};
+
+// create enums
+Day day = Day.Mo;
+
+// access enum values
+day == Day.Mo;
+
+// get enum string representations
+$"{day}" == "Mo";
+
+// get enum element value
+(int)day == 0;
+```
+
+### 9.2 Reference Types
 
 Reference data types are stored in heap memory per default, but they might be stored in stack
 memory instead in case of some JIT compilation optimizations. If they don't have a value
@@ -1272,53 +1380,56 @@ classes can also be derived from. Thereby derived objects that are used as insta
 classes can only use members defined for these base classes.
 
 ```csharp
-public class Foo {
-    protected String foo;
+class Foo
+{
+    string Foo;
 
-    public Foo(String foo) {
-        this.foo = foo;
+    Foo(string foo)
+    {
+        this.Foo = foo;
     }
 
-    public String getFoo() {
-        return this.foo;
+    string GetFoo()
+    {
+        return this.Foo;
     }
 }
 
 // derive classes
-public class Bar extends Foo {
-    protected String bar;
+class Bar : Foo
+{
+    string Bar;
 
-    public Bar(String foo, String bar) {
-        super(foo);  // call constructors of base classes
-        this.bar = bar;
+    Bar(string foo, string bar) : base(foo);  // call constructors of base classes
+    {
+        this.Bar = bar;
     }
 
-    // override inherited methods (parameters and return types must match or be subtypes)
-    @Override // annotate as override for compile-time checking
-    public String getFoo() {
-        return new String(this.foo);
+    string GetBar()
+    {
+        return this.Bar;
     }
 
-    // mark methods as final (not overridable)
-    public final String getBar() {
-        return this.bar;
+    void OverrideBase(string foo)
+    {
+        // access members of base classes
+        base.Foo = foo;
     }
 }
 
-// mark classes as final (not derivable)
-public final class FooBar extends Bar {
-    public void greet() {
-        System.out.println("Hello!");
-    }
+// prevent classes from being inherited
+sealed class Fizz
+{
+    string Name = "Fizz";
 }
 
 // access members of base class from derived class instances
-BarFoo barfoo = new BarFoo("Foo", "Bar");
-barfoo.getFoo() == "Foo";
-barfoo.getBar() == "Bar";
+Bar bar = new("Foo", "Bar");
+bar.getFoo() == "Foo";
+bar.getBar() == "Bar";
 
 // upcast instances to base classes
-Foo foo = new BarFoo("Foo", "Bar");
+Foo foo = new Bar("Foo", "Bar");
 foo.GetFoo() == "Foo";  // can only access members of "Foo"
 
 // downcast instances to derived classes
@@ -1327,18 +1438,6 @@ foobar == null;  // check whether downcast was successfull
 
 // check if objects are instances of base classes
 (barfoo is Foo) == true;
-
-// derive classes anonymously for one-time usage (must have default constructors)
-FooBar foofoo = new FooBar() {
-    private String foofoo = "Foo Foo";
-
-    public String getFooFoo() {
-        return this.foofoo;
-    }
-};
-foofoo.getFoo() == "Foo";
-foofoo.getBar() == "Bar";
-foofoo.getFooFoo() == "Foo Foo";
 ```
 
 ### 13.2 Access Modifiers
@@ -1349,6 +1448,7 @@ The following access modifiers do exist for class members and classes:
 - `private`: Member can only be accessed inside its class and class can only be accessed inside
              its file
 - `protected`: Member can only be accessed inside its class or classes derived from it
+ shadow inherited methods (doesn't support polymorphism)
 
 ```csharp
 // define internal classes
@@ -1400,6 +1500,9 @@ public class FooBar
 
     // define properties with implicit (internally managed) backing fields
     public string FooFoo { get; set; }
+
+    // define properties with access modifiers
+    public string FooFoo { protected get; protected set; }
 }
 ```
 
@@ -1408,7 +1511,89 @@ public class FooBar
 - Properties should be preferred over public fields
 - Propertiec with implicit backing fields should be used when no custom logic is required
 
-### 13.4 Static Classes and Members
+### 13.4 Method Overriding
+
+```csharp
+public class Foo
+{
+    protected string _foo = "Foo";
+
+    // define virtual methods that can be overriden
+    public virtual string GetName()
+    {
+        return "Foo";
+    }
+
+    // define virtual methods that can be overriden
+    public virtual void SetName(string name)
+    {
+        this._foo = name;
+    }
+
+    public void Greet()
+    {
+        Console.WriteLine("Hello!");
+    }
+}
+
+public class Bar : Foo
+{
+    protected string _bar = "Bar";
+
+    // override inherited virtual methods (supports polymorphism)
+    public override string GetName()
+    {
+        Console.WriteLine(base.GetName());  // access overriden method of base class
+        return "Bar";
+    }
+
+    // override inherited virtual methods and prevent further overrides
+    public sealed override void SetName(string name)
+    {
+        this._bar = name;
+    }
+
+    // shadow inherited methods (doesn't support polymorphism and base method access)
+    public void Greet()
+    {
+        Console.WriteLine("Hey!");
+    }
+}
+
+Foo foo = new();
+foo.GetName() == "Foo";
+Bar bar = new();
+bar.GetName() == "Bar";
+```
+
+### 13.5 Abstract Classes
+
+```csharp
+// define abstract classes that can only be inherited
+public abstract class Foo
+{
+    protected string _name = "Foo";
+
+    // define abstract methods that have to be overriden
+    public abstract string GetName();
+}
+
+public class Bar : Foo
+{
+    protected string _bar = "Bar";
+
+    // override inherited abstract methods
+    public override string GetName()
+    {
+        return $"{this._foo}{this._bar}";
+    }
+}
+
+Bar bar = new();
+bar.GetName() == "FooBar";
+```
+
+### 13.6 Static Classes and Members
 
 Static classes and members are created once at the start of programs and live for their entire
 durations. This can improve or worsen memory-efficiency, depending on the use-case.
@@ -1451,7 +1636,7 @@ public static class Bar
 <u>Best practices</u>:
 - Static members should be accessed through their classes
 
-### 13.5 Inner Classes
+### 13.7 Inner Classes
 
 ```csharp
 public class Foo
@@ -1469,31 +1654,43 @@ Foo.Bar bar = new Foo.Bar();  // construct inner classes
 bar.Name == "Bar";            // access members of inner classes
 ```
 
-### 13.6 Abstract Classes
+### 13.8 Object Class
 
-```java
-// define class as abstract (only inheritable)
-public abstract class Foo {
-    protected String foo = "Foo";
+Every class in C# is a derivation of the `Object` class. Therefore every class is guaranteed to
+have its members and polymorphism is possible between every class if used as the `Object` type.
 
-    // define method as abstract (must be overriden)
-    public abstract String getFoo();
-}
+```csharp
+public class Foo
+{
+    public string Name = "Foo";
 
-// derive from abstract clases
-public class FooBar extends Foo {
-    // override abstract classes
+    // override inherited string representation method
+    public override string ToString() {
+        return $"Foo\{Name: "{this.foo}"\}";
+    }
+
+    // override inherited comparison method
     @Override
-    public String getFoo {
-        return this.foo;
+    public override bool Equals(Foo other) {
+        return this.Name == other.Name;
+    }
+
+    // override inherited hash generation method
+    @Override
+    public override int GetHashCode() {
+        return this.Name.Length;
     }
 }
 
-FooBar foobar = new FooBar();
-foobar.getFoo() == "Foo";
+Foo foo = new();
+Foo bar = new();
+
+$"{foo}" == "Foo{Name: Foo}";  // use custom string representations
+foo.Equals(bar) == true;       // compare objects based on custom criterias
+foo.GetHashCode() == 3;        // compute custom hash codes
 ```
 
-### 13.7 Partial Classes
+### 13.9 Partial Classes
 
 Partial classes are classes that can be defined at different places, even among different files.
 Thereby partial classes can also partially define methods across their definitions.
@@ -1527,7 +1724,7 @@ foobar.Bar = "BAR";
 foobar.GetFooBar() == "FOO BAR";
 ```
 
-### 13.8 Indexers
+### 13.10 Indexers
 
 Indexers allow classes to be indexed like arrays and collections.
 
@@ -1546,7 +1743,7 @@ list[1] = 13;
 list[1] == 13;
 ```
 
-### 13.9 Operator Overloading
+### 13.11 Operator Overloading
 
 Operators can be overloaded with custom functionality for classes to make them compatible with
 these operators.
@@ -1588,7 +1785,7 @@ FooBar barbar = "Bar" + bar;  // use third overload
 barbar.Name == "BarBar";
 ```
 
-### 13.10 Generic Classes
+### 13.12 Generic Classes
 
 ```java
 // define generics that can be implemented by any compatible class
@@ -1616,93 +1813,54 @@ foobar.getBar() == 12;
 FooBar<String, Integer> barfoo = new FooBar<>();
 ```
 
-### 13.11 Interfaces
+### 13.13 Interfaces
 
 Implementations of interfaces are also considered to be instances of that interface, which enables
 polymorphism between implemented interfaces. Thereby implementations of interfaces that are used
 instance of specific interfaces can only use members defined by that interface.
 
-```java
+```csharp
 // define interfaces
-public interface Person {
-    // initialize static properties that are inherited
-    double BASE_DISTANCE = 10.0;  // public, static and final
-
+public interface IPerson
+{
     // declare methods that must be implemented
-    double walk(double distance);  // public
+    string Talk(string message);  // public per default
 }
 
-public interface Greeter {
-    // declare methods with default implementations that don't have to be implemented
-    default String greet() {
-        return "Hi";
-    }
-}
-
-// derive interfaces
-public interface Talker extends Greeter {
-    String pass();
+public interface IFish {
+    void Swim();  // public per default
 }
 
 // implement interfaces
-public class Student implements Person, Talker {
-    @Override
-    public double walk(double distance) {
-        return BASE_DISTANCE + distance;
+public class Mermaid : IPerson, IFish
+{
+    public string Talk(string message)
+    {
+        return message + "!";
     }
 
-    // "greet" method is implemented per default
-
-    @Override
-    public String pass() {
-        return "Bye!";
+    public void Swim()
+    {
+        Console.WriteLine("Blub Blub Blub");
     }
 }
 
 // access members of interfaces from implementations
-Person john = new Student();  // can only use members declared by "Person"
-john.walk(5.0) == 15.0;
-Talker jane = new Student();  // can only use members declared by "Talker"
-jane.greet() == "Hi!";
-jane.pass() == "Bye!";
+IPerson person = new Mermaid();  // can only use members declared by "IPerson"
+person.Talk("Hello") == "Hello!";
+IFish fish = new Mermaid();      // can only use members declared by "IFish"
+fish.Swim();
 
 // abstract classes don't have to implement interface methods, only their derivations
-public abstract class Pupil implements Human {}
+public abstract class Siren : IPerson, IFish
+{}
 
-// implement interfaces anonymously for one-time usage
-Person jonny = new Person() {
-    public double walk(double distance) {
-        return distance - 1.0;
-    }
-};
-jonny.walk(10.0) == 9.0;
-
-// check if objects implement interfaces
-Student jack = new Student();
-jack instanceof Person == true;
+// check if objects are instances of interfaces
+(person is IPerson) == true;
 ```
 
 <u>Best practices</u>:
-- Interfaces should be named in camel case
-
-```java
-// define generics that can be implemented by any compatible class
-public interface FooBar<T, U> {
-    T foo(T some);
-    U bar(U thing);
-}
-
-// implement generics by inserting any compatible classes
-public class BarFoo implements FooBar<String, Integer> {
-    public String foo(String some) {
-        return some;
-    }
-
-    public Integer bar(Integer thing) {
-        return thing;
-    }
-}
-```
+- Interfaces should be named in pascel case with a capital I
 
 ## 14 Null
 
@@ -1922,6 +2080,8 @@ List<int> myList = filtered.ToList();
 
 ## 17 IO
 
+### 17.1 Terminal
+
 ```csharp
 // print to stdout
 Console.Write("Hello");  // print string
@@ -1956,70 +2116,112 @@ Console.ForegroundColor = Console.Orange;
 Console.ForegroundColor = Console.Cyan;
 ```
 
-<!--
 ### 17.2 Filea
 
-How file streams are treated in the language.
+```csharp
+// append text to files (automatically create files when they don't exist)
+File.AppendAllText("path/to/file.txt", "Hello, World!\n");
 
-```test
-Example for file streams usage in the language
+// create system dependant file paths
+string path = Path.Combine("path", "to", "file.txt");
+
+// check whether directories exist
+bool dirExists = Directory.Exists("path/to/directory/")
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
--->
 ## 18 Math
 
 ```csharp
+// round numbers
+Math.Round(15.3) == 15;    // round to nearest
+Math.Ceiling(15.3) == 16;  // round up
+Math.Floor(15.3) == 15;    // round down
+
+// get highest or lowest numbers
+Math.Max(15, 0) == 15;  // highest value
+Math.Min(15, 0) == 0;   // lowest value
+
+// perform calculations
+Math.Pow(4, 3) == 64;      // raise to the power
+Math.Sqrt(25.0) == 5.0;    // raise to the power
+Math.Abs(-13) == 13;       // get absolute value
+double cos = Math.Cos(1);  // get cosinus
+double sin = Math.Sin(1);  // get sinus
+
+// get mathematical constants
+double pi = Math.PI;
+
 // generate random numbers
 var random = new Random();
 int num = random.Next(1, 11);  // get random number between 1 and 10
 ```
 
-<!--
 ## 19 Time and Date
 
-```test
-Example for time and date utilities in the language
+```csharp
+// create custom datetime objects based on current locale
+DateTime date = new DateTime(1999, 12, 31);
+DateTime datetime = new DateTime(1999, 12, 31, 23, 59, 59);
+
+// create string representations of datetime objects in current locale
+$"{date}" == "12/31/1999 12:00:00 AM";
+$"{datetime}" == "12/31/1999 11:59:59 PM";
+
+// get datetime objects from specific moments based on current locale
+DateTime today = DateTime.Today;
+DatetIme now = DateTime.Now;
+
+// get information about datetime objects
+int year = now.Year;
+int month = now.Month;
+int week = now.Week;
+int day = now.Day;
+DayOfWeek weekDay = now.DayOfWeek;
+int monthDay = now.DayOfMonth;
+int yearDay = now.DayOfYear;
+int hour = now.Hour;
+int minute = now.Minute;
+int second = now.Second;
+bool isBefore = now < today;
+
+// manipulate datetime objects
+DateTime nextYear = now.AddYears(1);
+DateTime nextMonth = now.AddMonths(1);
+DateTime tomorrow = now.AddDays(1);
+DateTime nextHour = now.AddHours(1);
+DateTime nextMinute = now.AddMinutes(1);
+DateTime nextSecond = now.AddSeconds(1);
+
+// get information about dates and times
+bool isLeep = DateTime.IsLeepYear(2000);
+int daysInMonth = DateTime.DaysInMonth(1999, 1);
+
+// create time spans
+TimeSpan passed = tomorrow.Subtract(today);
+TimeSpan willPass = now.Add(passed);
+
+// get information about time spans
+int passedYears = passed.Years;
+int passedMonths = passed.Months;
+int passedDays = passed.Days;
+int passedHours = passed.Hours;
+int passedMinutes = passed.Minutes;
+int passedSeconds = passed.Seconds;
+bool isLess = passed < willPass;
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 20 System
-
-```test
-Example for system utilities in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
--->
-
-## 19 Threads
+## 20 Threads
 
 ```csharp
 // pause current thread
 Thread.Sleep(1000);  // in milliseconds
 ```
 
-<!--
-## 23 Memory Management
+## 21 Memory Management
 
-Description of how memory management is implemented in the language.
-
-Description of how memory can be manually managed in the language.
-
-```text
-Example for manual memory management in the language
+```csharp
+// manually trigger garbage collection (may be refused)
+GC.Collect();
 ```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
--->
 
 {% endraw %}
