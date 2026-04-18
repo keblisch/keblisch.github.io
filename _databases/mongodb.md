@@ -1,16 +1,16 @@
 ---
 layout: base
-title: javascript
+title: MongoDB
 ---
 
 <!-- markdownlint-disable MD013 MD033 MD032 MD029 MD025 MD022 MD007 -->
 
 {% raw %}
 
-# javascript
+# MongoDB
 {: .no_toc }
 
-javascript is a document based No-SQL database that is build to handle large amounts of data in
+MongoDB is a document based No-SQL database that is build to handle large amounts of data in
 asynchronous environments.
 
 | Query Language | Implementation | License | Current Version |
@@ -25,11 +25,11 @@ asynchronous environments.
 
 ## 1 Resources
 
-- Official javascript website: [javascript](https://www.javascript.com/)
+- Official MongoDB website: [MongoDB](https://www.mongodb.com/)
 
 ## 2 Data Model
 
-javascript operates on the following levels:
+MongoDB operates on the following levels:
 
 1. **Databases**: Encapsulates any number of collections
 2. **Collections**: Contains any number of documents
@@ -38,24 +38,24 @@ javascript operates on the following levels:
 BSON is a superset of JSON that is stored in a binary format for more efficiency. It adds
 additional syntax and data types,but also share the same syntax as JSON.
 
-javascript is entirely schemaless, therefore documents inside the same collections don't have to
+MongoDB is entirely schemaless, therefore documents inside the same collections don't have to
 share any fields. This allows collections and their contained documents to be completely
 dynamic and be adjusted individually.
 
 The only required field of documents are object id fields wth the identifier `_id`. This field is
-automatically created and managed by javascript, but can be set manually. They`re used to uniquely
+automatically created and managed by MongoDB, but can be set manually. They`re used to uniquely
 identify documents and operate on them, therefore they shouldn't be manipulated manually after
 their creation.
 
 ## 3 Usage
 
-javascript runs as a server and on port 27017 per default. Thereby it can only be used by
+MongoDB runs as a server and on port 27017 per default. Thereby it can only be used by
 users that are registered inside the server and are authenticated. A root user is created
 automatically on startup for which credentials can be set with the environment variables
 `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD`.
 
-javascript can be interacted with via the Mongo Shell in the terminal and via drivers in programs.
-To connect to a running javascript server on the current machine via the Mongo Shell, the command
+MongoDB can be interacted with via the Mongo Shell in the terminal and via drivers in programs.
+To connect to a running MongoDB server on the current machine via the Mongo Shell, the command
 `mongosh` can be used. Inside the shell command completion with tab and command history with
 up are available.
 
@@ -73,7 +73,7 @@ show dbs
 use someDatabase
 ```
 
-Additionally the following restrictions exist for javascript:
+Additionally the following restrictions exist for MongoDB:
 
 - Documents can only be up to 16MB big
 - Documents can only have a nesting level of up to 100 embedded documents
@@ -193,7 +193,7 @@ db.people.updateOne({_id: ObjectId(123456789abcdefghi)})
 
 ## 5 Operators
 
-Operators a predefined fields that are used to declare operations on documents to javascript.
+Operators a predefined fields that are used to declare operations on documents to MongoDB.
 
 ```javascript
 // use operator as filter
@@ -210,7 +210,7 @@ db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
 
 ## 6 Functions
 
-Predefined functions can be used to interact with data inside javascript.
+Predefined functions can be used to interact with data inside MongoDB.
 
 ```javascript
 // pretty print document as JSON
