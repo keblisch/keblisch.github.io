@@ -1,16 +1,16 @@
 ---
 layout: base
-title: MongoDB
+title: javascript
 ---
 
 <!-- markdownlint-disable MD013 MD033 MD032 MD029 MD025 MD022 MD007 -->
 
 {% raw %}
 
-# MongoDB
+# javascript
 {: .no_toc }
 
-MongoDB is a document based No-SQL database that is build to handle large amounts of data in
+javascript is a document based No-SQL database that is build to handle large amounts of data in
 asynchronous environments.
 
 | Query Language | Implementation | License | Current Version |
@@ -25,11 +25,11 @@ asynchronous environments.
 
 ## 1 Resources
 
-- Official MongoDB website: [MongoDB](https://www.mongodb.com/)
+- Official javascript website: [javascript](https://www.javascript.com/)
 
 ## 2 Data Model
 
-MongoDB operates on the following levels:
+javascript operates on the following levels:
 
 1. **Databases**: Encapsulates any number of collections
 2. **Collections**: Contains any number of documents
@@ -38,24 +38,24 @@ MongoDB operates on the following levels:
 BSON is a superset of JSON that is stored in a binary format for more efficiency. It adds
 additional syntax and data types,but also share the same syntax as JSON.
 
-MongoDB is entirely schemaless, therefore documents inside the same collections don't have to
+javascript is entirely schemaless, therefore documents inside the same collections don't have to
 share any fields. This allows collections and their contained documents to be completely
 dynamic and be adjusted individually.
 
 The only required field of documents are object id fields wth the identifier `_id`. This field is
-automatically created and managed by MongoDB, but can be set manually. They`re used to uniquely
+automatically created and managed by javascript, but can be set manually. They`re used to uniquely
 identify documents and operate on them, therefore they shouldn't be manipulated manually after
 their creation.
 
 ## 3 Usage
 
-MongoDB runs as a server and on port 27017 per default. Thereby it can only be used by
+javascript runs as a server and on port 27017 per default. Thereby it can only be used by
 users that are registered inside the server and are authenticated. A root user is created
 automatically on startup for which credentials can be set with the environment variables
 `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD`.
 
-MongoDB can be interacted with via the Mongo Shell in the terminal and via drivers in programs.
-To connect to a running MongoDB server on the current machine via the Mongo Shell, the command
+javascript can be interacted with via the Mongo Shell in the terminal and via drivers in programs.
+To connect to a running javascript server on the current machine via the Mongo Shell, the command
 `mongosh` can be used. Inside the shell command completion with tab and command history with
 up are available.
 
@@ -73,7 +73,7 @@ show dbs
 use someDatabase
 ```
 
-Additionally the following restrictions exist for MongoDB:
+Additionally the following restrictions exist for javascript:
 
 - Documents can only be up to 16MB big
 - Documents can only have a nesting level of up to 100 embedded documents
@@ -92,7 +92,7 @@ Every response object of update operations contain the following fields:
 - `insertedIds`: An array of object IDs from the created documents
                  (when multiple documents where created)
 
-```mongodb
+```javascript
 // insert new document into collection (and create collection when it doesn't exist)
 db.people.insertOne({name: "John", age: 21})
 
@@ -106,7 +106,7 @@ Response objects of read operations are either single documents or cursor object
 documents. Thereby cursor objects act like pointers to result sets to be more performant in case
 of large amounts of data, but act like arrays in most cases.
 
-```mongodb
+```javascript
 // get all documents from collection
 db.people.find()
 
@@ -144,7 +144,7 @@ Every response object of update operations contain the following fields:
 - `matchedCount`: An integer containing the number of documents matched by the query
 - `modifiedCount`: An integer containing the number of updated documents
 
-```mongodb
+```javascript
 // update first document in collection that contains specified fields with specified set operator
 db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
 
@@ -172,7 +172,7 @@ Every response object of delete operations contain the following fields:
 - `acknowledged`: A boolean that signals whether the operation was successful
 - `deleteCount`: An integer containing the number of deleted documents
 
-```mongodb
+```javascript
 // delete first document in collection that contains specified fields
 db.people.deleteOne({name: "John"})
 
@@ -193,9 +193,9 @@ db.people.updateOne({_id: ObjectId(123456789abcdefghi)})
 
 ## 5 Operators
 
-Operators a predefined fields that are used to declare operations on documents to MongoDB.
+Operators a predefined fields that are used to declare operations on documents to javascript.
 
-```mongodb
+```javascript
 // use operator as filter
 db.people.find({$gt: {age: 18}})
 
@@ -210,9 +210,9 @@ db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
 
 ## 6 Functions
 
-Predefined functions can be used to interact with data inside MongoDB.
+Predefined functions can be used to interact with data inside javascript.
 
-```mongodb
+```javascript
 // pretty print document as JSON
 printjson({name: "John", age: 21})
 ```
