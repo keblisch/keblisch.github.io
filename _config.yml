@@ -16,6 +16,8 @@ collections:
     output: true
   tools:
     output: true
+  databases:
+    output: true
 
 defaults:
   - scope:
@@ -51,6 +53,8 @@ just_the_docs:
       name: Frameworks
     tools:
       name: Tools
+    databases:
+      name: Databases
 
 exclude:
   - .sass-cache/
