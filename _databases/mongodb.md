@@ -71,6 +71,9 @@ show dbs
 
 # switch to database (and create it when it doesn't exist)
 use someDatabase
+
+# delete database
+db.dropDatabase()
 ```
 
 Additionally the following restrictions exist for MongoDB:
@@ -179,14 +182,20 @@ db.people.deleteOne({name: "John"})
 // delete all documents in collection that contain specified fields
 db.people.deleteMany({age: 21})
 
-// delete entire collection
+// delete every document in collection
 db.people.deleteMany({})
 
 // delete documents in collection that fulfill specified filter
 db.people.find({$gt: {age: 18}})
 
 // delete document in collection by its ID
-db.people.updateOne({_id: ObjectId(123456789abcdefghi)})
+db.people.deleteOne({_id: ObjectId(123456789abcdefghi)})
+
+// delete database
+db.dropDatabase()
+
+// delete collection
+db.people.drop()
 ```
 
 {% endraw %}
