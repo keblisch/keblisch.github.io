@@ -54,10 +54,10 @@ users that are registered inside the server and are authenticated. A root user i
 automatically on startup for which credentials can be set with the environment variables
 `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD`.
 
-MongoDB can be interacted with via the Mongo Shell in the terminal and via drivers in programs.
-To connect to a running MongoDB server on the current machine via the Mongo Shell, the command
-`mongosh` can be used. Inside the shell command completion with tab and command history with
-up are available.
+MongoDB can be interacted with via the Mongo Shell (implemented in JavaScript and therefore
+adhering to its rules) in the terminal and via drivers in programs. To connect to a running
+MongoDB server on the current machine via the Mongo Shell, the command `mongosh` can be used.
+Inside the shell command completion with tab and command history with up are available.
 
 ```bash
 # exit the shell
@@ -74,6 +74,9 @@ use someDatabase
 
 # delete database
 db.dropDatabase()
+
+# show statistics about database
+db.stats()
 ```
 
 Additionally the following restrictions exist for MongoDB:
@@ -81,12 +84,49 @@ Additionally the following restrictions exist for MongoDB:
 - Documents can only be up to 16MB big
 - Documents can only have a nesting level of up to 100 embedded documents
 
-## 4 CRUD Operations
+## 4 Data Types
+
+MongoDB implements its own data types that are based on JSON, but also adds additional data types.
+
+| Data Type          | Implementation                     | Example                 |
+| :----------------- | :--------------------------------- | :---------------------- |
+| `String`           | String of any number of characters | `"Hello!"`              |
+| `Boolean`          | Boolean true and false             | `true`, `false`         |
+| `Number`           | Any numerical value                | `4`, `3.14`             |
+| `NumberInt`        | 32 bit integer                     | `2374`                  |
+| `NumberLong`       | 64 bit integer                     | `100000000000`          |
+| `NumberDecimal`    | 64 bit floating point number       | `3.14`                  |
+| `Object`           | Documents as elements of documents | `Timestamp(123456789)`  |
+| `Array`            | Arbitrary list of values           | `Timestamp(123456789)`  |
+| `ObjectId`         | Unique id based on Unix time       | `ObjectId("1234abcd")`  |
+| `ISODate`          | Date according to ISO norm         | `ISODate("2000-12-31")` |
+| `Timestamp`        | Unix timestamp                     | `Timestamp(123456789)`  |
+
+```javascript
+// explicitly set data type of numbers
+NumberInt(142)
+NumberLong(12.78)
+NumberDecimal(1.45)
+
+// create timestamps
+new Timestamp()
+```
+
+## 5 Functions
+
+Predefined functions can be used to interact with data inside MongoDB.
+
+```javascript
+// pretty print document as JSON
+printjson({name: "John", age: 21})
+```
+
+## 6 CRUD Operations
 
 Every CRUD operation returns a response object in the form of an array or document containing
 data related to the operation.
 
-### 4.1 Create Operations
+### 6.1 Create Operations
 
 Every response object of update operations contain the following fields:
 
@@ -103,7 +143,7 @@ db.people.insertOne({name: "John", age: 21})
 db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}])
 ```
 
-### 4.2 Read Operations
+### 6.2 Read Operations
 
 Response objects of read operations are either single documents or cursor objects to multiple
 documents. Thereby cursor objects act like pointers to result sets to be more performant in case
@@ -126,9 +166,6 @@ db.people.find({$gt: {age: 18}})
 db.people.find({name: "John"}, {name: 1})          // only include fields with an assigned 1
 db.people.find({name: "John"}, {name: 1, _id: 0})  // explicitly exclude fields with an assigned 0
 
-// get document from collection by its ID
-db.people.findOne({_id: ObjectId(123456789abcdefghi)})
-
 // pretty print found documents of cursor object
 db.people.find().pretty()
 
@@ -139,7 +176,7 @@ db.people.find().toArray()
 db.people.find().forEach((person) => {printjson(person)})
 ```
 
-### 4.3 Update Operations
+### 6.3 Update Operations
 
 Every response object of update operations contain the following fields:
 
@@ -163,12 +200,9 @@ db.people.replaceMany({age: 21}, {name: "Johnny"})
 // update documents in collection that fulfill specified filter
 db.people.updateMany({$gt: {age: 18}}, {$set: {age: 16}})
 db.people.replaceMany({$gt: {age: 18}},{name: "Jay" })
-
-// update document in collection by its ID
-db.people.updateOne({_id: ObjectId(123456789abcdefghi)}, {$set: {name: "Johnny"})
 ```
 
-### 4.4 Delete Operations
+### 6.4 Delete Operations
 
 Every response object of delete operations contain the following fields:
 
@@ -188,9 +222,6 @@ db.people.deleteMany({})
 // delete documents in collection that fulfill specified filter
 db.people.find({$gt: {age: 18}})
 
-// delete document in collection by its ID
-db.people.deleteOne({_id: ObjectId(123456789abcdefghi)})
-
 // delete database
 db.dropDatabase()
 
@@ -198,11 +229,9 @@ db.dropDatabase()
 db.people.drop()
 ```
 
-{% endraw %}
+### 6.5 Operators
 
-## 5 Operators
-
-Operators a predefined fields that are used to declare operations on documents to MongoDB.
+Operators a predefined fields that are used to declare operations on documents in CRUD operations.
 
 ```javascript
 // use operator as filter
@@ -217,11 +246,4 @@ db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
 | `$gt`    | Filter specified field to be greater than its specified value | `{$gt: {num: 18}}`  |
 | `$set`   | Set specified field to its specified value                    | `{$set: {val: 18}}` |
 
-## 6 Functions
-
-Predefined functions can be used to interact with data inside MongoDB.
-
-```javascript
-// pretty print document as JSON
-printjson({name: "John", age: 21})
-```
+{% endraw %}
