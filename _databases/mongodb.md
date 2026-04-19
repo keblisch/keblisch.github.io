@@ -61,7 +61,7 @@ users that are registered inside the server and are authenticated. A root user i
 automatically on startup for which credentials can be set with the environment variables
 `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD`.
 
-## 3.1 Configuration
+### 3.1 Configuration
 
 MongoDB can be started with the following arguments to configure the server that it's running:
 
@@ -85,7 +85,7 @@ systemLog:
     path: "data/log"
 ```
 
-## 3.2 Mongo Shell
+### 3.2 Mongo Shell
 
 MongoDB can be interacted with via the Mongo Shell (implemented in JavaScript and therefore
 adhering to its rules) in the terminal. To connect to a running MongoDB server on the current
