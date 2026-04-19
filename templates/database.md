@@ -27,12 +27,20 @@ Short description of the database.
 - Some link to a resource
 - Some link to another resource
 
-## 2 Installation
+## 2 Data Model
 
-How to integrate the library into projects.
+How data is modelled and processed in the database.
 
-## 3 Content
+## 3 Usage
 
-Description of the library.
+How the database can be used.
+
+## 4 CRUD Operations
+
+How CRUD operations are performed on the database
+
+## 5 Relations
+
+How data relations are handled in the database.
 
 {% endraw %}
