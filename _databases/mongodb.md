@@ -40,12 +40,19 @@ additional syntax and data types,but also share the same syntax as JSON.
 
 MongoDB is entirely schemaless, therefore documents inside the same collections don't have to
 share any fields. This allows collections and their contained documents to be completely
-dynamic and be adjusted individually.
+dynamic and be adjusted individually. Because of this flexibility it's also common practice to
+use embedded documents instead of joined collections in many places, to reduce complexity,
+computation time and network load.
 
 The only required field of documents are object id fields wth the identifier `_id`. This field is
 automatically created and managed by MongoDB, but can be set manually. They`re used to uniquely
 identify documents and operate on them, therefore they shouldn't be manipulated manually after
 their creation.
+
+Additionally the following restrictions exist for MongoDB:
+
+- Documents can only be up to 16MB big
+- Documents can only have a nesting level of up to 100 embedded documents
 
 ## 3 Usage
 
@@ -54,10 +61,36 @@ users that are registered inside the server and are authenticated. A root user i
 automatically on startup for which credentials can be set with the environment variables
 `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD`.
 
+## 3.1 Configuration
+
+MongoDB can be started with the following arguments to configure the server that it's running:
+
+| Flag        | Argument       | Description                                              |
+| :---------- | :------------- | :------------------------------------------------------- |
+| `--dbpath`  | Directory path | Sets the directory to store database files in            |
+| `--logpath` | Directory path | Sets the directory to store log files in                 |
+| `--fork`    | None           | Starts the server as a background process (only on Unix) |
+| `--config`  | File path      | Sets a file to read additional configurations from       |
+
+Configuration files for MongoDB are conventionally named `mongod.cfg` and look like the following:
+
+```conf
+# set directory to store database files in
+storage:
+    dbPath: "/data/db"
+
+# set directory to store log files in
+systemLog:
+    destination: file
+    path: "data/log"
+```
+
+## 3.2 Mongo Shell
+
 MongoDB can be interacted with via the Mongo Shell (implemented in JavaScript and therefore
-adhering to its rules) in the terminal and via drivers in programs. To connect to a running
-MongoDB server on the current machine via the Mongo Shell, the command `mongosh` can be used.
-Inside the shell command completion with tab and command history with up are available.
+adhering to its rules) in the terminal. To connect to a running MongoDB server on the current
+machine via the Mongo Shell, the command `mongosh` can be used. Inside the shell command
+completion with tab and command history with up are available.
 
 ```bash
 # exit the shell
@@ -66,23 +99,30 @@ exit
 # clear the shell
 cls
 
-# show all Databases
+# get available commands
+help                      # shell commands for regular user
+help admin                # shell commands for admin user
+db.help()                 # commands for current database
+db.someCollection.help()  # commands for collection
+
+# show all databases
 show dbs
+
+# show all collections in the current database
+show collections
 
 # switch to database (and create it when it doesn't exist)
 use someDatabase
 
-# delete database
+# delete current database
 db.dropDatabase()
 
-# show statistics about database
+# show statistics about current database
 db.stats()
+
+# shutdown MongoDB server
+db.shutdownServer()
 ```
-
-Additionally the following restrictions exist for MongoDB:
-
-- Documents can only be up to 16MB big
-- Documents can only have a nesting level of up to 100 embedded documents
 
 ## 4 CRUD Operations
 
@@ -99,6 +139,9 @@ Every response object of update operations contain the following fields:
                  (when multiple documents where created)
 
 ```javascript
+// create collection
+db.createCollection("people")
+
 // insert new document into collection (and create collection when it doesn't exist)
 db.people.insertOne({name: "John", age: 21})
 
@@ -195,24 +238,71 @@ db.people.drop()
 ## 5 Aggregations
 
 Aggregations can be used to join collections that have a one-to-many or many-to-many relationship.
+Their result objects are either single documents or arrays of documents.
 
 ```javascript
-db.people.insertOne({name: "John", hobbyIds: [ObjectId("123abc"), ObjectId("456def")]})
+db.people.insertOne({name: "John", hobbyIds: [
+    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
+]})
 db.hobbies.insertMany([
-    {_id: ObjectId("123abc"), name: "Jogging"},
-    {_id: ObjectId("456def"), name: "Reading"}
+    {_id: ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), name: "Jogging"},
+    {_id: ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), name: "Reading"}
 ])
 
-// aggregate documents from other collection into specified collection
-db.people.aggregate([$loopup: {
+// aggregate documents from other collection into documents of specified collection
+db.people.aggregate([{$lookup: {
     from: "hobbies",         // other collection to aggregate from
     localField: "hobbyIds",  // field containing values in other collection to match
     foreignField: "_id",     // field in other collection to match
     as: "hobbyData"          // name of field to insert results in
-}])
+}}])
 ```
 
-## 6 Data Types
+## 6 Schema Validation
+
+Even though MongoDB doesn't enforce schemas, documents can be validated at runtime to adhere
+to a minimum set of requirements.
+
+```javascript
+// create collection with validator for all its documents
+db.createCollection("people", {validator: {
+    $jsonSchema: {
+        bsonType: "object",                                      // define type of documents
+        required: ["name", "age"],                               // define fields of document
+        properties: {                                            // define requirements for fields
+            name: {
+                bsonType: "string",                              // define type of field
+                description: "Is required and must be a string"  // description for requirement
+            },
+            hobbies: {
+                bsonType: "array",                               // define type of field
+                description: "Must be an array",                 // description for requirement
+                items: {                                         // define elements of array
+                    bsonType: "object",                          // define element as document
+                    required: ["name"],
+                    properties: {
+                        name: {
+                            bsonType: "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    validationAction: "error"    // throw error on validation failure (default)
+    //validationAction: "warn"   // show warning on validation failure
+}})
+
+// update schema validation for collection
+db.runCommand({collMod: "people", {validator: {
+    $jsonSchema: {
+        bsonType: "object",
+        required: ["name", "height"],
+    }
+}}})
+```
+
+## 7 Data Types
 
 MongoDB implements its own data types that are based on JSON, but also adds additional data types.
 
@@ -240,7 +330,7 @@ NumberDecimal(1.45)
 new Timestamp()
 ```
 
-## 7 Variables
+## 8 Variables
 
 Inside of Mongo Shell sessions values and results can be stored in variables to reuse them later.
 
@@ -255,7 +345,7 @@ var person = db-people.findOne()
 db.people.find({name: firstName})
 ```
 
-## 8 Functions
+## 9 Functions
 
 Predefined functions can be used to interact with data inside MongoDB.
 
@@ -264,7 +354,7 @@ Predefined functions can be used to interact with data inside MongoDB.
 printjson({name: "John", age: 21})
 ```
 
-## 9 Operators
+## 10 Operators
 
 Operators a predefined fields that are used to declare operations on documents in CRUD operations.
 
