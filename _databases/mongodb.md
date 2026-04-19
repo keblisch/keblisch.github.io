@@ -85,11 +85,11 @@ systemLog:
     path: "data/log"
 ```
 
-### 3.2 Mongo Shell
+### 3.2 MongoDB Shell
 
-MongoDB can be interacted with via the Mongo Shell (implemented in JavaScript and therefore
+MongoDB can be interacted with via the MongoDB Shell (implemented in JavaScript and therefore
 adhering to its rules) in the terminal. To connect to a running MongoDB server on the current
-machine via the Mongo Shell, the command `mongosh` can be used. Inside the shell command
+machine via the MongoDB Shell, the command `mongosh` can be used. Inside the shell command
 completion with tab and command history with up are available.
 
 ```bash
@@ -124,12 +124,91 @@ db.stats()
 db.shutdownServer()
 ```
 
-## 4 CRUD Operations
+### 3.3 MongoDB Compass
+
+MongoDB servers can be connected to with MongoDB Compass to have a graphical user interface. This
+allows to do any operation from the MongoDB Shell in a GUI. It is available in a community version
+with SSPL license, but also in a paid enterprise version with additional features.
+
+## 4 Data Types
+
+MongoDB implements its own data types that are based on JSON, but also adds additional data types.
+
+| Data Type          | Implementation                     | Example                 |
+| :----------------- | :--------------------------------- | :---------------------- |
+| `String`           | String of any number of characters | `"Hello!"`              |
+| `Boolean`          | Boolean true and false             | `true`, `false`         |
+| `Number`           | Any numerical value                | `4`, `3.14`             |
+| `NumberInt`        | 32 bit integer                     | `2374`                  |
+| `NumberLong`       | 64 bit integer                     | `100000000000`          |
+| `NumberDecimal`    | 64 bit floating point number       | `3.14`                  |
+| `Object`           | Documents as elements of documents | `Timestamp(123456789)`  |
+| `Array`            | Arbitrary list of values           | `Timestamp(123456789)`  |
+| `ObjectId`         | Unique id based on Unix time       | `ObjectId("1234abcd")`  |
+| `ISODate`          | Date according to ISO norm         | `ISODate("2000-12-31")` |
+| `Timestamp`        | Unix timestamp                     | `Timestamp(123456789)`  |
+
+```javascript
+// explicitly set data type of numbers
+NumberInt(142)
+NumberLong(12.78)
+NumberDecimal(1.45)
+
+// create timestamp
+new Timestamp()
+```
+
+## 5 Variables
+
+Inside of MongoDB Shell sessions values and results can be stored in variables to reuse them
+later.
+
+```javascript
+// store result of expression in variable
+var firstName = db.people.findOne().name
+
+// store result of operation in variable
+var person = db-people.findOne()
+
+// use variable in operation
+db.people.find({name: firstName})
+```
+
+## 6 Functions
+
+Predefined functions can be used to interact with data inside MongoDB.
+
+```javascript
+// pretty print document as JSON
+printjson({name: "John", age: 21})
+```
+
+## 7 Operators
+
+Operators are predefined fields that are used to declare operations inside a database. Thereby
+they're used in different contexts with according meanings.
+
+```javascript
+// use operator as filter
+db.people.find({$gt: {age: 18}})
+
+// use operator as command to manipulate document
+db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
+```
+
+| Operator      | Usage                                                    |
+| :------------ | :------------------------------------------------------- |
+| `$gt`         | Filter for fields with values greater than another value |
+| `$set`        | Set specific fields and their values                     |
+| `$lookup`     | Aggregate documents from different collections           |
+| `$jsonSchema` | Define schema for documents                              |
+
+## 8 CRUD Operations
 
 Every CRUD operation returns a response object in the form of an array or document containing
 data related to the operation.
 
-### 4.1 Create Operations
+### 8.1 Create Operations
 
 Every response object of update operations contain the following fields:
 
@@ -149,7 +228,7 @@ db.people.insertOne({name: "John", age: 21})
 db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}])
 ```
 
-### 4.2 Read Operations
+### 8.2 Read Operations
 
 Response objects of read operations are either single documents or cursor objects to multiple
 documents. Thereby cursor objects act like pointers to result sets to be more performant in case
@@ -182,7 +261,7 @@ db.people.find().toArray()
 db.people.find().forEach((person) => {printjson(person)})
 ```
 
-### 4.3 Update Operations
+### 8.3 Update Operations
 
 Every response object of update operations contain the following fields:
 
@@ -208,7 +287,7 @@ db.people.updateMany({$gt: {age: 18}}, {$set: {age: 16}})
 db.people.replaceMany({$gt: {age: 18}},{name: "Jay" })
 ```
 
-### 4.4 Delete Operations
+### 8.4 Delete Operations
 
 Every response object of delete operations contain the following fields:
 
@@ -235,7 +314,7 @@ db.dropDatabase()
 db.people.drop()
 ```
 
-## 5 Aggregations
+## 9 Aggregations
 
 Aggregations can be used to join collections that have a one-to-many or many-to-many relationship.
 Their result objects are either single documents or arrays of documents.
@@ -258,7 +337,7 @@ db.people.aggregate([{$lookup: {
 }}])
 ```
 
-## 6 Schema Validation
+## 10 Schema Validation
 
 Even though MongoDB doesn't enforce schemas, documents can be validated at runtime to adhere
 to a minimum set of requirements.
@@ -301,74 +380,5 @@ db.runCommand({collMod: "people", {validator: {
     }
 }}})
 ```
-
-## 7 Data Types
-
-MongoDB implements its own data types that are based on JSON, but also adds additional data types.
-
-| Data Type          | Implementation                     | Example                 |
-| :----------------- | :--------------------------------- | :---------------------- |
-| `String`           | String of any number of characters | `"Hello!"`              |
-| `Boolean`          | Boolean true and false             | `true`, `false`         |
-| `Number`           | Any numerical value                | `4`, `3.14`             |
-| `NumberInt`        | 32 bit integer                     | `2374`                  |
-| `NumberLong`       | 64 bit integer                     | `100000000000`          |
-| `NumberDecimal`    | 64 bit floating point number       | `3.14`                  |
-| `Object`           | Documents as elements of documents | `Timestamp(123456789)`  |
-| `Array`            | Arbitrary list of values           | `Timestamp(123456789)`  |
-| `ObjectId`         | Unique id based on Unix time       | `ObjectId("1234abcd")`  |
-| `ISODate`          | Date according to ISO norm         | `ISODate("2000-12-31")` |
-| `Timestamp`        | Unix timestamp                     | `Timestamp(123456789)`  |
-
-```javascript
-// explicitly set data type of numbers
-NumberInt(142)
-NumberLong(12.78)
-NumberDecimal(1.45)
-
-// create timestamp
-new Timestamp()
-```
-
-## 8 Variables
-
-Inside of Mongo Shell sessions values and results can be stored in variables to reuse them later.
-
-```javascript
-// store result of expression in variable
-var firstName = db.people.findOne().name
-
-// store result of operation in variable
-var person = db-people.findOne()
-
-// use variable in operation
-db.people.find({name: firstName})
-```
-
-## 9 Functions
-
-Predefined functions can be used to interact with data inside MongoDB.
-
-```javascript
-// pretty print document as JSON
-printjson({name: "John", age: 21})
-```
-
-## 10 Operators
-
-Operators a predefined fields that are used to declare operations on documents in CRUD operations.
-
-```javascript
-// use operator as filter
-db.people.find({$gt: {age: 18}})
-
-// use operator as command to manipulate document
-db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
-```
-
-| Operator | Usage                                                         | Example             |
-| :------- | :------------------------------------------------------------ | :------------------ |
-| `$gt`    | Filter specified field to be greater than its specified value | `{$gt: {num: 18}}`  |
-| `$set`   | Set specified field to its specified value                    | `{$set: {val: 18}}` |
 
 {% endraw %}
