@@ -84,49 +84,12 @@ Additionally the following restrictions exist for MongoDB:
 - Documents can only be up to 16MB big
 - Documents can only have a nesting level of up to 100 embedded documents
 
-## 4 Data Types
-
-MongoDB implements its own data types that are based on JSON, but also adds additional data types.
-
-| Data Type          | Implementation                     | Example                 |
-| :----------------- | :--------------------------------- | :---------------------- |
-| `String`           | String of any number of characters | `"Hello!"`              |
-| `Boolean`          | Boolean true and false             | `true`, `false`         |
-| `Number`           | Any numerical value                | `4`, `3.14`             |
-| `NumberInt`        | 32 bit integer                     | `2374`                  |
-| `NumberLong`       | 64 bit integer                     | `100000000000`          |
-| `NumberDecimal`    | 64 bit floating point number       | `3.14`                  |
-| `Object`           | Documents as elements of documents | `Timestamp(123456789)`  |
-| `Array`            | Arbitrary list of values           | `Timestamp(123456789)`  |
-| `ObjectId`         | Unique id based on Unix time       | `ObjectId("1234abcd")`  |
-| `ISODate`          | Date according to ISO norm         | `ISODate("2000-12-31")` |
-| `Timestamp`        | Unix timestamp                     | `Timestamp(123456789)`  |
-
-```javascript
-// explicitly set data type of numbers
-NumberInt(142)
-NumberLong(12.78)
-NumberDecimal(1.45)
-
-// create timestamps
-new Timestamp()
-```
-
-## 5 Functions
-
-Predefined functions can be used to interact with data inside MongoDB.
-
-```javascript
-// pretty print document as JSON
-printjson({name: "John", age: 21})
-```
-
-## 6 CRUD Operations
+## 4 CRUD Operations
 
 Every CRUD operation returns a response object in the form of an array or document containing
 data related to the operation.
 
-### 6.1 Create Operations
+### 4.1 Create Operations
 
 Every response object of update operations contain the following fields:
 
@@ -143,7 +106,7 @@ db.people.insertOne({name: "John", age: 21})
 db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}])
 ```
 
-### 6.2 Read Operations
+### 4.2 Read Operations
 
 Response objects of read operations are either single documents or cursor objects to multiple
 documents. Thereby cursor objects act like pointers to result sets to be more performant in case
@@ -176,7 +139,7 @@ db.people.find().toArray()
 db.people.find().forEach((person) => {printjson(person)})
 ```
 
-### 6.3 Update Operations
+### 4.3 Update Operations
 
 Every response object of update operations contain the following fields:
 
@@ -202,7 +165,7 @@ db.people.updateMany({$gt: {age: 18}}, {$set: {age: 16}})
 db.people.replaceMany({$gt: {age: 18}},{name: "Jay" })
 ```
 
-### 6.4 Delete Operations
+### 4.4 Delete Operations
 
 Every response object of delete operations contain the following fields:
 
@@ -229,7 +192,79 @@ db.dropDatabase()
 db.people.drop()
 ```
 
-### 6.5 Operators
+## 5 Aggregations
+
+Aggregations can be used to join collections that have a one-to-many or many-to-many relationship.
+
+```javascript
+db.people.insertOne({name: "John", hobbyIds: [ObjectId("123abc"), ObjectId("456def")]})
+db.hobbies.insertMany([
+    {_id: ObjectId("123abc"), name: "Jogging"},
+    {_id: ObjectId("456def"), name: "Reading"}
+])
+
+// aggregate documents from other collection into specified collection
+db.people.aggregate([$loopup: {
+    from: "hobbies",         // other collection to aggregate from
+    localField: "hobbyIds",  // field containing values in other collection to match
+    foreignField: "_id",     // field in other collection to match
+    as: "hobbyData"          // name of field to insert results in
+}])
+```
+
+## 6 Data Types
+
+MongoDB implements its own data types that are based on JSON, but also adds additional data types.
+
+| Data Type          | Implementation                     | Example                 |
+| :----------------- | :--------------------------------- | :---------------------- |
+| `String`           | String of any number of characters | `"Hello!"`              |
+| `Boolean`          | Boolean true and false             | `true`, `false`         |
+| `Number`           | Any numerical value                | `4`, `3.14`             |
+| `NumberInt`        | 32 bit integer                     | `2374`                  |
+| `NumberLong`       | 64 bit integer                     | `100000000000`          |
+| `NumberDecimal`    | 64 bit floating point number       | `3.14`                  |
+| `Object`           | Documents as elements of documents | `Timestamp(123456789)`  |
+| `Array`            | Arbitrary list of values           | `Timestamp(123456789)`  |
+| `ObjectId`         | Unique id based on Unix time       | `ObjectId("1234abcd")`  |
+| `ISODate`          | Date according to ISO norm         | `ISODate("2000-12-31")` |
+| `Timestamp`        | Unix timestamp                     | `Timestamp(123456789)`  |
+
+```javascript
+// explicitly set data type of numbers
+NumberInt(142)
+NumberLong(12.78)
+NumberDecimal(1.45)
+
+// create timestamp
+new Timestamp()
+```
+
+## 7 Variables
+
+Inside of Mongo Shell sessions values and results can be stored in variables to reuse them later.
+
+```javascript
+// store result of expression in variable
+var firstName = db.people.findOne().name
+
+// store result of operation in variable
+var person = db-people.findOne()
+
+// use variable in operation
+db.people.find({name: firstName})
+```
+
+## 8 Functions
+
+Predefined functions can be used to interact with data inside MongoDB.
+
+```javascript
+// pretty print document as JSON
+printjson({name: "John", age: 21})
+```
+
+## 9 Operators
 
 Operators a predefined fields that are used to declare operations on documents in CRUD operations.
 
