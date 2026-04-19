@@ -130,6 +130,38 @@ MongoDB servers can be connected to with MongoDB Compass to have a graphical use
 allows to do any operation from the MongoDB Shell in a GUI. It is available in a community version
 with SSPL license, but also in a paid enterprise version with additional features.
 
+### 3.4 Exchanging Data
+
+Data from MongoDB databases can be exported and imported to share them across servers.
+
+#### 3.4.1 Import Data
+
+```bash
+# import document from JSON file to collection
+mongoimport path/to/file.json --db someDatabase --collection someCollection
+
+# import array of documents from JSON file to collection
+mongoimport path/to/file.json --db someDatabase --collection someCollection --jsonArray
+
+# import JSON file into server with authentication
+mongoimport path/to/file.json --db someDatabase --collection someCollection \
+            --username name --password secret
+
+# import JSON file to collection and delete it beforehand if it exists already
+mongoimport path/to/file.json --db someDatabase --collection someCollection --drop
+```
+
+#### 3.4.2 Export Data
+
+```bash
+# export collection as array of document to JSON file
+mongoexport --db someDatabase --collection someCollection --out path/to/file.json
+
+# export JSON file from server with authentication
+mongoexport --db someDatabase --collection someCollection --out path/to/file.json \
+            --username name --password secret
+```
+
 ## 4 Data Types
 
 MongoDB implements its own data types that are based on JSON, but also adds additional data types.
@@ -208,6 +240,11 @@ db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
 Every CRUD operation returns a response object in the form of an array or document containing
 data related to the operation.
 
+CRUD operations are atomic on a document basis, meaning that every operation on single documents
+is rolled backed when it failed or was interrupted. But when an error or interruption occurs in
+an operation on multiple documents, the operation isn't rolled back for documents that were
+successfull,
+
 ### 8.1 Create Operations
 
 Every response object of update operations contain the following fields:
@@ -226,6 +263,18 @@ db.people.insertOne({name: "John", age: 21})
 
 // insert new documents into collection (and create collection when it doesn't exist)
 db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}])
+
+// insert new documents without stopping the operation when an insertion failed
+db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}], {ordered: false})
+
+// only acknowledge document insertion when it has been written to memory (default)
+db.people.insertOne({name: "John", age: 21}, {writeConcern: {w: 1}})
+
+// only acknowledge document insertion when it has beenjournaled to disk
+db.people.insertOne({name: "John", age: 21}, {writeConcern: {w: 1, j: true}})
+
+// don't await any acknowledgement of document insertion
+db.people.insertOne({name: "John", age: 21}, {writeConcern: {w: 0}})
 ```
 
 ### 8.2 Read Operations
