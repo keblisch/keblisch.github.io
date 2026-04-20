@@ -147,6 +147,7 @@ df = pd.DataFrame(
 
 # access specific column from data frame
 a: Series[int] = df["A"]
+a = df.A
 
 # access specific rows from data frame
 row: Series[int] = df.loc["x"]                    # single row
@@ -198,7 +199,7 @@ df = pd.DataFrame(
 )
 
 
-# sort column
+# sort columns of data frame
 sorted_df: pd.DataFrame = pd.sort_values(by="A")             # by single column
 sorted_df = pd.sort_values(by=["A", "B"])                    # by multiple columns
 sorted_df = pd.sort_values(by="A", ascending=False)          # in descending order
@@ -206,6 +207,14 @@ sorted_df = pd.sort_values(
     by=["A", "B"],
     ascending=[0, 1],  # set ascending sorting for columns (0 for false, 1 for true)
 )
+
+# filter data frame by column values
+filtered: pd.DataFrame = df.loc[df["A"] > 1]       # single condition
+filtered = df.loc[(df["A"] > 1) & (df["B"] < 5>)]  # multiple conditions
+filtered = df[df["A"] > 1]                         # shorthand syntax
+filtered = df.loc[df["A"] > 1, ["B", "C"]]         # only return specific columns
+
+# filter data frame by column values
 ```
 
 ## 8 Export Data Frames
