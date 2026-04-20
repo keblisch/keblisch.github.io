@@ -88,61 +88,7 @@ df = pd.read_feather(path="path/to/file.feather")          # from file
 df = pd.read_feather(path="https://path/to/file.feather")  # from URL
 ```
 
-## 5 Read Data Frames
-
-### 5.1 Data from Data Frames
-
-```python
-import pandas as pd
-
-
-df = pd.DataFrame(
-    data=[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
-    columns=["A", "B", "C"],
-    index=["x", "y", "z"],
-)
-
-
-# get specific column from data frame
-a: Series[int] = df["A"]
-
-# get specific row from data frame
-x: Series[int] = df.loc["x"]
-
-# get specific rows from data frame
-xy: pd.DataFrame = df.loc[["x", "y"]]
-
-# get range of rows from data frame
-x_to_y: pd.DataFrame = df.loc["x":"y"]
-x_to_end: pd.DataFrame = df.loc["x":]
-start_to_y: pd.DataFrame = df.loc[:"y"]
-
-# get first n rows of data frame
-head: pd.DataFrame = df.head()  # first five
-head = df.head(n=3)
-
-# get last n rows of data frame
-head: pd.DataFrame = df.tail()  # last five
-head = df.tail(n=3)
-
-# get n random rows of data frame
-rand: pd.DataFrame = df.sample(n=5)
-
-# get column headers of data frame
-columns: pd.Index[str] = df.columns
-columns[0] == "A"
-columns.dtype == "str"
-
-# get row indices of data frame
-rows: pd.Index[str] = df.index
-rows[0] == "x"
-rows.dtype == "str"
-
-# get unique values inside column
-uniques: Series[int] = df["A"].unique()
-```
-
-### 5.2 Data about Data Frames
+## 5 Describe Data Frames
 
 ```python
 import pandas as pd
@@ -162,17 +108,107 @@ size: int = df.size
 shape: tuple[int, int] = df.shape
 shape == (3, 2)
 
+# get first n rows of data frame
+head: pd.DataFrame = df.head()  # first five
+head = df.head(n=3)
+
+# get last n rows of data frame
+head: pd.DataFrame = df.tail()  # last five
+head = df.tail(n=3)
+
+# get n random rows of data frame
+rand: pd.DataFrame = df.sample(n=5)
+
 # get number of unique values in data frame
 uniques_in_columns: pd.Series[int] = df.nunique()     # number of unique values per column
 uniques_in_rows: pd.Series[int] = df.nunique(axis=1)  # number of unique values per row
 uniques_in_column: int = df["A"].nunique()            # number of unique values in row
+
+# get unique values inside column
+uniques: Series[int] = df["A"].unique()
 
 # print information about data frame to console
 df.info()      # technical information
 df.describe()  # statistical information
 ```
 
-## 6 Export Data Frames
+## 6 Access Data Frames
+
+```python
+import pandas as pd
+
+
+df = pd.DataFrame(
+    data=[[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+    columns=["A", "B", "C"],
+    index=["x", "y", "z"],
+)
+
+
+# access specific column from data frame
+a: Series[int] = df["A"]
+
+# access specific rows from data frame
+row: Series[int] = df.loc["x"]                    # single row
+xyz: pd.DataFrame = df.loc[["x", "y", "z"]]     # multiple rows
+x_ab: pd:dataFrame = df.loc["x", ["A", "B"]]    # only with specific columns
+i_x: pd.DataFrame = df.iloc[[0, 1, 2], [0, 1]]  # by their index
+
+# access range of rows from data frame
+x_to_y: pd.DataFrame = df.loc["x":"y"]                 # between to indices
+x_to_end: pd.DataFrame = df.loc["x":]                  # from index to end
+start_to_y: pd.DataFrame = df.loc[:"y"]                # from beginning to index
+x_to_y_ab: pd.DataFrame = df.loc["x":"y", ["A", "B"]]  # only with specific columns
+i_x_to_y: pd.DataFrame = df.iloc[0:2, [0, 1]]          # by their index (upper exclusive)
+
+# access specific column from row
+row_element: int = df.loc["x"]["A"]
+
+# access specific cell from data frame
+cell: int = df.at["y", "B"]   # by row and column name
+cell = df.loc["y", "B"]
+i_cell: int = df.iat[1, 1]    # by row and column index
+i_cell = df.loc[1, 1]
+
+# access column headers of data frame
+columns: pd.Index[str] = df.columns
+columns[0] == "A"
+columns.dtype == "str"
+
+# access row indices of data frame
+rows: pd.Index[str] = df.index
+rows[0] == "x"
+rows.dtype == "str"
+
+# iterate through rows
+for idx, row in df.iterrows():
+    print(f"{idx}: {row}")
+```
+
+## 7 Manipulate Data Frames
+
+```python
+import pandas as pd
+
+
+df = pd.DataFrame(
+    data=[[1, 2, 3], [4, 5, 6]],
+    columns=["A", "B", "C"],
+    index=["x", "y", "z"],
+)
+
+
+# sort column
+sorted_df: pd.DataFrame = pd.sort_values(by="A")             # by single column
+sorted_df = pd.sort_values(by=["A", "B"])                    # by multiple columns
+sorted_df = pd.sort_values(by="A", ascending=False)          # in descending order
+sorted_df = pd.sort_values(
+    by=["A", "B"],
+    ascending=[0, 1],  # set ascending sorting for columns (0 for false, 1 for true)
+)
+```
+
+## 8 Export Data Frames
 
 ```python
 import pandas as pd
