@@ -18,11 +18,10 @@ Pandas is a library to analyze and manipulate data.
 | Python   | Python (NumPy) | BSD 3-Clause License | 3.0.2           |
 
 ## Table of Contents
-
 {: .no_toc .text-delta }
 
 - TOC
-  {:toc}
+{:toc}
 
 ## 1 Resources
 
