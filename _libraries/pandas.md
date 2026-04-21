@@ -8,7 +8,6 @@ title: Pandas
 {% raw %}
 
 # Pandas
-
 {: .no_toc }
 
 Pandas is a library to analyze and manipulate data.
