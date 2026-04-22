@@ -12,9 +12,9 @@ title: Pandas
 
 Pandas is a library to analyze and manipulate data.
 
-| Language | Implementation | License              | Current Version |
-| :------- | :------------- | :------------------- | :-------------- |
-| Python   | Python (NumPy) | BSD 3-Clause License | 3.0.2           |
+| Language | Implementation   | License              | Current Version |
+| :------- | :--------------- | :------------------- | :-------------- |
+| Python   | Python/C (NumPy) | BSD 3-Clause License | 3.0.2           |
 
 ## Table of Contents
 {: .no_toc .text-delta }
@@ -25,6 +25,7 @@ Pandas is a library to analyze and manipulate data.
 ## 1 Resources
 
 - Official Pandas website: [Pandas](https://pandas.pydata.org/)
+- Pandas repository: [pandas-dev/pandas](https://github.com/pandas-dev/pandas)
 - Official Pandas user guide: [User Guide](https://pandas.pydata.org/docs/user_guide/index.html)
 - Official Pandas API reference:
   [API Reference](https://pandas.pydata.org/docs/reference/index.html)
