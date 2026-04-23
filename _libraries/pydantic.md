@@ -61,7 +61,7 @@ john: Person = Person(first_name="John")
 jane: Person = Person(first_name="Jane", last_name="Doe", age=20, hobbies=["reading", "hiking"])
 ```
 
-### 3.1 Constraint Fields
+### 3.1 Constrained Fields
 
 ```python
 from typing import Annotated, Literal
@@ -102,6 +102,7 @@ class Log(BaseModel):
         default_factory=lambda: datetime.now(tz=UTC),  # use lambda
     )
 
+
 # instantiate model with instantiated fields and validate it at runtime
 log: Log = Log()
 ```
@@ -120,6 +121,7 @@ class Message(BaseModel):
     @property
     def rough_hash() -> str:
         return text + str(text.length())
+
 
 # instantiate model with dynamically computed fields and use access them
 message: Message = Message(text="Hello!")
@@ -182,7 +184,6 @@ class Person(BaseModel):
     name: str
     age: PositiveInt
 
-
     # execute custom validation on model field
     @field_validator("name")
     @classmethod
@@ -191,7 +192,6 @@ class Person(BaseModel):
             raise ValidationError("Name must consist of letters")
         return v.capitalize()
 
-
     # execute custom validation model instance
     @field_validator("age", mode="before")
     @classmethod
@@ -199,7 +199,6 @@ class Person(BaseModel):
         if not v > 0:
             return -v
         return v
-
 
     # execute custom validation before Pydantic validation
     @model_validator()
@@ -235,7 +234,7 @@ john.first_name == "John"
 john.last_name == "Doe"
 ```
 
-## Serialization
+## 7 Conversion
 
 ```python
 from typing import Any
@@ -251,24 +250,23 @@ class Person(BaseModel):
 john: Person = Person(name="John", age=21)
 
 
-# serialize model instance to dictionary
+# convert model instance to dictionary
 john_dict: dict[str, Any] = john.model_dump()
 
-# serialize model instance to JSON
+# convert model instance to JSON
 john_json: str = john.model_dump_json()     # one-line JSON
 john_json = john.model_dump_json(indent=2)  # indented JSON
 
-# only include specific fields in serialization
+# only include specific fields in conversion
 john_dict = john.model_dump(include={"name"})
 
-# exclude specific fields in serialization
+# exclude specific fields in conversion
 john_dict = john.model_dump(exclude={"age"})
 
-
-# deserialize dictionary into model instance
+# convert dictionary into model instance
 other_john: Person = Person.model_validate(obj=john_dict)
 
-# deserialize JSON into model instance
+# convert JSON into model instance
 other_john = Person.model_validate_json(obj=john_json)
 ```
 
