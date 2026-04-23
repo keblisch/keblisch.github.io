@@ -200,10 +200,10 @@ later.
 var firstName = db.people.findOne().name
 
 // store result of operation in variable
-var person = db-people.findOne()
+var person = db.people.findOne()
 
 // use variable in operation
-db.people.find({name: firstName})
+db.people.find({"name": firstName})
 ```
 
 ## 6 Functions
@@ -212,7 +212,7 @@ Predefined functions can be used to interact with data inside MongoDB.
 
 ```javascript
 // pretty print document as JSON
-printjson({name: "John", age: 21})
+printjson({"name": "John", "age": 21})
 ```
 
 ## 7 Operators
@@ -222,10 +222,10 @@ they're used in different contexts with according meanings.
 
 ```javascript
 // use operator as filter
-db.people.find({$gt: {age: 18}})
+db.people.find({"$gt": {"age": 18}})
 
 // use operator as command to manipulate document
-db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
+db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
 ```
 
 | Operator      | Usage                                                    |
@@ -243,7 +243,7 @@ data related to the operation.
 CRUD operations are atomic on a document basis, meaning that every operation on single documents
 is rolled backed when it failed or was interrupted. But when an error or interruption occurs in
 an operation on multiple documents, the operation isn't rolled back for documents that were
-successfull,
+successful,
 
 ### 8.1 Create Operations
 
@@ -259,22 +259,24 @@ Every response object of update operations contain the following fields:
 db.createCollection("people")
 
 // insert new document into collection (and create collection when it doesn't exist)
-db.people.insertOne({name: "John", age: 21})
+db.people.insertOne({"name": "John", "age": 21})
 
 // insert new documents into collection (and create collection when it doesn't exist)
-db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}])
+db.people.insertMany([{"name": "John", "age": 21}, {"name": "Jane", "age": 18}])
 
 // insert new documents without stopping the operation when an insertion failed
-db.people.insertMany([{name: "John", age: 21}, {name: "Jane", age: 18}], {ordered: false})
+db.people.insertMany(
+    [{"name": "John", "age": 21}, {"name": "Jane", "age": 18}], {"ordered": false},
+)
 
 // only acknowledge document insertion when it has been written to memory (default)
-db.people.insertOne({name: "John", age: 21}, {writeConcern: {w: 1}})
+db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w: 1"}})
 
-// only acknowledge document insertion when it has beenjournaled to disk
-db.people.insertOne({name: "John", age: 21}, {writeConcern: {w: 1, j: true}})
+// only acknowledge document insertion when it has been journald to disk
+db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w": 1, "j": true}})
 
 // don't await any acknowledgement of document insertion
-db.people.insertOne({name: "John", age: 21}, {writeConcern: {w: 0}})
+db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w": 0}})
 ```
 
 ### 8.2 Read Operations
@@ -288,17 +290,17 @@ of large amounts of data, but act like arrays in most cases.
 db.people.find()
 
 // get all documents from collection that contain specified fields
-db.people.find({name: "John"})
+db.people.find({"name": "John"})
 
 // get first document from collection that contain specified fields
-db.people.findOne({name: "John"})
+db.people.findOne({"name": "John"})
 
 // get documents from collection that fulfill specified filter
-db.people.find({$gt: {age: 18}})
+db.people.find({"$gt": {"age": 18}})
 
 // get documents from collection with only their projected fields
-db.people.find({name: "John"}, {name: 1})          // only include fields with an assigned 1
-db.people.find({name: "John"}, {name: 1, _id: 0})  // explicitly exclude fields with an assigned 0
+db.people.find({"name": "John"}, {"name": 1})            // only include fields with an assigned 1
+db.people.find({"name": "John"}, {"name": 1, "_id": 0})  // exclude fields with an assigned 0
 
 // pretty print found documents of cursor object
 db.people.find().pretty()
@@ -320,20 +322,20 @@ Every response object of update operations contain the following fields:
 
 ```javascript
 // update first document in collection that contains specified fields with specified set operator
-db.people.updateOne({name: "John"}, {$set: {name: "Johnny"}})
+db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
 
 // update all documents in collection that contain specified fields with specified set operator
-db.people.updateMany({age: 21}, {$set: {age: 18}})
+db.people.updateMany({"age": 21}, {"$set": {"age": 18}})
 
 // replace first document in collection that contains specified fields with specified fields
-db.people.replaceOne({name: "John"}, {name: "Johnny"})
+db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
 
 // replace all documents in collection that contain specified fields with specified fields
-db.people.replaceMany({age: 21}, {name: "Johnny"})
+db.people.replaceMany({"age": 21}, {"name": "Johnny"})
 
 // update documents in collection that fulfill specified filter
-db.people.updateMany({$gt: {age: 18}}, {$set: {age: 16}})
-db.people.replaceMany({$gt: {age: 18}},{name: "Jay" })
+db.people.updateMany({"$gt": {"age": 18}}, {"$set": {"age": 16}})
+db.people.replaceMany({"$gt": {"age": 18}}, {"name": "Jay" })
 ```
 
 ### 8.4 Delete Operations
@@ -345,16 +347,16 @@ Every response object of delete operations contain the following fields:
 
 ```javascript
 // delete first document in collection that contains specified fields
-db.people.deleteOne({name: "John"})
+db.people.deleteOne({"name": "John"})
 
 // delete all documents in collection that contain specified fields
-db.people.deleteMany({age: 21})
+db.people.deleteMany({"age": 21})
 
 // delete every document in collection
 db.people.deleteMany({})
 
 // delete documents in collection that fulfill specified filter
-db.people.find({$gt: {age: 18}})
+db.people.find({"$gt": {"age": 18}})
 
 // delete database
 db.dropDatabase()
@@ -369,20 +371,20 @@ Aggregations can be used to join collections that have a one-to-many or many-to-
 Their result objects are either single documents or arrays of documents.
 
 ```javascript
-db.people.insertOne({name: "John", hobbyIds: [
+db.people.insertOne({"name": "John", "hobbyIds": [
     ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
 ]})
 db.hobbies.insertMany([
-    {_id: ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), name: "Jogging"},
-    {_id: ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), name: "Reading"}
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
 ])
 
 // aggregate documents from other collection into documents of specified collection
-db.people.aggregate([{$lookup: {
-    from: "hobbies",         // other collection to aggregate from
-    localField: "hobbyIds",  // field containing values in other collection to match
-    foreignField: "_id",     // field in other collection to match
-    as: "hobbyData"          // name of field to insert results in
+db.people.aggregate([{"$lookup": {
+    "from": "hobbies",         // other collection to aggregate from
+    "localField": "hobbyIds",  // field containing values in other collection to match
+    "foreignField": "_id",     // field in other collection to match
+    "as": "hobbyData"          // name of field to insert results in
 }}])
 ```
 
@@ -393,39 +395,39 @@ to a minimum set of requirements.
 
 ```javascript
 // create collection with validator for all its documents
-db.createCollection("people", {validator: {
-    $jsonSchema: {
-        bsonType: "object",                                      // define type of documents
-        required: ["name", "age"],                               // define fields of document
-        properties: {                                            // define requirements for fields
-            name: {
-                bsonType: "string",                              // define type of field
-                description: "Is required and must be a string"  // description for requirement
+db.createCollection("people", {"validator": {
+    "$jsonSchema": {
+        "bsonType": "object",                                      // define type of documents
+        "required": ["name", "age"],                               // define fields of document
+        "properties": {                                            // define field's requirements
+            "name": {
+                "bsonType": "string",                              // define type of field
+                "description": "Is required and must be a string"  // description for requirement
             },
-            hobbies: {
-                bsonType: "array",                               // define type of field
-                description: "Must be an array",                 // description for requirement
-                items: {                                         // define elements of array
-                    bsonType: "object",                          // define element as document
-                    required: ["name"],
-                    properties: {
-                        name: {
-                            bsonType: "string"
+            "hobbies": {
+                "bsonType": "array",                               // define type of field
+                "description": "Must be an array",                 // description for requirement
+                "items": {                                         // define elements of array
+                    "bsonType": "object",                          // define element as document
+                    "required": ["name"],
+                    "properties": {
+                        "name": {
+                            "bsonType": "string"
                         }
                     }
                 }
             }
         }
     },
-    validationAction: "error"    // throw error on validation failure (default)
-    //validationAction: "warn"   // show warning on validation failure
+    "validationAction": "error"    // throw error on validation failure (default)
+    //"validationAction": "warn"   // show warning on validation failure
 }})
 
 // update schema validation for collection
-db.runCommand({collMod: "people", {validator: {
-    $jsonSchema: {
-        bsonType: "object",
-        required: ["name", "height"],
+db.runCommand({"collMod": "people", {"validator": {
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["name", "height"],
     }
 }}})
 ```
