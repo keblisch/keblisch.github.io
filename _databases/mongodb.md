@@ -220,12 +220,22 @@ printjson({"name": "John", "age": 21})
 Operators are predefined fields that are used to declare operations inside a database. Thereby
 they're used in different contexts with according meanings.
 
-| Operator      | Type                 | Meaning                                        |
-| :------------ | :------------------- | :--------------------------------------------- |
-| `$eq`         | Query operator       | Data should equal specified value              |
-| `$gt`         | Query operator       | Data should be greater than specified value    |
-| `$set`        | Update operator      | Set data to specified value                    |
-| `$lookup`     | Aggregation operator | Aggregate documents from different collections |
+| Operator      | Type                 | Meaning                                              |
+| :------------ | :------------------- | :--------------------------------------------------- |
+| `$eq`         | Query operator       | Data should equal specified value                    |
+| `$ne`         | Query operator       | Data shouldn't equal specified value                 |
+| `$gt`         | Query operator       | Data should be greater than specified value          |
+| `$gte`        | Query operator       | Data should be greater than or equal specified value |
+| `$lt`         | Query operator       | Data should be less than specified value             |
+| `$lte`        | Query operator       | Data should be less than or equal specified value    |
+| `$in`         | Query operator       | Data should be in specified array                    |
+| `$nin`        | Query operator       | Data shouldn't be in specified array                 |
+| `$or`         | Logical operator     | Data should fulfill any specified query operator     |
+| `$nor`        | Logical operator     | Data shouldn't fulfill any specified query operator  |
+| `$and`        | Logical operator     | Data should fulfill every specified query operator   |
+| `$not`        | Logical operator     | Invert effect of query operator or logical operator  |
+| `$set`        | Update operator      | Set data to specified value                          |
+| `$lookup`     | Aggregation operator | Aggregate documents from different collections       |
 
 ```javascript
 db.people.insertOne({"name": "John", "hobbyIds": [
@@ -238,6 +248,9 @@ db.hobbies.insertMany([
 
 // use query operator
 db.people.find({"$gt": {"age": 18}})
+
+// chain query operators with logical operator
+db.people.find({"$or": [{"$gt": {"age": 12}}, {"$lt": {"age": 18}}]})
 
 // use update operator
 db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
@@ -302,6 +315,11 @@ documents. Thereby cursor objects act like pointers to result sets to be more pe
 of large amounts of data, but act like arrays in most cases.
 
 ```javascript
+db.people.insertMany([
+    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"],},
+    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"]},
+])
+
 // get all documents from collection
 db.people.find()
 
@@ -311,12 +329,22 @@ db.people.find({"name": "John"})
 // get first document from collection that contain specified fields
 db.people.findOne({"name": "John"})
 
-// get documents from collection that fulfill specified filter
+// get documents from collection that fulfill specified query operator
 db.people.find({"$gt": {"age": 18}})
+
+// get documents from collection that fulfill logically chained query operators
+db.people.find({"$or": [{"$gt": {"age": 12}}, {"$lt": {"age": 18}}]})
+
+// get documents from collection that contain specified array elements
+db.people.find({"hobbies": "Hiking"})             // match for single element
+db.people.find({"hobbies": ["Hiking", "Chess"]})  // match for entire array
 
 // get documents from collection with only their projected fields
 db.people.find({"name": "John"}, {"name": 1})            // only include fields with an assigned 1
 db.people.find({"name": "John"}, {"name": 1, "_id": 0})  // exclude fields with an assigned 0
+
+// get number of documents found by query
+db.people.find().count()
 
 // pretty print found documents of cursor object
 db.people.find().pretty()
@@ -336,22 +364,25 @@ Every response object of update operations contain the following fields:
 - `matchedCount`: An integer containing the number of documents matched by the query
 - `modifiedCount`: An integer containing the number of updated documents
 
+To query documents to update the same syntax as in read operations can be used.
+
 ```javascript
-// update first document in collection that contains specified fields with specified set operator
+db.people.insertMany([
+    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"],},
+    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"]},
+])
+
+// update first document in collection that matches query with specified set operator
 db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
 
-// update all documents in collection that contain specified fields with specified set operator
+// update all documents in collection that matches query with specified set operator
 db.people.updateMany({"age": 21}, {"$set": {"age": 18}})
 
-// replace first document in collection that contains specified fields with specified fields
+// replace first document in collection that matches query with specified fields
 db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
 
-// replace all documents in collection that contain specified fields with specified fields
+// replace all documents in collection that matches query with specified fields
 db.people.replaceMany({"age": 21}, {"name": "Johnny"})
-
-// update documents in collection that fulfill specified filter
-db.people.updateMany({"$gt": {"age": 18}}, {"$set": {"age": 16}})
-db.people.replaceMany({"$gt": {"age": 18}}, {"name": "Jay" })
 ```
 
 ### 8.4 Delete Operations
@@ -361,18 +392,22 @@ Every response object of delete operations contain the following fields:
 - `acknowledged`: A boolean that signals whether the operation was successful
 - `deleteCount`: An integer containing the number of deleted documents
 
+To query documents to delete the same syntax as in read operations can be used.
+
 ```javascript
-// delete first document in collection that contains specified fields
+db.people.insertMany([
+    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"],},
+    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"]},
+])
+
+// delete first document in collection that matches query
 db.people.deleteOne({"name": "John"})
 
-// delete all documents in collection that contain specified fields
+// delete all documents in collection that matches query
 db.people.deleteMany({"age": 21})
 
 // delete every document in collection
 db.people.deleteMany({})
-
-// delete documents in collection that fulfill specified filter
-db.people.find({"$gt": {"age": 18}})
 
 // delete database
 db.dropDatabase()
