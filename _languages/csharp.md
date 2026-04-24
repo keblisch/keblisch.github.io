@@ -10,7 +10,8 @@ title: C#
 # C\#
 {: .no_toc }
 
-Short description of the language.
+C# is a purely object oriented language that provides high-level abstractions inside a platform
+independent runtime environment and is part of Microsoft's .NET framework.
 
 | Paradigms          | Typing           | Memory Management | Execution                           |
 | :----------------- | :--------------- | :---------------- | :---------------------------------- |
