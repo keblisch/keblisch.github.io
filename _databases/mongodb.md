@@ -215,56 +215,7 @@ Predefined functions can be used to interact with data inside MongoDB.
 printjson({"name": "John", "age": 21})
 ```
 
-## 7 Operators
-
-Operators are predefined fields that are used to declare operations inside a database. Thereby
-they're used in different contexts with according meanings.
-
-| Operator      | Type                 | Meaning                                              |
-| :------------ | :------------------- | :--------------------------------------------------- |
-| `$eq`         | Query operator       | Data should equal specified value                    |
-| `$ne`         | Query operator       | Data shouldn't equal specified value                 |
-| `$gt`         | Query operator       | Data should be greater than specified value          |
-| `$gte`        | Query operator       | Data should be greater than or equal specified value |
-| `$lt`         | Query operator       | Data should be less than specified value             |
-| `$lte`        | Query operator       | Data should be less than or equal specified value    |
-| `$in`         | Query operator       | Data should be in specified array                    |
-| `$nin`        | Query operator       | Data shouldn't be in specified array                 |
-| `$or`         | Logical operator     | Data should fulfill any specified query operator     |
-| `$nor`        | Logical operator     | Data shouldn't fulfill any specified query operator  |
-| `$and`        | Logical operator     | Data should fulfill every specified query operator   |
-| `$not`        | Logical operator     | Invert effect of query operator or logical operator  |
-| `$set`        | Update operator      | Set data to specified value                          |
-| `$lookup`     | Aggregation operator | Aggregate documents from different collections       |
-
-```javascript
-db.people.insertOne({"name": "John", "hobbyIds": [
-    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
-]})
-db.hobbies.insertMany([
-    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
-    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
-])
-
-// use query operator
-db.people.find({"$gt": {"age": 18}})
-
-// chain query operators with logical operator
-db.people.find({"$or": [{"$gt": {"age": 12}}, {"$lt": {"age": 18}}]})
-
-// use update operator
-db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
-
-// use aggregation operator
-db.people.aggregate([{"$lookup": {
-    "from": "hobbies",
-    "localField": "hobbyIds",
-    "foreignField": "_id",
-    "as": "hobbyData"
-}}])
-```
-
-## 8 CRUD Operations
+## 7 CRUD Operations
 
 Every CRUD operation returns a response object in the form of an array or document containing
 data related to the operation.
@@ -274,7 +225,7 @@ is rolled backed when it failed or was interrupted. But when an error or interru
 an operation on multiple documents, the operation isn't rolled back for documents that were
 successful,
 
-### 8.1 Create Operations
+### 7.1 Create Operations
 
 Every response object of update operations contain the following fields:
 
@@ -308,7 +259,7 @@ db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w": 1, "j": 
 db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w": 0}})
 ```
 
-### 8.2 Read Operations
+### 7.2 Read Operations
 
 Response objects of read operations are either single documents or cursor objects to multiple
 documents. Thereby cursor objects act like pointers to result sets to be more performant in case
@@ -330,10 +281,11 @@ db.people.find({"name": "John"})
 db.people.findOne({"name": "John"})
 
 // get documents from collection that fulfill specified query operator
-db.people.find({"$gt": {"age": 18}})
+db.people.find({"$age": {"$gt": 18}})              // single operator
+db.people.find({"$age": {"$gt": 18, "$ne": 100}})  // multiple operators
 
 // get documents from collection that fulfill logically chained query operators
-db.people.find({"$or": [{"$gt": {"age": 12}}, {"$lt": {"age": 18}}]})
+db.people.find({"$or": [{"$age": {"$gt": 12}}, {"$age": {"$lt": 18}}]})
 
 // get documents from collection that contain specified array elements
 db.people.find({"hobbies": "Hiking"})             // match for single element
@@ -356,7 +308,7 @@ db.people.find().toArray()
 db.people.find().forEach((person) => {printjson(person)})
 ```
 
-### 8.3 Update Operations
+### 7.3 Update Operations
 
 Every response object of update operations contain the following fields:
 
@@ -385,7 +337,7 @@ db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
 db.people.replaceMany({"age": 21}, {"name": "Johnny"})
 ```
 
-### 8.4 Delete Operations
+### 7.4 Delete Operations
 
 Every response object of delete operations contain the following fields:
 
@@ -416,7 +368,7 @@ db.dropDatabase()
 db.people.drop()
 ```
 
-## 9 Aggregations
+## 8 Aggregations
 
 Aggregations can be used to join collections that have a one-to-many or many-to-many relationship.
 Their result objects are either single documents or arrays of documents.
@@ -439,7 +391,7 @@ db.people.aggregate([{"$lookup": {
 }}])
 ```
 
-## 10 Schema Validation
+## 9 Schema Validation
 
 Even though MongoDB doesn't enforce schemas, documents can be validated at runtime to adhere
 to a minimum set of requirements.
@@ -481,6 +433,70 @@ db.runCommand({"collMod": "people", {"validator": {
         "required": ["name", "height"],
     }
 }}})
+```
+
+## 10 Operators
+
+Operators are predefined fields that are used to declare operations inside a database. Thereby
+they're used in different contexts with according meanings.
+
+| Operator      | Type                 | Meaning                                               |
+| :------------ | :------------------- | :---------------------------------------------------- |
+| `$eq`         | Query operator       | Field should equal specified value                    |
+| `$ne`         | Query operator       | Field shouldn't equal specified value                 |
+| `$gt`         | Query operator       | Field should be greater than specified value          |
+| `$gte`        | Query operator       | Field should be greater than or equal specified value |
+| `$lt`         | Query operator       | Field should be less than specified value             |
+| `$lte`        | Query operator       | Field should be less than or equal specified value    |
+| `$in`         | Query operator       | Field should be in specified array                    |
+| `$nin`        | Query operator       | Field shouldn't be in specified array                 |
+| `$regex`      | Query operator       | Field should match specified regular expression       |
+| `$expr`       | Query operator       | Field should match specified expression syntax        |
+| `$exists`     | Query operator       | Whether Field should exist according to boolean       |
+| `$type`       | Query operator       | Field should have specified data type as string       |
+| `$type`       | Query operator       | Field should have any data type in specified array    |
+| `$or`         | Logical operator     | Field should fulfill any specified query operator     |
+| `$nor`        | Logical operator     | Field shouldn't fulfill any specified query operator  |
+| `$and`        | Logical operator     | Field should fulfill every specified query operator   |
+| `$not`        | Logical operator     | Invert effect of query operator or logical operator   |
+| `$set`        | Update operator      | Set Field to specified value                          |
+| `$lookup`     | Aggregation operator | Aggregate documents from different collections        |
+| `$jsonSchema` | Evaluation operator  | Documents must adhere to specified schema at creation |
+
+```javascript
+db.people.insertOne({"name": "John", "hobbyIds": [
+    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
+]})
+db.hobbies.insertMany([
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
+])
+
+// use query operator
+db.people.find({"$age": {"$gt": 18}})              // single operator
+db.people.find({"$age": {"$gt": 18, "$ne": 100}})  // multiple operators
+
+// chain query operators with logical operator
+db.people.find({"$or": [{"$age": {"$gt": 12}}, {"$age": {"$lt": 18}}]})
+
+// use update operator
+db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
+
+// use aggregation operator
+db.people.aggregate([{"$lookup": {
+    "from": "hobbies",
+    "localField": "hobbyIds",
+    "foreignField": "_id",
+    "as": "hobbyData"
+}}])
+
+// use evaluation operator
+db.createCollection("people", {"validator": {
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["name", "height"],
+    }
+}})
 ```
 
 {% endraw %}
