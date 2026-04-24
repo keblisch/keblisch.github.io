@@ -220,20 +220,36 @@ printjson({"name": "John", "age": 21})
 Operators are predefined fields that are used to declare operations inside a database. Thereby
 they're used in different contexts with according meanings.
 
+| Operator      | Type                 | Meaning                                        |
+| :------------ | :------------------- | :--------------------------------------------- |
+| `$eq`         | Query operator       | Data should equal specified value              |
+| `$gt`         | Query operator       | Data should be greater than specified value    |
+| `$set`        | Update operator      | Set data to specified value                    |
+| `$lookup`     | Aggregation operator | Aggregate documents from different collections |
+
 ```javascript
-// use operator as filter
+db.people.insertOne({"name": "John", "hobbyIds": [
+    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
+]})
+db.hobbies.insertMany([
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
+])
+
+// use query operator
 db.people.find({"$gt": {"age": 18}})
 
-// use operator as command to manipulate document
+// use update operator
 db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
-```
 
-| Operator      | Usage                                                    |
-| :------------ | :------------------------------------------------------- |
-| `$gt`         | Filter for fields with values greater than another value |
-| `$set`        | Set specific fields and their values                     |
-| `$lookup`     | Aggregate documents from different collections           |
-| `$jsonSchema` | Define schema for documents                              |
+// use aggregation operator
+db.people.aggregate([{"$lookup": {
+    "from": "hobbies",
+    "localField": "hobbyIds",
+    "foreignField": "_id",
+    "as": "hobbyData"
+}}])
+```
 
 ## 8 CRUD Operations
 
