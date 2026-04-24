@@ -215,7 +215,89 @@ Predefined functions can be used to interact with data inside MongoDB.
 printjson({"name": "John", "age": 21})
 ```
 
-## 7 CRUD Operations
+## 7 Operators
+
+Operators are predefined fields that are used to declare operations inside a database. Thereby
+they're used in different contexts with according meanings.
+
+| Operator      | Type                 | Meaning                                                         |
+| :------------ | :------------------- | :-------------------------------------------------------------- |
+| `$eq`         | Query operator       | Field should equal specified value                              |
+| `$ne`         | Query operator       | Field shouldn't equal specified value                           |
+| `$gt`         | Query operator       | Field should be greater than specified value                    |
+| `$gte`        | Query operator       | Field should be greater than or equal specified value           |
+| `$lt`         | Query operator       | Field should be less than specified value                       |
+| `$lte`        | Query operator       | Field should be less than or equal specified value              |
+| `$in`         | Query operator       | Field should be in specified array                              |
+| `$nin`        | Query operator       | Field shouldn't be in specified array                           |
+| `$all`        | Query operator       | Array field should include specified array                      |
+| `$elemMatch`  | Query operator       | Array field's elements should fulfill specified query operator  |
+| `$size`       | Query operator       | Array field should be of specified size                         |
+| `$regex`      | Query operator       | Field should match specified regular expression                 |
+| `$expr`       | Query operator       | Field should match specified expression syntax                  |
+| `$exists`     | Query operator       | Whether Field should exist according to boolean                 |
+| `$type`       | Query operator       | Field should have specified data type as string                 |
+| `$type`       | Query operator       | Field should have any data type in specified array              |
+| `$or`         | Logical operator     | Field should fulfill any specified query operator               |
+| `$nor`        | Logical operator     | Field shouldn't fulfill any specified query operator            |
+| `$and`        | Logical operator     | Field should fulfill every specified query operator             |
+| `$not`        | Logical operator     | Invert effect of query operator or logical operator             |
+| `$slice`      | Projection operator  | Projected field should only contain number of elements          |
+| `$set`        | Update operator      | Set Field to specified value                                    |
+| `$min`        | Update operator      | Set Field to specified value if it is higher than the field     |
+| `$max`        | Update operator      | Set Field to specified value if it is lower than the field      |
+| `$inc`        | Update operator      | Increment field by specified amount                             |
+| `$mul`        | Update operator      | Multiply field by specified amount                              |
+| `$rename`     | Update operator      | Rename field by specified string                                |
+| `$unset`      | Update operator      | Remove used field (value is irrelevant)                         |
+| `$push`       | Update operator      | Push value or values of `$each` operator to array field         |
+| `$addToSet`   | Update operator      | Push value or to array field if doesn't exist already           |
+| `$each`       | Update operator      | Provide elements of specified array to `$push` operator         |
+| `$pull`       | Update operator      | Remove specified value from array field                         |
+| `$pop`        | Update operator      | Remove last value from array field if value is 1 or first if -1 |
+| `$lookup`     | Aggregation operator | Aggregate documents from different collections                  |
+| `$jsonSchema` | Evaluation operator  | Documents must adhere to specified schema at creation           |
+
+```javascript
+db.people.insertOne({"name": "John", "hobbyIds": [
+    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
+]})
+db.hobbies.insertMany([
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
+    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
+])
+
+// use query operator
+db.people.find({"$age": {"$gt": 18}})              // single operator
+db.people.find({"$age": {"$gt": 18, "$ne": 100}})  // multiple operators
+
+// chain query operators with logical operator
+db.people.find({"$or": [{"$age": {"$gt": 12}}, {"$age": {"$lt": 18}}]})
+
+// use projection operator
+db.people.find({}, {"hobbyIds": {"$slice": 2}})
+
+// use update operator
+db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
+
+// use aggregation operator
+db.people.aggregate([{"$lookup": {
+    "from": "hobbies",
+    "localField": "hobbyIds",
+    "foreignField": "_id",
+    "as": "hobbyData"
+}}])
+
+// use evaluation operator
+db.createCollection("people", {"validator": {
+    "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["name", "height"],
+    }
+}})
+```
+
+## 8 CRUD Operations
 
 Every CRUD operation returns a response object in the form of an array or document containing
 data related to the operation.
@@ -225,12 +307,12 @@ is rolled backed when it failed or was interrupted. But when an error or interru
 an operation on multiple documents, the operation isn't rolled back for documents that were
 successful,
 
-### 7.1 Create Operations
+### 8.1 Create Operations
 
 Every response object of update operations contain the following fields:
 
 - `acknowledged`: A boolean that signals whether the operation was successful
-- `insertedId`: An object Is from the created document (when only one document was created)
+- `insertedId`: An object Id from the created document (when only one document was created)
 - `insertedIds`: An array of object IDs from the created documents
                  (when multiple documents where created)
 
@@ -259,7 +341,7 @@ db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w": 1, "j": 
 db.people.insertOne({"name": "John", "age": 21}, {"writeConcern": {"w": 0}})
 ```
 
-### 7.2 Read Operations
+### 8.2 Read Operations
 
 Response objects of read operations are either single documents or cursor objects to multiple
 documents. Thereby cursor objects act like pointers to result sets to be more performant in case
@@ -267,8 +349,8 @@ of large amounts of data, but act like arrays in most cases.
 
 ```javascript
 db.people.insertMany([
-    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"],},
-    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"]},
+    {"name": "John", "age": 21, "height": 1.8, "hobbies": ["Hiking", "Chess"],},
+    {"name": "Jane", "age": 18, "height": 1.75, "hobbies": ["Jogging", "Reading"]},
 ])
 
 // get all documents from collection
@@ -294,8 +376,22 @@ db.people.find({"hobbies": ["Hiking", "Chess"]})  // match for entire array
 // get documents from collection with only their projected fields
 db.people.find({"name": "John"}, {"name": 1})            // only include fields with an assigned 1
 db.people.find({"name": "John"}, {"name": 1, "_id": 0})  // exclude fields with an assigned 0
+db.people.find({}, {"age": {"$gt": 18}})             // include fields that fulfill query operator
+db.people.find({}, {"hobbies": {"$slice": 2}})       // include sliced array field
+db.people.find({}, {"hobbies": {"$slice": [1, 2]}})  // include sliced array field with offset
 
-// get number of documents found by query
+// sort found documents by specified fields
+db.people.find().sort({"age": 1})                // in ascending order
+db.people.find().sort({"age": -1})               // in descending order
+db.people.find().sort({"age": 1, "height": -1})  // by multiple fields
+
+// limit number of found documents
+db.people.find().limit(10)
+
+// skip number of found documents
+db.people.find().skip(10)
+
+// get number of found documents
 db.people.find().count()
 
 // pretty print found documents of cursor object
@@ -304,17 +400,28 @@ db.people.find().pretty()
 // get entire result set of cursor object as array
 db.people.find().toArray()
 
+// get next document from result set of cursor object
+var result = db.people.find()
+result.next()
+
+// check if there is a next document in result set of cursor object
+result = db.people.find()
+result.hasNext()
+
 // iterate over every document from result set of cursor object
 db.people.find().forEach((person) => {printjson(person)})
 ```
 
-### 7.3 Update Operations
+### 8.3 Update Operations
 
 Every response object of update operations contain the following fields:
 
 - `acknowledged`: A boolean that signals whether the operation was successful
 - `matchedCount`: An integer containing the number of documents matched by the query
 - `modifiedCount`: An integer containing the number of updated documents
+- `upsertedId`: An object Id from the created document when one document was upserted
+- `upsertedIds`: An array of object IDs from the created documents
+                 when multiple documents where upserted
 
 To query documents to update the same syntax as in read operations can be used.
 
@@ -330,6 +437,15 @@ db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
 // update all documents in collection that matches query with specified set operator
 db.people.updateMany({"age": 21}, {"$set": {"age": 18}})
 
+// update documents in collection that matches query or create them if they don't exist
+db.people.updateMany({"age": 21}, {"$set": {"age": 18}}, {"upsert": true})
+
+// update all array elements of field in document that matches query
+db.people.updateMany({"name": "John"}, {"$set": {"hobbies.$[]": "Climbing"}})
+
+// update array elements in document that matches query
+db.people.updateMany({"elemMatch": {"$eq": "Hiking"}}, {"$set": {"hobbies.$": "Climbing"}})
+
 // replace first document in collection that matches query with specified fields
 db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
 
@@ -337,7 +453,7 @@ db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
 db.people.replaceMany({"age": 21}, {"name": "Johnny"})
 ```
 
-### 7.4 Delete Operations
+### 8.4 Delete Operations
 
 Every response object of delete operations contain the following fields:
 
@@ -368,7 +484,7 @@ db.dropDatabase()
 db.people.drop()
 ```
 
-## 8 Aggregations
+## 9 Aggregations
 
 Aggregations can be used to join collections that have a one-to-many or many-to-many relationship.
 Their result objects are either single documents or arrays of documents.
@@ -391,7 +507,7 @@ db.people.aggregate([{"$lookup": {
 }}])
 ```
 
-## 9 Schema Validation
+## 10 Schema Validation
 
 Even though MongoDB doesn't enforce schemas, documents can be validated at runtime to adhere
 to a minimum set of requirements.
@@ -433,70 +549,6 @@ db.runCommand({"collMod": "people", {"validator": {
         "required": ["name", "height"],
     }
 }}})
-```
-
-## 10 Operators
-
-Operators are predefined fields that are used to declare operations inside a database. Thereby
-they're used in different contexts with according meanings.
-
-| Operator      | Type                 | Meaning                                               |
-| :------------ | :------------------- | :---------------------------------------------------- |
-| `$eq`         | Query operator       | Field should equal specified value                    |
-| `$ne`         | Query operator       | Field shouldn't equal specified value                 |
-| `$gt`         | Query operator       | Field should be greater than specified value          |
-| `$gte`        | Query operator       | Field should be greater than or equal specified value |
-| `$lt`         | Query operator       | Field should be less than specified value             |
-| `$lte`        | Query operator       | Field should be less than or equal specified value    |
-| `$in`         | Query operator       | Field should be in specified array                    |
-| `$nin`        | Query operator       | Field shouldn't be in specified array                 |
-| `$regex`      | Query operator       | Field should match specified regular expression       |
-| `$expr`       | Query operator       | Field should match specified expression syntax        |
-| `$exists`     | Query operator       | Whether Field should exist according to boolean       |
-| `$type`       | Query operator       | Field should have specified data type as string       |
-| `$type`       | Query operator       | Field should have any data type in specified array    |
-| `$or`         | Logical operator     | Field should fulfill any specified query operator     |
-| `$nor`        | Logical operator     | Field shouldn't fulfill any specified query operator  |
-| `$and`        | Logical operator     | Field should fulfill every specified query operator   |
-| `$not`        | Logical operator     | Invert effect of query operator or logical operator   |
-| `$set`        | Update operator      | Set Field to specified value                          |
-| `$lookup`     | Aggregation operator | Aggregate documents from different collections        |
-| `$jsonSchema` | Evaluation operator  | Documents must adhere to specified schema at creation |
-
-```javascript
-db.people.insertOne({"name": "John", "hobbyIds": [
-    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
-]})
-db.hobbies.insertMany([
-    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
-    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
-])
-
-// use query operator
-db.people.find({"$age": {"$gt": 18}})              // single operator
-db.people.find({"$age": {"$gt": 18, "$ne": 100}})  // multiple operators
-
-// chain query operators with logical operator
-db.people.find({"$or": [{"$age": {"$gt": 12}}, {"$age": {"$lt": 18}}]})
-
-// use update operator
-db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
-
-// use aggregation operator
-db.people.aggregate([{"$lookup": {
-    "from": "hobbies",
-    "localField": "hobbyIds",
-    "foreignField": "_id",
-    "as": "hobbyData"
-}}])
-
-// use evaluation operator
-db.createCollection("people", {"validator": {
-    "$jsonSchema": {
-        "bsonType": "object",
-        "required": ["name", "height"],
-    }
-}})
 ```
 
 {% endraw %}
