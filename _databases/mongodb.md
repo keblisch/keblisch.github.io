@@ -630,4 +630,74 @@ db.runCommand({"collMod": "people", {"validator": {
 }}})
 ```
 
+## 12 Geospatial Data
+
+Geospatial data is represented by documents in the GeoJSON format. The following types of GeoJSON
+objects do exist:
+
+```json
+// single coordinate (longitude, latitude)
+{"type": "point", "coordinates": [45, 30]}
+
+// polygon of coordinates (longitude, latitude)
+{"type": "Polygon", "coordinates": [
+    [[45, 30], [50, 20], [65, 10]]
+]}
+```
+
+```javascript
+// create location data
+db.places.insertOne({
+    "name" "My Place",
+    "location": {"type": "point", "coordinates": [45, 30]}
+})
+
+// create index of geospatial data field (required for most geospatial operations)
+db.places.createIndex({"location": "2dsphere"})
+
+// get array of documents with near location
+db.places.find({"location": {
+    "$near": {"$geometry": {"type": "point", "coordinates": [45, 30]}}}
+})
+db.places.find({"location": {  // define how near point should be
+    "$near": {"$geometry": {"type": "point", "coordinates": [45, 30]}},
+    "$minDistance": 10,  // in meters
+    "$maxDistance": 30   // in meters
+}})
+
+// get array of documents with location inside radius
+db.places.find({"location": {
+    "$geoWithin": {"$centerSphere": [[45, 30], 5]}  // center and radius in kilometers
+}})
+
+// get array of documents with location inside polygon
+db.places.find({"location": {
+    "$geoWithin": {
+        "$geometry": {
+            "type": "Polygon", "coordinates": [
+                [[45, 30], [50, 20], [65, 10]]
+            ]
+        }
+    }}
+})
+
+// get whether point/polygon intersects with polygon
+db.places.find({"location": {
+    "$geoIntersects": {
+        "$geometry": {
+            "type": "Point", "coordinates": [45, 30]
+        }
+    }}
+})
+db.places.find({"location": {
+    "$geoIntersects": {
+        "$geometry": {
+            "type": "Polygon", "coordinates": [
+                [[45, 30], [50, 20], [65, 10]]
+            ]
+        }
+    }}
+})
+```
+
 {% endraw %}
