@@ -61,6 +61,11 @@ users that are registered inside the server and are authenticated. A root user i
 automatically on startup for which credentials can be set with the environment variables
 `MONGO_INITDB_ROOT_USERNAME` and `MONGO_INITDB_ROOT_PASSWORD`.
 
+MongoDB holds a cache in RAM where it stores data that is operated upon in parallel to the actual
+data stored on disk. Thereby operations are performed first on the cache, which is then
+synchronized with the data on disk asynchronously. This removes the need for an additional
+in-memory-cache in most cases.
+
 ### 3.1 Configuration
 
 MongoDB can be started with the following arguments to configure the server that it's running:
@@ -247,6 +252,12 @@ CRUD operations are atomic on a document basis, meaning that every operation on 
 is rolled backed when it failed or was interrupted. But when an error or interruption occurs in
 an operation on multiple documents, the operation isn't rolled back for documents that were
 successful.
+
+To perform operations MongoDB follows an execution plan which picks the most optimal way to
+perform this operation automatically. To deduce this execution plan different approaches are
+performed in parallel and the first operation reaching the so called winning goal is the
+winning plan and is picked as the according execution plan. The result of that test is cached
+and only rerun after a certain amount of time or multiple updates to the effected collections.
 
 ### 8.1 Create Operations
 
