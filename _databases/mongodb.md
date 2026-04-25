@@ -484,11 +484,12 @@ db.people.drop()
 
 ## 9 Aggregations
 
-Aggregations can be used to join collections that have a one-to-many or many-to-many relationship.
+Aggregations are used to manipulate collections for display in pipelines of operations. Thereby
+they're also used to join collections that have a one-to-many or many-to-many relationship.
 Their result objects are either single documents or arrays of documents.
 
 ```javascript
-db.people.insertOne({"name": "John", "hobbyIds": [
+db.people.insertOne({"name": "John", "age": 21, "hobbyIds": [
     ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
 ]})
 db.hobbies.insertMany([
@@ -496,14 +497,70 @@ db.hobbies.insertMany([
     {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
 ])
 
-// aggregate documents from other collection into documents of specified collection
+// search collection with query operation (returns cursor object)
+db.people.aggregate([{"$match": {"name": "John", {"age": {"$gt": 18}}}}])
+
+// group documents by specified fields
+db.people.aggregate([{"$group": {
+   "_id": {"personName": "$name"},  // define fields by which to group and create field for it
+   "total": {"$sum": 1}             // operation to perform on group and create field for it
+}}])
+
+// create document for each element of specified array and give it one as the field's value
+db.people.aggregate([{"$unwind": "hobbyIds"}])
+
+// sort collection by specified fields
+db.people.aggregate([{"$sort": {"age": 1}}])
+
+// limit number of documents in collection
+db.people.aggregate([{"$limit": 10}])
+
+// skip number of documents in collection
+db.people.aggregate([{"$skip": 10}])
+
+// project documents into specified fields
+db.people.aggregate([{"$project": {"name": 1, "_id": 0}}])
+db.people.aggregate([{"$project": {
+    "age2": "$age"                              // reference other field in projection
+}}])
+db.people.aggregate([{"$project": {
+    "greet": {"$concat": ["Hi", " ", "$name"]}  // create value/field for projection
+}}])
+db.people.aggregate([{"$project": {
+    "name": {"$toUpper": "$name"}               // perform field manipulation for projection
+}}])
+
+// merge documents from other collection into documents of specified collection
 db.people.aggregate([{"$lookup": {
     "from": "hobbies",         // other collection to aggregate from
     "localField": "hobbyIds",  // field containing values in other collection to match
     "foreignField": "_id",     // field in other collection to match
     "as": "hobbyData"          // name of field to insert results in
 }}])
+
+// chain aggregation operations into pipeline where each step takes output of last step as input
+db.people.aggregate([
+    {"$match": {"name": "John", {"age": {"$gt": 18}}}},
+    {"$group": {"_id": {"personName": "$name"}, "total": {"$sum": 1}}},
+    {"$sort": {"total": -1}},
+    {"$limit": 10},
+    {"$project": {"_id": 0, "total": 1}}
+])
+
+// save aggregation output to collection and replace it when it already exists
+db.people.aggregate([{"$out": "otherPeople"}])
 ```
+
+The following group operators are available:
+
+| Operator    | Meaning                                                                          |
+| :---------- | :------------------------------------------------------------------------------- |
+| `$sum`      | Sum specified value/field of entire group                                        |
+| `$avg`      | Calculate average of specified value/field of entire group                       |
+| `$min`      | Get smallest value/field of entire group                                         |
+| `$max`      | Get largest value/field of entire group                                          |
+| `$push`     | Push specified value/field to array for entire group                             |
+| `$addToSet` | Push specified value/field to array for entire group if it doesn't exist already |
 
 ## 10 Indices
 
