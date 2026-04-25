@@ -92,35 +92,38 @@ adhering to its rules) in the terminal. To connect to a running MongoDB server o
 machine via the MongoDB Shell, the command `mongosh` can be used. Inside the shell command
 completion with tab and command history with up are available.
 
-```bash
-# exit the shell
+```javascript
+// exit the shell
 exit
 
-# clear the shell
+// clear the shell
 cls
 
-# get available commands
-help                      # shell commands for regular user
-help admin                # shell commands for admin user
-db.help()                 # commands for current database
-db.someCollection.help()  # commands for collection
+// get available commands
+help                      // shell commands for regular user
+help admin                // shell commands for admin user
+db.help()                 // commands for current database
+db.someCollection.help()  // commands for collection
 
-# show all databases
+// show all databases
 show dbs
 
-# show all collections in the current database
+// show all collections in the current database
 show collections
 
-# switch to database (and create it when it doesn't exist)
+// switch to database (and create it when it doesn't exist)
 use someDatabase
 
-# delete current database
+// delete current database
 db.dropDatabase()
 
-# show statistics about current database
+// show statistics about current database
 db.stats()
 
-# shutdown MongoDB server
+// show execution plan and statistics for command
+db.someCollection.explain().someCommand()
+
+// shutdown MongoDB server
 db.shutdownServer()
 ```
 
@@ -160,6 +163,15 @@ mongoexport --db someDatabase --collection someCollection --out path/to/file.jso
 # export JSON file from server with authentication
 mongoexport --db someDatabase --collection someCollection --out path/to/file.json \
             --username name --password secret
+```
+
+#### 3.4.3 Execute Scripts
+
+Because the MongoDB Shell is based on JavaScript, JavaScript can be executed inside it.
+
+```bash
+# execute JavaScript file in MongoDB server
+mongo path/to/file.js
 ```
 
 ## 4 Data Types
@@ -206,95 +218,24 @@ var person = db.people.findOne()
 db.people.find({"name": firstName})
 ```
 
-## 6 Functions
+## 6 Control Flow Structures
+
+Inside of MongoDB Shell sessions control flow structures can be used.
+
+```javascript
+// loop certain amount of times
+for (int i = 0; i < 10; i++) {
+    db.people.findOne()
+}
+```
+
+## 7 Functions
 
 Predefined functions can be used to interact with data inside MongoDB.
 
 ```javascript
 // pretty print document as JSON
 printjson({"name": "John", "age": 21})
-```
-
-## 7 Operators
-
-Operators are predefined fields that are used to declare operations inside a database. Thereby
-they're used in different contexts with according meanings.
-
-| Operator      | Type                 | Meaning                                                         |
-| :------------ | :------------------- | :-------------------------------------------------------------- |
-| `$eq`         | Query operator       | Field should equal specified value                              |
-| `$ne`         | Query operator       | Field shouldn't equal specified value                           |
-| `$gt`         | Query operator       | Field should be greater than specified value                    |
-| `$gte`        | Query operator       | Field should be greater than or equal specified value           |
-| `$lt`         | Query operator       | Field should be less than specified value                       |
-| `$lte`        | Query operator       | Field should be less than or equal specified value              |
-| `$in`         | Query operator       | Field should be in specified array                              |
-| `$nin`        | Query operator       | Field shouldn't be in specified array                           |
-| `$all`        | Query operator       | Array field should include specified array                      |
-| `$elemMatch`  | Query operator       | Array field's elements should fulfill specified query operator  |
-| `$size`       | Query operator       | Array field should be of specified size                         |
-| `$regex`      | Query operator       | Field should match specified regular expression                 |
-| `$expr`       | Query operator       | Field should match specified expression syntax                  |
-| `$exists`     | Query operator       | Whether Field should exist according to boolean                 |
-| `$type`       | Query operator       | Field should have specified data type as string                 |
-| `$type`       | Query operator       | Field should have any data type in specified array              |
-| `$or`         | Logical operator     | Field should fulfill any specified query operator               |
-| `$nor`        | Logical operator     | Field shouldn't fulfill any specified query operator            |
-| `$and`        | Logical operator     | Field should fulfill every specified query operator             |
-| `$not`        | Logical operator     | Invert effect of query operator or logical operator             |
-| `$slice`      | Projection operator  | Projected field should only contain number of elements          |
-| `$set`        | Update operator      | Set Field to specified value                                    |
-| `$min`        | Update operator      | Set Field to specified value if it is higher than the field     |
-| `$max`        | Update operator      | Set Field to specified value if it is lower than the field      |
-| `$inc`        | Update operator      | Increment field by specified amount                             |
-| `$mul`        | Update operator      | Multiply field by specified amount                              |
-| `$rename`     | Update operator      | Rename field by specified string                                |
-| `$unset`      | Update operator      | Remove used field (value is irrelevant)                         |
-| `$push`       | Update operator      | Push value or values of `$each` operator to array field         |
-| `$addToSet`   | Update operator      | Push value or to array field if doesn't exist already           |
-| `$each`       | Update operator      | Provide elements of specified array to `$push` operator         |
-| `$pull`       | Update operator      | Remove specified value from array field                         |
-| `$pop`        | Update operator      | Remove last value from array field if value is 1 or first if -1 |
-| `$lookup`     | Aggregation operator | Aggregate documents from different collections                  |
-| `$jsonSchema` | Evaluation operator  | Documents must adhere to specified schema at creation           |
-
-```javascript
-db.people.insertOne({"name": "John", "hobbyIds": [
-    ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), ObjectId("64f1c2a9b8e7d6c5f4a3b2c2")
-]})
-db.hobbies.insertMany([
-    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c1"), "name": "Jogging"},
-    {"_id": ObjectId("64f1c2a9b8e7d6c5f4a3b2c2"), "name": "Reading"}
-])
-
-// use query operator
-db.people.find({"$age": {"$gt": 18}})              // single operator
-db.people.find({"$age": {"$gt": 18, "$ne": 100}})  // multiple operators
-
-// chain query operators with logical operator
-db.people.find({"$or": [{"$age": {"$gt": 12}}, {"$age": {"$lt": 18}}]})
-
-// use projection operator
-db.people.find({}, {"hobbyIds": {"$slice": 2}})
-
-// use update operator
-db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
-
-// use aggregation operator
-db.people.aggregate([{"$lookup": {
-    "from": "hobbies",
-    "localField": "hobbyIds",
-    "foreignField": "_id",
-    "as": "hobbyData"
-}}])
-
-// use evaluation operator
-db.createCollection("people", {"validator": {
-    "$jsonSchema": {
-        "bsonType": "object",
-        "required": ["name", "height"],
-    }
-}})
 ```
 
 ## 8 CRUD Operations
@@ -305,7 +246,7 @@ data related to the operation.
 CRUD operations are atomic on a document basis, meaning that every operation on single documents
 is rolled backed when it failed or was interrupted. But when an error or interruption occurs in
 an operation on multiple documents, the operation isn't rolled back for documents that were
-successful,
+successful.
 
 ### 8.1 Create Operations
 
@@ -412,6 +353,35 @@ result.hasNext()
 db.people.find().forEach((person) => {printjson(person)})
 ```
 
+The following query operators are available:
+
+| Operator      | Meaning                                                         |
+| :------------ | :-------------------------------------------------------------- |
+| `$eq`         | Field should equal specified value                              |
+| `$ne`         | Field shouldn't equal specified value                           |
+| `$gt`         | Field should be greater than specified value                    |
+| `$gte`        | Field should be greater than or equal specified value           |
+| `$lt`         | Field should be less than specified value                       |
+| `$lte`        | Field should be less than or equal specified value              |
+| `$in`         | Field should be in specified array                              |
+| `$nin`        | Field shouldn't be in specified array                           |
+| `$all`        | Array field should include specified array                      |
+| `$elemMatch`  | Array field's elements should fulfill specified query operator  |
+| `$size`       | Array field should be of specified size                         |
+| `$regex`      | Field should match specified regular expression                 |
+| `$exists`     | Whether Field should exist according to boolean                 |
+| `$type`       | Field should have specified data type as string                 |
+| `$type`       | Field should have any data type in specified array              |
+
+The following logical operators are available:
+
+| Operator      | Meaning                                                         |
+| :------------ | :-------------------------------------------------------------- |
+| `$or`         | Field should fulfill any specified query operator               |
+| `$nor`        | Field shouldn't fulfill any specified query operator            |
+| `$and`        | Field should fulfill every specified query operator             |
+| `$not`        | Invert effect of query operator or logical operator             |
+
 ### 8.3 Update Operations
 
 Every response object of update operations contain the following fields:
@@ -452,6 +422,23 @@ db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
 // replace all documents in collection that matches query with specified fields
 db.people.replaceMany({"age": 21}, {"name": "Johnny"})
 ```
+
+The following update operators are available:
+
+| Operator      | Meaning                                                         |
+| :------------ | :-------------------------------------------------------------- |
+| `$set`        | Set Field to specified value                                    |
+| `$min`        | Set Field to specified value if it is higher than the field     |
+| `$max`        | Set Field to specified value if it is lower than the field      |
+| `$inc`        | Increment field by specified amount                             |
+| `$mul`        | Multiply field by specified amount                              |
+| `$rename`     | Rename field by specified string                                |
+| `$unset`      | Remove used field (value is irrelevant)                         |
+| `$push`       | Push value or values of `$each` operator to array field         |
+| `$addToSet`   | Push value or to array field if doesn't exist already           |
+| `$each`       | Provide elements of specified array to `$push` operator         |
+| `$pull`       | Remove specified value from array field                         |
+| `$pop`        | Remove last value from array field if value is 1 or first if -1 |
 
 ### 8.4 Delete Operations
 
@@ -507,7 +494,88 @@ db.people.aggregate([{"$lookup": {
 }}])
 ```
 
-## 10 Schema Validation
+## 10 Indices
+
+Indices are indexing collections by their document's fields to speed up lookup and sort operations
+for these. But this comes at the cost of larger disk consumption and a small performance penalty
+for operations that modify the collection, because its index also has to be modified.
+
+Indexes can consist of single fields or be built from multiple fields. Thereby compound indices
+from multiple fields can act as indices of single fields if only the first value in the compound
+index is looked up.
+
+Additionally, there exists a default index for all documents of a collection that indexes them
+by their object ID. This is index is entirely managed by MongoDB itself and therefore shouldn't
+be manipulated.
+
+The following additional restrictions do exist for indexes:
+
+- Only the top level fields of embedded documents are going to be indexed
+- Compound indices can only contain up to one array
+
+```javascript
+db.people.insertMany([
+    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"], "createdAt": new Date()},
+    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"], "createdAt": new Date()},
+])
+
+// get array of documents describing all existing indices
+db.people.getIndexes()
+
+// create index for single field of collection
+db.people.createIndex({"name": 1})  // in ascending order
+db.people.createIndex({"age": -1})  // in descending order
+
+// create compound index from multiple fields of collection
+db.people.createIndex({"name": 1, "age": 1})   // in ascending order
+db.people.createIndex({"name": 1, "age": -1})  // with descending order
+
+// create text index that normalizes text for querying (faster than RegEx)
+db.people.createIndex({"name": "text"})
+db.people.createIndex(
+    {"name": "text"},
+    {"defaultLanguage": "german"},                  // specify language for entire index
+)
+db.people.createIndex(
+    {"name": "text"},
+    {"languageOverride": "language"},               // set field to specify document's language
+)
+db.people.createIndex(
+    {"name": "text"},
+    {"weights": {"name": 10}},                      // specify relative weights for indexed fields
+)
+db.people.find({"$text": {"$search": "john"}})      // search for indexed text
+db.people.find({"$text": {"$search": "john -ny"}})  // exclude words in search
+db.people.find(
+    {"$text": {"$search": "john"}},
+    {"$language": "german"},                        // set search language in case of multiple
+)
+db.people.find(
+    {"$text": {"$search": "john"}},
+    {"$meta": "score"},                             // sort by matching score and add it as field
+)
+
+// delete index for field of collection
+dp.people.dropIndex({"name": 1})
+
+// create index in the background to not block operations on collection
+db.people.createIndex({"name": 1}, {"background": true})
+
+// create index which must consist of unique values (and to enforce unqie values in collections)
+db.people.createIndex({"name": 1}, {"unique": true})
+db.people.createIndex({"name": 1, "age": -1}, {"unique": true})
+
+// create partial index that only indexes collections that match filter
+// (collection scans are performed as a fallback for partial indices)
+db.people.createIndex({"name": 1}, {"partialFilterExpression": {"age": {"$gt: 18}}})
+db.people.createIndex({"name": 1, "age": -1}, {"partialFilterExpression": {"age": {"$gt: 18}}})
+
+// create time-to-live (TTL) index that deletes indexed document after certain amount of time
+// (indexed field must be of type date)
+db.people.createIndex({"createdAt": 1}, {"expireAfterSeconds": 600})
+```
+
+## 11 Schema Validation
 
 Even though MongoDB doesn't enforce schemas, documents can be validated at runtime to adhere
 to a minimum set of requirements.
