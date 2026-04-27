@@ -26,6 +26,8 @@ asynchronous environments.
 ## 1 Resources
 
 - Official MongoDB website: [MongoDB](https://www.mongodb.com/)
+- Official MongoDB repository: [mongodb/mongo](https://github.com/mongodb/mongo)
+- Official MongoDB documentation: [MongoDB Documentation](https://www.mongodb.com/docs/)
 
 ## 2 Data Model
 
@@ -75,6 +77,7 @@ MongoDB can be started with the following arguments to configure the server that
 | `--dbpath`  | Directory path | Sets the directory to store database files in            |
 | `--logpath` | Directory path | Sets the directory to store log files in                 |
 | `--fork`    | None           | Starts the server as a background process (only on Unix) |
+| `--auth`    | None           | Starts the server as an user that needs to authenticate  |
 | `--config`  | File path      | Sets a file to read additional configurations from       |
 
 Configuration files for MongoDB are conventionally named `mongod.cfg` and look like the following:
@@ -178,6 +181,23 @@ Because the MongoDB Shell is based on JavaScript, JavaScript can be executed ins
 # execute JavaScript file in MongoDB server
 mongo path/to/file.js
 ```
+
+### 3.5 Hosting
+
+The most popular way to deploy MongoDB is MongoDB Atlas, MongoDB's own managed cloud hosting
+platform. It builds upon existing cloud hosting services and offers a seamless integration
+between database development and deployment.
+
+MongoDB can be configured to use replica sets. Thereby multiple instances of MongoDB are run
+(that may run across different machines) where one acts as the primary node of the cluster.
+Data is copied from the primary node to every other node to create exact replicas, so that
+a secondary node can take over when the primary node dies or isn't available. Additionally,
+reading operations can be split between nodes to enhance their speed.
+
+There exists the option of Sharding for MongoDB servers. Thereby multiple MongoDB servers
+(called shards) are run in a cluster on different machines to horizontally scale. For this
+the data and operations are split across the cluster's servers and a central router (`mongos`)
+orchestrates the communication to and between these.
 
 ## 4 Data Types
 
@@ -309,6 +329,13 @@ Every response object of update operations contain the following fields:
 ```javascript
 // create collection
 db.createCollection("people")
+
+// create collection capped collection (clears oldest document when maximum is reached)
+db.createCollection("people", {
+    "capped": true,  // make collection capped
+    "size": 256,     // maximum number of bytes (4 per default)
+    "max": 8         // maximum number of documents (optional)
+})
 
 // insert new document into collection (and create collection when it doesn't exist)
 db.people.insertOne({"name": "John", "age": 21})
@@ -518,6 +545,33 @@ db.dropDatabase()
 
 // delete collection
 db.people.drop()
+```
+
+### 8.5 Transactions
+
+Transactions enable sequences of operations to be atomic, this means that the entire sequence
+is rolled back when one of it's operations failed. Thereby transactions are only available for
+MongoDB clusters which use replica sets or sharding.
+
+```javascript
+// create session for transaction
+const session = db.getMongo().startSession()
+
+// start transaction
+session.startTransaction()
+
+// bind collection to transaction
+const myCollection = session.getDatabases("contacts").people
+
+// define operations for transaction that don't get executed yet
+myCollection.insertOne({"name": "John", "age": 21})
+myCollection.deleteOne({"name": "John"})
+
+// execute transaction and delete it afterwards
+session.commitTransaction()
+
+// abort and delete transaction
+session.abortTransaction()
 ```
 
 ## 9 Aggregations
@@ -794,5 +848,59 @@ db.places.find({"location": {
     }}
 })
 ```
+
+## 13 User Management
+
+In MongoDB actions need to be performed by registered users that are authorized for these actions
+on specific databases. Users are stored in a database and have roles assigned that describe which
+permissions they have on their assigned databases. Thereby a root user exists per default which
+has every role.
+
+```bash
+# start MongoDB as authenticated user
+mongo --user john --password mySecretPassword --authenticationDatabase admin
+```
+
+```javascript
+// create user in current database and give it roles assigned to that database
+use admin
+db.createUser({"user": "john", "pwd": "mySecretPassword", "roles": [
+    "readWrite",                      // assign role for user's database
+    {"role": "read", "db": "people"}  // assign role for specific database
+]})
+
+// update user
+db.updateUser("john", {
+    "pwd": "newSecretPassword",  // update password
+    "roles": [                                 // replace roles
+        "read",                                // assign role for user's database
+        {"role": "readWrite", "db": "people"}  // assign role for specific database
+    ]
+})
+
+// authenticate as user in current database
+db.auth("john", "mySecretPassword")
+
+// logout as user
+db.logout()
+
+// get description of user
+db.getUser("john")
+```
+
+The following roles do exist:
+
+| Role                   | Permission                                                    |
+| :--------------------- | :------------------------------------------------------------ |
+| `root`                 | All permissions for all databases                             |
+| `read`                 | Any read operation on collections for the database            |
+| `readWrite`            | Any read and write operation on collections for the database  |
+| `dbAdmin`              | Editing the database itself                                   |
+| `userAdmin`            | Creating, editing and deleting users for the database         |
+| `dbOwner`              | All permissions for the database                              |
+| `readAnyDatabase`      | Any read operation on collections for all databases           |
+| `readWriteAnyDatabase` | Any read and write operation on collections for all databases |
+| `dbAdminAnyDatabase`   | Editing all databases                                         |
+| `userAdminAnyDatabase` | Creating, editing and deleting users for all databases        |
 
 {% endraw %}
