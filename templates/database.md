@@ -43,4 +43,12 @@ How CRUD operations are performed on the database
 
 How data relations are handled in the database.
 
+## 6 Indices
+
+How indices are created and handled in the database.
+
+## 6 Aggregations
+
+How aggregations re performed in the database.
+
 {% endraw %}
