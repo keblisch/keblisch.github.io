@@ -181,30 +181,68 @@ mongo path/to/file.js
 
 ## 4 Data Types
 
-MongoDB implements its own data types that are based on JSON, but also adds additional data types.
+The following data types are used by BSON:
 
-| Data Type          | Implementation                     | Example                 |
-| :----------------- | :--------------------------------- | :---------------------- |
-| `String`           | String of any number of characters | `"Hello!"`              |
-| `Boolean`          | Boolean true and false             | `true`, `false`         |
-| `Number`           | Any numerical value                | `4`, `3.14`             |
-| `NumberInt`        | 32 bit integer                     | `2374`                  |
-| `NumberLong`       | 64 bit integer                     | `100000000000`          |
-| `NumberDecimal`    | 64 bit floating point number       | `3.14`                  |
-| `Object`           | Documents as elements of documents | `Timestamp(123456789)`  |
-| `Array`            | Arbitrary list of values           | `Timestamp(123456789)`  |
-| `ObjectId`         | Unique id based on Unix time       | `ObjectId("1234abcd")`  |
-| `ISODate`          | Date according to ISO norm         | `ISODate("2000-12-31")` |
-| `Timestamp`        | Unix timestamp                     | `Timestamp(123456789)`  |
+| Data Type    | Implementation / Meaning              | Example                                |
+| :----------- | :------------------------------------ | :------------------------------------- |
+| `int`        | 32-bit signed integer                 | `42`                                   |
+| `long`       | 64-bit signed integer                 | `Long("426743287")`                    |
+| `double`     | 64-bit floating-point number          | `3.14`                                 |
+| `decimal128` | 128-bit decimal floating-point number | `Decimal128("3.14")`                   |
+| `bool`       | Boolean value                         | `true`, `false`                        |
+| `string`     | UTF-8 string                          | `"Hello, World"`                       |
+| `regex`      | Regular expression                    | `/^[A-Za-z0-9]+$/`                     |
+| `array`      | Ordered list of values                | `[1, 2, 3]`                            |
+| `object`     | Embedded document / key-value pairs   | `{"name": "John", "age": 21}`          |
+| `objectId`   | 12-byte unique identifier             | `ObjectId("64f1c2a9b8e7d6c5f4a3b2c1")` |
+| `date`       | UTC datetime                          | `new Date()`                           |
+| `binData`    | Binary data                           |                                        |
+| `null`       | Null value                            | `null`                                 |
+
+Because the MongoDB Shell is based on JavaScript, all values are treated as JavaScript types per
+default and have to be explicitly constructed if this is undesired.
 
 ```javascript
-// explicitly set data type of numbers
-NumberInt(142)
-NumberLong(12.78)
-NumberDecimal(1.45)
+// string
+{ value: "Hello" }
 
-// create timestamp
-new Timestamp()
+// int
+{ value: NumberInt(42) }
+
+// long
+{ value: NumberLong("426743287") }
+
+// double
+{ value: 3.14 }
+
+// decimal128
+{ value: NumberDecimal("3.14") }
+
+// bool
+{ value: true }
+{ value: false }
+
+// null
+{ value: null }
+
+// object / embedded document
+{ value: {"name": "John", "age": 21} }
+
+// array
+{ value: [1, 2, 3] }
+
+// objectId
+{ value: ObjectId("64f1c2a9b8e7d6c5f4a3b2c1") }
+
+// date
+{ value: new Date() }
+{ value: new Date("2000-12-31") }
+
+// regex
+{ value: /^[A-Za-z0-9]+$/ }
+
+// binary data
+{ value: BinData(0, "SGVsbG8=") }
 ```
 
 ## 5 Variables
