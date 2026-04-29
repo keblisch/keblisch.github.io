@@ -8,7 +8,6 @@ title: MongoDB
 {% raw %}
 
 # MongoDB
-
 {: .no_toc }
 
 MongoDB is a document based No-SQL database that is build to handle large amounts of data in
@@ -19,11 +18,10 @@ asynchronous environments.
 | BSON           | C++            | SSPL    | 8.2.7           |
 
 ## Table of Contents
-
 {: .no_toc .text-delta }
 
 - TOC
-  {:toc}
+{:toc}
 
 ## 1 Resources
 
