@@ -8,6 +8,7 @@ title: MongoDB
 {% raw %}
 
 # MongoDB
+
 {: .no_toc }
 
 MongoDB is a document based No-SQL database that is build to handle large amounts of data in
@@ -18,10 +19,11 @@ asynchronous environments.
 | BSON           | C++            | SSPL    | 8.2.7           |
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 - TOC
-{:toc}
+  {:toc}
 
 ## 1 Resources
 
@@ -272,13 +274,13 @@ later.
 
 ```javascript
 // store result of expression in variable
-var firstName = db.people.findOne().name
+var firstName = db.people.findOne().name;
 
 // store result of operation in variable
-var person = db.people.findOne()
+var person = db.people.findOne();
 
 // use variable in operation
-db.people.find({"name": firstName})
+db.people.find({ name: firstName });
 ```
 
 ## 6 Control Flow Structures
@@ -298,7 +300,7 @@ Predefined functions can be used to interact with data inside MongoDB.
 
 ```javascript
 // pretty print document as JSON
-printjson({"name": "John", "age": 21})
+printjson({ name: "John", age: 21 });
 ```
 
 ## 8 CRUD Operations
@@ -324,7 +326,7 @@ Every response object of update operations contain the following fields:
 - `acknowledged`: A boolean that signals whether the operation was successful
 - `insertedId`: An object Id from the created document (when only one document was created)
 - `insertedIds`: An array of object IDs from the created documents
-                 (when multiple documents where created)
+  (when multiple documents where created)
 
 ```javascript
 // create collection
@@ -366,97 +368,99 @@ of large amounts of data, but act like arrays in most cases.
 
 ```javascript
 db.people.insertMany([
-    {"name": "John", "age": 21, "height": 1.8, "hobbies": ["Hiking", "Chess"],},
-    {"name": "Jane", "age": 18, "height": 1.75, "hobbies": ["Jogging", "Reading"]},
-])
+    { name: "John", age: 21, height: 1.8, hobbies: ["Hiking", "Chess"] },
+    { name: "Jane", age: 18, height: 1.75, hobbies: ["Jogging", "Reading"] },
+]);
 
 // get all documents from collection
-db.people.find()
+db.people.find();
 
 // get all documents from collection that contain specified fields
-db.people.find({"name": "John"})
+db.people.find({ name: "John" });
 
 // get first document from collection that contain specified fields
-db.people.findOne({"name": "John"})
+db.people.findOne({ name: "John" });
 
 // get documents from collection that fulfill specified query operator
-db.people.find({"$age": {"$gt": 18}})              // single operator
-db.people.find({"$age": {"$gt": 18, "$ne": 100}})  // multiple operators
+db.people.find({ $age: { $gt: 18 } }); // single operator
+db.people.find({ $age: { $gt: 18, $ne: 100 } }); // multiple operators
 
 // get documents from collection that fulfill logically chained query operators
-db.people.find({"$or": [{"$age": {"$gt": 12}}, {"$age": {"$lt": 18}}]})
+db.people.find({ $or: [{ $age: { $gt: 12 } }, { $age: { $lt: 18 } }] });
 
 // get documents from collection that contain specified array elements
-db.people.find({"hobbies": "Hiking"})             // match for single element
-db.people.find({"hobbies": ["Hiking", "Chess"]})  // match for entire array
+db.people.find({ hobbies: "Hiking" }); // match for single element
+db.people.find({ hobbies: ["Hiking", "Chess"] }); // match for entire array
 
 // get documents from collection with only their projected fields
-db.people.find({"name": "John"}, {"name": 1})            // only include fields with an assigned 1
-db.people.find({"name": "John"}, {"name": 1, "_id": 0})  // exclude fields with an assigned 0
-db.people.find({}, {"age": {"$gt": 18}})             // include fields that fulfill query operator
-db.people.find({}, {"hobbies": {"$slice": 2}})       // include sliced array field
-db.people.find({}, {"hobbies": {"$slice": [1, 2]}})  // include sliced array field with offset
+db.people.find({ name: "John" }, { name: 1 }); // only include fields with an assigned 1
+db.people.find({ name: "John" }, { name: 1, _id: 0 }); // exclude fields with an assigned 0
+db.people.find({}, { age: { $gt: 18 } }); // include fields that fulfill query operator
+db.people.find({}, { hobbies: { $slice: 2 } }); // include sliced array field
+db.people.find({}, { hobbies: { $slice: [1, 2] } }); // include sliced array field with offset
 
 // sort found documents by specified fields
-db.people.find().sort({"age": 1})                // in ascending order
-db.people.find().sort({"age": -1})               // in descending order
-db.people.find().sort({"age": 1, "height": -1})  // by multiple fields
+db.people.find().sort({ age: 1 }); // in ascending order
+db.people.find().sort({ age: -1 }); // in descending order
+db.people.find().sort({ age: 1, height: -1 }); // by multiple fields
 
 // limit number of found documents
-db.people.find().limit(10)
+db.people.find().limit(10);
 
 // skip number of found documents
-db.people.find().skip(10)
+db.people.find().skip(10);
 
 // get number of found documents
-db.people.find().count()
+db.people.find().count();
 
 // pretty print found documents of cursor object
-db.people.find().pretty()
+db.people.find().pretty();
 
 // get entire result set of cursor object as array
-db.people.find().toArray()
+db.people.find().toArray();
 
 // get next document from result set of cursor object
-var result = db.people.find()
-result.next()
+var result = db.people.find();
+result.next();
 
 // check if there is a next document in result set of cursor object
-result = db.people.find()
-result.hasNext()
+result = db.people.find();
+result.hasNext();
 
 // iterate over every document from result set of cursor object
-db.people.find().forEach((person) => {printjson(person)})
+db.people.find().forEach((person) => {
+    printjson(person);
+});
 ```
 
 The following query operators are available:
 
-| Operator      | Meaning                                                         |
-| :------------ | :-------------------------------------------------------------- |
-| `$eq`         | Field should equal specified value                              |
-| `$ne`         | Field shouldn't equal specified value                           |
-| `$gt`         | Field should be greater than specified value                    |
-| `$gte`        | Field should be greater than or equal specified value           |
-| `$lt`         | Field should be less than specified value                       |
-| `$lte`        | Field should be less than or equal specified value              |
-| `$in`         | Field should be in specified array                              |
-| `$nin`        | Field shouldn't be in specified array                           |
-| `$all`        | Array field should include specified array                      |
-| `$elemMatch`  | Array field's elements should fulfill specified query operator  |
-| `$size`       | Array field should be of specified size                         |
-| `$regex`      | Field should match specified regular expression                 |
-| `$exists`     | Whether Field should exist according to boolean                 |
-| `$type`       | Field should have specified data type as string                 |
-| `$type`       | Field should have any data type in specified array              |
+| Operator     | Meaning                                                        |
+| :----------- | :------------------------------------------------------------- |
+| `$eq`        | Field should equal specified value                             |
+| `$ne`        | Field shouldn't equal specified value                          |
+| `$gt`        | Field should be greater than specified value                   |
+| `$gte`       | Field should be greater than or equal specified value          |
+| `$lt`        | Field should be less than specified value                      |
+| `$lte`       | Field should be less than or equal specified value             |
+| `$in`        | Field should be in specified array                             |
+| `$nin`       | Field shouldn't be in specified array                          |
+| `$all`       | Array field should include specified array                     |
+| `$elemMatch` | Array field's elements should fulfill specified query operator |
+| `$size`      | Array field should be of specified size                        |
+| `$regex`     | Field should match specified regular expression                |
+| `$exists`    | Whether Field should exist according to boolean                |
+| `$type`      | Field should have specified data type as string                |
+| `$type`      | Field should have any data type in specified array             |
 
 The following logical operators are available:
 
-| Operator      | Meaning                                                         |
-| :------------ | :-------------------------------------------------------------- |
-| `$or`         | Field should fulfill any specified query operator               |
-| `$nor`        | Field shouldn't fulfill any specified query operator            |
-| `$and`        | Field should fulfill every specified query operator             |
-| `$not`        | Invert effect of query operator or logical operator             |
+| Operator | Meaning                                              |
+| :------- | :--------------------------------------------------- |
+| `$or`    | Field should fulfill any specified query operator    |
+| `$nor`   | Field shouldn't fulfill any specified query operator |
+| `$and`   | Field should fulfill every specified query operator  |
+| `$not`   | Invert effect of query operator or logical operator  |
 
 ### 8.3 Update Operations
 
@@ -467,54 +471,57 @@ Every response object of update operations contain the following fields:
 - `modifiedCount`: An integer containing the number of updated documents
 - `upsertedId`: An object Id from the created document when one document was upserted
 - `upsertedIds`: An array of object IDs from the created documents
-                 when multiple documents where upserted
+  when multiple documents where upserted
 
 To query documents to update the same syntax as in read operations can be used.
 
 ```javascript
 db.people.insertMany([
-    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"],},
-    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"]},
-])
+    { name: "John", age: 21, hobbies: ["Hiking", "Chess"] },
+    { name: "Jane", age: 18, hobbies: ["Jogging", "Reading"] },
+]);
 
 // update first document in collection that matches query with specified set operator
-db.people.updateOne({"name": "John"}, {"$set": {"name": "Johnny"}})
+db.people.updateOne({ name: "John" }, { $set: { name: "Johnny" } });
 
 // update all documents in collection that matches query with specified set operator
-db.people.updateMany({"age": 21}, {"$set": {"age": 18}})
+db.people.updateMany({ age: 21 }, { $set: { age: 18 } });
 
 // update documents in collection that matches query or create them if they don't exist
-db.people.updateMany({"age": 21}, {"$set": {"age": 18}}, {"upsert": true})
+db.people.updateMany({ age: 21 }, { $set: { age: 18 } }, { upsert: true });
 
 // update all array elements of field in document that matches query
-db.people.updateMany({"name": "John"}, {"$set": {"hobbies.$[]": "Climbing"}})
+db.people.updateMany({ name: "John" }, { $set: { "hobbies.$[]": "Climbing" } });
 
 // update array elements in document that matches query
-db.people.updateMany({"elemMatch": {"$eq": "Hiking"}}, {"$set": {"hobbies.$": "Climbing"}})
+db.people.updateMany(
+    { elemMatch: { $eq: "Hiking" } },
+    { $set: { "hobbies.$": "Climbing" } },
+);
 
 // replace first document in collection that matches query with specified fields
-db.people.replaceOne({"name": "John"}, {"name": "Johnny"})
+db.people.replaceOne({ name: "John" }, { name: "Johnny" });
 
 // replace all documents in collection that matches query with specified fields
-db.people.replaceMany({"age": 21}, {"name": "Johnny"})
+db.people.replaceMany({ age: 21 }, { name: "Johnny" });
 ```
 
 The following update operators are available:
 
-| Operator      | Meaning                                                         |
-| :------------ | :-------------------------------------------------------------- |
-| `$set`        | Set Field to specified value                                    |
-| `$min`        | Set Field to specified value if it is higher than the field     |
-| `$max`        | Set Field to specified value if it is lower than the field      |
-| `$inc`        | Increment field by specified amount                             |
-| `$mul`        | Multiply field by specified amount                              |
-| `$rename`     | Rename field by specified string                                |
-| `$unset`      | Remove used field (value is irrelevant)                         |
-| `$push`       | Push value or values of `$each` operator to array field         |
-| `$addToSet`   | Push value or to array field if doesn't exist already           |
-| `$each`       | Provide elements of specified array to `$push` operator         |
-| `$pull`       | Remove specified value from array field                         |
-| `$pop`        | Remove last value from array field if value is 1 or first if -1 |
+| Operator    | Meaning                                                         |
+| :---------- | :-------------------------------------------------------------- |
+| `$set`      | Set Field to specified value                                    |
+| `$min`      | Set Field to specified value if it is higher than the field     |
+| `$max`      | Set Field to specified value if it is lower than the field      |
+| `$inc`      | Increment field by specified amount                             |
+| `$mul`      | Multiply field by specified amount                              |
+| `$rename`   | Rename field by specified string                                |
+| `$unset`    | Remove used field (value is irrelevant)                         |
+| `$push`     | Push value or values of `$each` operator to array field         |
+| `$addToSet` | Push value or to array field if doesn't exist already           |
+| `$each`     | Provide elements of specified array to `$push` operator         |
+| `$pull`     | Remove specified value from array field                         |
+| `$pop`      | Remove last value from array field if value is 1 or first if -1 |
 
 ### 8.4 Delete Operations
 
@@ -527,24 +534,24 @@ To query documents to delete the same syntax as in read operations can be used.
 
 ```javascript
 db.people.insertMany([
-    {"name": "John", "age": 21, "hobbies": ["Hiking", "Chess"],},
-    {"name": "Jane", "age": 18, "hobbies": ["Jogging", "Reading"]},
-])
+    { name: "John", age: 21, hobbies: ["Hiking", "Chess"] },
+    { name: "Jane", age: 18, hobbies: ["Jogging", "Reading"] },
+]);
 
 // delete first document in collection that matches query
-db.people.deleteOne({"name": "John"})
+db.people.deleteOne({ name: "John" });
 
 // delete all documents in collection that matches query
-db.people.deleteMany({"age": 21})
+db.people.deleteMany({ age: 21 });
 
 // delete every document in collection
-db.people.deleteMany({})
+db.people.deleteMany({});
 
 // delete database
-db.dropDatabase()
+db.dropDatabase();
 
 // delete collection
-db.people.drop()
+db.people.drop();
 ```
 
 ### 8.5 Transactions
@@ -555,23 +562,23 @@ MongoDB clusters which use replica sets or sharding.
 
 ```javascript
 // create session for transaction
-const session = db.getMongo().startSession()
+const session = db.getMongo().startSession();
 
 // start transaction
-session.startTransaction()
+session.startTransaction();
 
 // bind collection to transaction
-const myCollection = session.getDatabases("contacts").people
+const myCollection = session.getDatabases("contacts").people;
 
 // define operations for transaction that don't get executed yet
-myCollection.insertOne({"name": "John", "age": 21})
-myCollection.deleteOne({"name": "John"})
+myCollection.insertOne({ name: "John", age: 21 });
+myCollection.deleteOne({ name: "John" });
 
 // execute transaction and delete it afterwards
-session.commitTransaction()
+session.commitTransaction();
 
 // abort and delete transaction
-session.abortTransaction()
+session.abortTransaction();
 ```
 
 ## 9 Aggregations
@@ -902,5 +909,357 @@ The following roles do exist:
 | `readWriteAnyDatabase` | Any read and write operation on collections for all databases |
 | `dbAdminAnyDatabase`   | Editing all databases                                         |
 | `userAdminAnyDatabase` | Creating, editing and deleting users for all databases        |
+
+## 14 Drivers
+
+### 14.1 Python
+
+The official MongoDB driver for Python is PyMongo. Its official documentation can be read
+at [PyMongo Documentation](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/).
+
+#### 14.1.1 Installation
+
+```bash
+# install with pip
+pip install pymongo
+
+# install with poetry
+poetry add pymongo
+
+# install with uv
+uv add pymongo
+```
+
+#### 14.1.2 Clients
+
+```python
+from typing import Any
+
+from pymongo import AsyncMongoClient, MongoClient
+
+
+# create MongoDB client to server with user in specified URI
+client: MongoClient[dict[str, Any]] = MongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+
+# create asynchronous MongoDB client to server with user in specified URI
+async_client: AsyncMongoClient[dict[str, Any]] = AsyncMongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+
+
+# ping database
+client.admin.command("ping")              # synchronous
+await async_client.admin.command("ping")  # asynchronous
+
+
+# close MongoDB clients
+client.close()        # synchronous
+async_client.close()  # asynchronous
+```
+
+#### 14.1.3 Databases
+
+```python
+from typing import Any
+
+from pymongo import AsyncMongoClient, MongoClient
+from pymongo.asynchronous.database import AsyncDatabase
+from pymongo.synchronous.database import Database
+
+
+# access specific database
+database: Database[dict[str, Any]] = client["test"]                   # synchronous
+async_database: AsyncDatabase[dict[str, Any]] = async_client["test"]  # asynchronous
+
+# delete database
+client.delete_database("test")              # synchronous
+await async_client.delete_database("test")  # asynchronous
+```
+
+#### 14.1.4 Collections
+
+```python
+from typing import Any, MutableMapping
+
+from pymongo import AsyncMongoClient, MongoClient
+from pymongo.command_cursor import CommandCursor
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.command_cursor import AsyncCommandCursor
+from pymongo.asynchronous.database import AsyncDatabase
+from pymongo.synchronous.collection import Collection
+from pymongo.synchronous.database import Database
+
+
+client: MongoClient[dict[str, Any]] = MongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+async_client: AsyncMongoClient[dict[str, Any]] = AsyncMongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+
+database: Database[dict[str, Any]] = client["test"]
+async_database: AsyncDatabase[dict[str, Any]] = async_client["test"]
+
+
+# access specific collection
+collection: Collection[dict[str, Any]] = database["people"]                   # synchronous
+async_collection: AsyncCollection[dict[str, Any]] = async_database["people"]  # asynchronous
+
+# get cursor to all collections
+cursor: CommandCursor[MutableMapping[str, Any]] = database.list_collections()  # synchronous
+async_cursor: AsyncCommandCursor[MutableMapping[str, Any]] =
+    await async_database.list_collections()                                    # asynchronous
+
+# get names of all collections
+collections: list[str] = database.list_collection_names()                   # synchronous
+async_collections:list[str] = await async_database.list_collection_names()  # asynchronous
+
+# create collection
+collection = database.create_collection("animals")                         # synchronous
+async_collection = await async_database.create_collection("animals")       # asynchronous
+collection = database.create_collection("animals", capped=True, size=100)  # capped collection
+
+# delete collection
+collection.drop()              # synchronous
+await async_collection.drop()  # asynchronous
+
+# count documents in collection
+doc_count: int = collection.count_documents({})         # synchronous
+doc_count = async async_collection.count_documents({})  # asynchronous
+```
+
+#### 14.1.5 CRUD Operations
+
+```python
+from typing import Any, MutableMapping
+
+from pymongo import AsyncMongoClient, MongoClient
+from pymongo.command_cursor import CommandCursor
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.command_cursor import AsyncCommandCursor
+from pymongo.asynchronous.database import AsyncDatabase
+from pymongo.results import (
+    DeleteOneResult,
+    DeleteManyResult,
+    InsertOneResult,
+    InsertManyResult,
+    UpdateOneResult,
+    UpdateManyResult,
+    ReplaceOneResult,
+)
+from pymongo.synchronous.collection import Collection
+from pymongo.synchronous.database import Database
+
+
+client: MongoClient[dict[str, Any]] = MongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+async_client: AsyncMongoClient[dict[str, Any]] = AsyncMongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+
+database: Database[dict[str, Any]] = client["test_database"]
+async_database: AsyncDatabase[dict[str, Any]] = async_client["test_database"]
+
+collection: Collection[dict[str, Any]] = database["test_collection"]
+async_collection: AsyncCollection[dict[str, Any]] = async_database["test_collection"]
+
+
+# search single documents
+find_one_result: dict[str, Any] = collection.find_one({"name": "John"})
+
+# search multiple documents
+find_many_result: list[dict[str, Any]] = collection.find({"name": "John"})
+
+
+# insert single documents
+insert_one_result: InsertOneResult = collection.insert_one({"name": "John"})
+insert_one_result.acknowledged == True
+
+# insert multiple documents
+insert_many_result: InsertManyResult = collection.insert_many([
+    {"name": "John"}, {"name": "Jane"},
+])
+insert_many_result.acknowledged == True
+
+
+# update single documents
+update_one_result: UpdateOneResult = collection.update_one(
+    {"name": "John"}, {"$set": {"name": "Johnny"}},
+)
+update_one_result.modified_count == 1
+
+# update multiple documents
+update_many_result: UpdateManyResult = collection.update_many(
+    {"name": "John"}, {"$set": {"name": "Johnny"}},
+)
+update_many_result.modified_count == 1
+
+
+# replace single documents
+replace_one_result: ReplaceOneResult = collection.replace_one(
+    {"name": "John"}, {"name": "Johnny"},
+)
+replace_one_result.modified_count == 1
+
+
+# delete single documents
+delete_one_result: DeleteOneResult = collection.delete_one({"name": "John"})
+delete_one_result.deleted_count == 1
+
+# delete multiple documents
+delete_many_result: DeleteManyResult = collection.delete_many({"name": "John"})
+delete_many_result.deleted_count == 1
+
+
+# perform asynchronous operation
+insert_one_result = await async_collection.insert_one({"name": "John"})
+insert_one_result.acknowledged == True
+```
+
+#### 14.1.6 Indices
+
+```python
+from typing import Any, MutableMapping
+
+from pymongo import ASCENDING, DESCENDING, TEXT, AsyncMongoClient, MongoClient
+from pymongo.command_cursor import CommandCursor
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.command_cursor import AsyncCommandCursor
+from pymongo.asynchronous.database import AsyncDatabase
+from pymongo.synchronous.collection import Collection
+from pymongo.synchronous.database import Database
+
+
+client: MongoClient[dict[str, Any]] = MongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+async_client: AsyncMongoClient[dict[str, Any]] = AsyncMongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+
+database: Database[dict[str, Any]] = client["test_database"]
+async_database: AsyncDatabase[dict[str, Any]] = async_client["test_database"]
+
+collection: Collection[dict[str, Any]] = database["test_collection"]
+async_collection: AsyncCollection[dict[str, Any]] = async_database["test_collection"]
+
+
+# get cursor to all indices of collection
+cursor: CommandCursor[MutableMapping[str, Any]] = collection.list_indexes()  # synchronous
+async_cursor: AsyncCommandCursor[MutableMapping[str, Any]] = (
+    await async_collection.list_indexes()
+)                                                                            # asynchronous
+
+# get index metadata keyed by index name
+index_information: MutableMapping[str, Any] = collection.index_information()  # synchronous
+async_index_information: MutableMapping[str, Any] = (
+    await async_collection.index_information()
+)                                                                            # asynchronous
+
+
+# create single-field index
+name_index: str = collection.create_index([("name", ASCENDING)])                  # synchronous
+age_index: str = await async_collection.create_index([("age", DESCENDING)])       # asynchronous
+
+# create compound index
+compound_index: str = collection.create_index(
+    [("name", ASCENDING), ("age", DESCENDING)]
+)
+
+# create text index for text search queries
+text_index: str = collection.create_index([("name", TEXT)])
+
+# create unique index
+unique_index: str = collection.create_index([("email", ASCENDING)], unique=True)
+
+# create partial index
+partial_index: str = collection.create_index(
+    [("age", ASCENDING)],
+    partialFilterExpression={"age": {"$gt": 18}},
+)
+
+# create TTL index (field must store UTC datetime values)
+ttl_index: str = collection.create_index(
+    [("createdAt", ASCENDING)],
+    expireAfterSeconds=600,
+)
+
+
+# delete single index
+collection.drop_index(name_index)            # synchronous
+await async_collection.drop_index(age_index)  # asynchronous
+
+# delete all user-defined indices (the default _id index stays)
+collection.drop_indexes()               # synchronous
+await async_collection.drop_indexes()   # asynchronous
+```
+
+#### 14.1.7 Aggregations
+
+```python
+from typing import Any
+
+from pymongo import AsyncMongoClient, MongoClient
+from pymongo.command_cursor import CommandCursor
+from pymongo.asynchronous.collection import AsyncCollection
+from pymongo.asynchronous.command_cursor import AsyncCommandCursor
+from pymongo.asynchronous.database import AsyncDatabase
+from pymongo.synchronous.collection import Collection
+from pymongo.synchronous.database import Database
+
+
+client: MongoClient[dict[str, Any]] = MongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+async_client: AsyncMongoClient[dict[str, Any]] = AsyncMongoClient(
+    "mongodb://username:password@localhost:27017"
+)
+
+database: Database[dict[str, Any]] = client["test_database"]
+async_database: AsyncDatabase[dict[str, Any]] = async_client["test_database"]
+
+collection: Collection[dict[str, Any]] = database["test_collection"]
+async_collection: AsyncCollection[dict[str, Any]] = async_database["test_collection"]
+
+
+# define aggregation pipeline
+pipeline: list[dict[str, Any]] = [
+    { "$match": { "cuisine": "Bakery" } },
+    { "$group": { "_id": "$borough", "count": { "$sum": 1 } } },
+]
+
+# execute aggregation pipeline and get results as cursor object
+cursor: CommandCursor[dict[str, Any]] = collection.aggregate(pipeline=pipeline)  # synchronous
+async_cursor: AsyncCommandCursor[dict[str, Any]] =
+    await async_collection.aggregate(pipeline=pipeline)                          # asynchronous
+```
+
+#### 14.1.8 Typing
+
+PyMongo can be strongly typed by giving typed dictionaries as type arguments. These define the
+expected structure of documents that are worked with.
+
+```python
+from typing import TypedDict
+
+from pymongo import MongoClient
+from pymongo.database import Database
+from pymongo.collection import Collection
+
+
+# define typed dictionary as document schema
+class Person(TypedDict):
+    name: str
+    age: int
+
+
+# pass typed dictionary as type argument
+client: MongoClient[Person] = MongoClient()
+database: Database[Person] = client["test_database"]
+collection: Collection[Person] = database["test_collection"]
+```
 
 {% endraw %}
