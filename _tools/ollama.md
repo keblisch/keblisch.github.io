@@ -320,4 +320,24 @@ while True:
     )
 ```
 
+## 7 Remote Connections
+
+```python
+from ollama import ChatResponse, Client
+
+
+# create remote Ollama server connection
+client: Client = Client(host="http://my-remote-ollama-server:11434")
+
+
+# manage LLM models via remote Ollama server
+client.pull(model="gemma4:e4b")
+
+# create chat via remote Ollama server
+response: ChatResponse = client.chat(
+    model="gemma:gemma4:e4b",
+    messages=[{"role": "user", "content": "What is the capital of germany?"}],
+)
+```
+
 {% endraw %}
