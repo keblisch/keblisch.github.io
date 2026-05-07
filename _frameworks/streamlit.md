@@ -8,26 +8,30 @@ title: Streamlit
 {% raw %}
 
 # Streamlit
+
 {: .no_toc }
 
 Streamlit is an opinionated web framework for building entire web apps with minimalistic Python
 code and is mainly used for data visualization.
 
-| Language  | Implementation       | License            | Current Version |
-| :-------- | :------------------- | :----------------- | :-------------- |
-| Python    | Python<br>TypeScript | Apache-2.0 License | 1.57.0          |
+| Language | Implementation       | License            | Current Version |
+| :------- | :------------------- | :----------------- | :-------------- |
+| Python   | Python<br>TypeScript | Apache-2.0 License | 1.57.0          |
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 - TOC
-{:toc}
+  {:toc}
 
 ## 1 Resources
 
 - Official Streamlit website: [Streamlit](https://streamlit.io/)
 - Streamlit repository: [streamlit/streamlit](https://github.com/streamlit/streamlit)
 - Official Streamlit documentation: [Streamlit documentation](https://docs.streamlit.io/)
+- Official Streamlit testing cheat sheet:
+  [App testing cheat sheet](https://docs.streamlit.io/develop/concepts/app-testing/cheat-sheet)
 
 ## 2 Installation
 
@@ -357,6 +361,203 @@ with st.spinner(
 ):
     time.sleep(3)
     st.text(body="Ready!")
+```
+
+## 6 State
+
+### 6.1 Caching
+
+Streamlit can cache function calls to save computation on reruns of the script. They're only
+rerun when their passed arguments, name or code changes.
+
+```python
+from transformers import pipeline, Pipeline
+import streamlit as st
+
+
+# cache serializable data by copying its original value
+@st.cache_data
+def greet(name: str, age: int) -> str:
+    return f"Hello, I'm {name} and am {age} years old!"
+
+
+# cache unserializable data by keeping its original value
+@st.cache_resource
+def load_model(pipeline_name: str) -> Pipeline:
+    return pipeline(pipeline_name)
+```
+
+### 6.2 Database Connections
+
+Streamlit enables a shorthand way to create database connections that are cached automatically.
+
+```python
+from typing import Any
+
+import streamlit as st
+from streamlit.connections import BaseConnection
+
+
+# automatically create cached database connection based on definition in secrets.toml
+conn: BaseConnection[Any] = st.connection(name="my_database")
+
+# perform query on database connection
+data: Any = conn.query("select * from my_table")
+```
+
+Database connections can be defined inside a `.streamlit/secrets.toml` file in the following way:
+
+```toml
+[connections.my_database]
+type="sql"
+dialect="mysql"
+username="admin"
+password="password"
+host="localhost"
+port=3306
+database="my_database"
+```
+
+### 6.3 Sessions
+
+Values can be cached across an entire user session by storing them in the session state. This
+session state is unique to its according session and therefore its values aren't shared.
+
+```python
+import streamlit as st
+
+
+# create value in session state
+if "counter" not in st.session_state:
+    st.session_state["counter"] = 0  # dictionary syntax
+    st.session_state.counter = 0     # object syntax
+
+# update value in session state
+st.session_state["counter"] += 1  # dictionary syntax
+st.session_state.counter += 1     # object syntax
+
+# retrieve value from session state
+st.text(f"This page has run {st.session_state["counter"]} times.")  # dictionary syntax
+st.text(f"This page has run {st.session_state.counter} times.")     # object syntax
+```
+
+## 7 Paging
+
+Streamlit supports splitting the application into multiple pages and navigation between them.
+
+```python
+import streamlit as st
+from streamlit.navigation.page import StreamlitPage
+
+
+# define pages
+page_1: StreamlitPage = st.Page(page="path/to/page_1.py", title="Page 1", icon="🎈")
+page_2: StreamlitPage = st.Page(page=lambda: st.markdown("# Page 2"), title="Page 2", icon="❄️")
+
+# define navigation for pages
+pg: StreamlitPage = st.navigation(
+    pages=[page_1, page_2],
+    position="top",  # sidebar (default), top or hidden
+    expanded=True,   # False per default
+)
+
+# run first page in navigation
+pg.run()
+```
+
+Alternatively a `pages` directory can be created besides the entry point of the application. Every
+file in that directory is treated as a page and a navigation is created for them automatically.
+Their page name is built from the file name where each underscore is treated as a whitespace.
+
+## 8 Static Files
+
+Static file serving has to be configured in a `.streamlit/config.toml` file to be enabled. Then every file
+inside the `static` directory can be referenced as relative path and be served.
+
+The following must be configured in `.streamlit/config.toml`:
+
+```toml
+[server]
+enableStaticServing = true
+```
+
+```python
+import streamlit as st
+
+
+st.markdown(body="[![Click me](static/cat.jpg)](https://streamlit.io)")
+```
+
+## 9 Authentication
+
+Streamlit supports authentication with OIDC via external providers. These provider connections
+have to be configured inside a `.streamlit/secrets.toml` file.
+
+```python
+import streamlit as st
+
+
+if not st.user.is_logged_in:  # check whether session is authenticated
+    if st.button(label="Login"):
+        st.login(provider="my_oidc_provider")  # login using specified OIDC provider profile
+    st.stop()
+
+if st.button(label="Logout"):
+    st.logout()  # deauthenticate current session
+```
+
+OIDC provider profiles can be configured in the following way in `.streamlit/secrets.toml`:
+
+```toml
+[auth]
+redirect_uri = "http://localhost:8501/oauth2callback"  # callback URL used by identity provider
+cookie_secret = "abcdefghij0123456789"  # secret for signing auth cookie
+
+# OIDC provider profile
+[auth.providers.my_oidc_provider]
+client_id = "CLIENT_ID"  # client ID of configured provider
+client_secret = "CLIENT_SECRET"  # client secret of configured provider
+server_metadata_url = "https://some-provider/.well-known/openid-configuration" # metadata endpoint
+```
+
+## 10 Testing
+
+Streamlit supports integration tests by simulating user input in its testing framework. This
+can be integrated seamlessly into any existing testing framework like Pytest.
+
+```python
+from streamlit.testing.v1 import AppTest
+
+
+def test_increment_and_add():
+    # create simulation of specified Streamlit page
+    at: AppTest = AppTest.from_file(script_path="app.py").run()
+
+    # set secrets for simulated application
+    at.secrets["db_username"] = "john"
+    at.secrets["db_password"] = "secret_password"
+
+    # set session state for simulated application
+    at.session_state["magic_word"] = "Balloons"
+
+    # access page element
+    val: str = at.markdown[0].value      # access by its index (by rendering order)
+    val = at.markdown(key="bean").value  # access by its key (when set)
+
+    # set content of page element
+    at.markdown[0].set_value("No beans")
+
+    # simulate incrementing of number input widget
+    at.number_input[0].increment().run()
+
+    # simulate pressing of button widget
+    at.button[0].click().run()
+
+    # check for content of page element
+    assert at.markdown[0].value == "Beans counted: 1"
+
+    # access elements of page element containers
+    val = at.sidebar.checkbox[0].value
 ```
 
 {% endraw %}
