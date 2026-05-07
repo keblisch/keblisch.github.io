@@ -8,7 +8,6 @@ title: Streamlit
 {% raw %}
 
 # Streamlit
-
 {: .no_toc }
 
 Streamlit is an opinionated web framework for building entire web apps with minimalistic Python
@@ -19,11 +18,10 @@ code and is mainly used for data visualization.
 | Python   | Python<br>TypeScript | Apache-2.0 License | 1.57.0          |
 
 ## Table of Contents
-
 {: .no_toc .text-delta }
 
 - TOC
-  {:toc}
+{:toc}
 
 ## 1 Resources
 
@@ -474,18 +472,18 @@ Their page name is built from the file name where each underscore is treated as 
 Static file serving has to be configured in a `.streamlit/config.toml` file to be enabled. Then every file
 inside the `static` directory can be referenced as relative path and be served.
 
-The following must be configured in `.streamlit/config.toml`:
-
-```toml
-[server]
-enableStaticServing = true
-```
-
 ```python
 import streamlit as st
 
 
 st.markdown(body="[![Click me](static/cat.jpg)](https://streamlit.io)")
+```
+
+The following must be configured in `.streamlit/config.toml`:
+
+```toml
+[server]
+enableStaticServing = true
 ```
 
 ## 9 Authentication
