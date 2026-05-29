@@ -435,7 +435,79 @@ b = 7.8;  // defined variables
 
 #### 9.2.2 Strings
 
-...
+##### 9.2.2.1 Escape Sequences
+
+- Escape sequences are used to insert special characters into strings
+
+```c
+// use escape sequences in string
+char* greeting = "Hello!\nHow are you?\n";
+```
+
+| Escape Sequence | Meaning               |
+| :-------------- | :-------------------- |
+| `\n`            | Insert line brean     |
+| `\t`            | Insert horizontal tab |
+| `\v`            | Insert vertical tab   |
+| `\a`            | Ring system bell      |
+| `\b`            | Remove last character |
+| `\"`            | Insert double quote   |
+| `\\`            | Insert backslash      |
+
+##### 9.2.2.2 Format Strings
+
+- Format strings are strings that contain placeholders in which values with certain data types
+  can be inserted
+
+```c
+#include <stdio.h>
+
+char buffer[100];
+
+// use format string
+sprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f);  // can overflow buffer
+snprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f); // can't overflow buffer
+buffer == "3 + 4.5 = 7.5";
+```
+
+| Format Specifier | Data Type         |
+| :--------------- | :---------------- |
+| `%d`/`%i`        | Signed integers   |
+| `%u`             | Unsigned integers |
+| `%f`             | `float`           |
+| `%lf`            | `double`          |
+| `%Lf`            | `long double`     |
+| `%c`             | `char`            |
+| `%s`             | Strings           |
+
+- Format specifiers can contain conversion specifiers to specify how the inserted values
+  should be represented
+
+```c
+#include <stdio.h>
+
+char buffer[100];
+
+// specify floating-point numbers
+snprintf(buffer, "%.2f", 83.2801);   // number of decimal places
+buffer == "83.28";
+snprintf(buffer, "%10.f", 83.2801);  // minimum number of characters (left justified)
+buffer == "   83.2801";
+snprintf(buffer, "%-10.f", 83.2801); // minimum number of characters (right justified)
+buffer == "83.2801   ";
+snprintf(buffer, "%8.2f", 83.2801);  // number of decimal places and minimum number of characters
+buffer == "   83.28";
+
+// specify integers
+snprintf(buffer, "%.3d", 14);  // minimum number of digits
+buffer == "014";
+snprintf(buffer, "%5d", 14);   // minimum number of characters (left justified)
+buffer == "   14";
+snprintf(buffer, "%-5d", 14);  // minimum number of characters (left justified)
+buffer == "14   ";
+snprintf(buffer, "%5.3d", 14); // minimum number of digits and minimum number of characters
+buffer == "  014";
+```
 
 #### 9.2.3 Structs
 
@@ -721,13 +793,25 @@ int sum(int x, int y)
 
 ## 15 IO
 
-### 15.1 Terminal
+```c
+#include <stdio.h>
 
-...
+// print to terminal
+printf("Hello, World!");         // regular string
+printf("%d + %d = %d", 3, 4, 7); // format string
 
-### 15.2 Files
+// read from terminal
+int id; float nc;          // storage variables
+scanf("%d", &id);          // read input into format string and store values in storage variables
+scanf("%d:%f.", &id, &nc); // pattern match input against format string (whitespaces are ignored)
 
-...
+// check whether reading was successful
+int success = scanf("%d%f", &id, &score);
+if (!success)
+{
+    printf("Couldn't read input!");
+}
+```
 
 ## 16 Math
 
