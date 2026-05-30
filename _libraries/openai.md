@@ -84,7 +84,6 @@ response: ChatCompletion = client.chat.completions.create(
         {"role": "system", "content": "Your job is to be a helpful assistant."},
         {"role": "user", "content": "What is the capital of France?"},
     ],
-    response_format={"type": "json_object"}
 )
 
 # get text of response
@@ -134,7 +133,28 @@ response: ChatCompletion = client.chat.completions.create(
         {"role": "system", "content": "Your job is to be a helpful assistant."},
         {"role": "user", "content": "What is the capital of France?"},
     ],
-    response_format={"type": "json_object"} # enforce JSON
+    response_format={"type": "json_object"}, # enforce JSON
+)
+```
+
+### 5.3 Reasonong
+
+```python
+from openai import OpenAI
+from openai.types.chat import ChatCompletion
+
+
+client: OpenAI = OpenAI(base_url="https://api.openai.com/v1", api_key="<your-api-secret-key>")
+
+
+# define reasonong for reasonong models
+response: ChatCompletion = client.chat.completions.create(
+    model="gpt-4.1",
+    messages=[
+        {"role": "system", "content": "Your job is to be a helpful assistant."},
+        {"role": "user", "content": "What is the capital of France?"},
+    ],
+    reasonong_effort="medium", # none, minimal, low, medium, high, xhigh
 )
 ```
 
