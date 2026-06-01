@@ -585,6 +585,7 @@ buffer == "  014";
 | 12         | Logical OR                                                      |
 | 13         | Ternary Operator                                                |
 | 14         | Assignment, Compound Assignments                                |
+| 15         | Comma Operator                                                  |
 
 ```c
 // change precedence of operators
@@ -776,6 +777,18 @@ int x = 4;
 const char* answer = x > 10 ? "x is greater than 10" : "x is 10 or less";
 ```
 
+### 10.8 Comma Operator
+
+- The comma operator evaluates multiple expressions from left to right
+- The result of a comma expression is the result of its right operand
+- Commas in declarations, function calls and parameter lists are separators, not comma operators
+
+```c
+int x = 0;
+int y = (x = 3, x);
+x == 3 && y == 3;
+```
+
 ## 11 Control Flow Structures
 
 ### 11.1 Conditions
@@ -878,11 +891,112 @@ switch (x)
 
 ### 11.3 Loops
 
-...
+```c
+#include <stdio.h>
+
+// execute statement as long as condition is true (check before execution)
+int i = 0;
+while (i < 10)
+{
+    printf("%d", i);
+    ++i;
+}
+
+// execute statement as long as condition is true (execution before check)
+i = 0;
+do
+{
+    printf("%d", i);
+    ++i;
+}
+while (i < 10)
+
+// execute statement specified amount of times
+for (i = 0; i < 10; ++i) // initialization step, condition, updating step
+{
+    printf("%d", i);
+}
+
+// for-loop with omitted steps
+for (; i < 10; ++i) // no initialization takes place
+{
+    printf("%d", i + j);
+}
+for (i = 0; ; ++i)  // condition is always true
+{
+    printf("%d", i + j);
+}
+for (i = 0; i < 10;) // no updare takes place
+{
+    printf("%d", i + j);
+}
+
+// exit loop early
+while (true)
+{
+    if (i >= 10)
+    {
+        break; // loop ends immediately
+    }
+    printf("%d", i);
+    i++
+}
+
+// skip loop iterations
+while (true)
+{
+    if (i % 2 == 0)
+    {
+        continue; // start next iteration immediately
+    }
+    printf("%d", i);
+    i++
+}
+
+// loops with line statements
+while (i < 10) printf("%d", i);
+do printf("%d", i); while (i < 10)
+for (i = 0; i < 10; ++i) printf("%d", i);
+```
+
+- Since **C99** variables can be declared in the initialization step of for-loops
+  - These variables are only in the scope of the loop
+
+```c
+#include <stdio.h>
+
+for (int i = 0; i < 10; ++i)
+{
+    printf("%d", i);
+}
+```
+
+- <u>Best practices</u>:
+  - Prefer loops with compound statements over loops with line statements
+  - Declare index variables in the initialization step of for-loops
 
 ### 11.4 Jumps
 
-...
+- The `goto` statement can be used to jump to any point in a function
+
+```c
+// jump to specified label
+goto skip;
+
+int x = 1;
+
+// label to jump to
+skip:
+int x = -1;
+
+x == -1;
+```
+
+- Since **C99** the `goto` stetement can't be used to skip declarations of arrays with
+  non-constant length
+
+- <u>Best practices</u>:
+  - Avoid `goto` because they can disturb the control flow in unpredictable ways
 
 ## 12 Functions
 
