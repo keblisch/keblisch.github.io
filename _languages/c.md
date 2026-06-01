@@ -231,7 +231,7 @@ graph TD
   - `void`
   - `volative`
   - `while`
-- The following keywords were introduces in **C99**:
+- The following keywords were introduced in **C99**:
   - `inline`
   - `restrict`
   - `_Bool`
@@ -242,7 +242,7 @@ graph TD
 
 ### 5.1 Entry Point
 
-Every program must contain a `main` function as the entry point for execution:
+- Every program must contain a `main` function as the entry point for execution
 
 ```cpp
 // main with command-line arguments
@@ -270,17 +270,22 @@ int main()
   - `0` conventionally indicates success
   - Non-zero values indicate various error conditions
 
-`main` functions with implicit return value were introduced in `C99`:
+- Since **C99** main functions don't need to return values explicitly
+  - In that case `0` is returned per default
 
 ```c
+// main with implicit return statement
+int main()
+{
+    // code goes here
+}
+
 // main with implicit return value
 void main()
 {
     // code goes here
 }
 ```
-
-- If no `return` statement is present, `main` implicitly returns `0`
 
 ### 5.2 Header and Source Files
 
@@ -316,7 +321,7 @@ comment
 */
 ```
 
-Single-line comments were introduced in `C99`:
+- Single-line comments were introduced in **C99**
 
 ```c
 // This is a comment
@@ -408,10 +413,13 @@ double b, c = 1.34;  // multiple with and without initial values
 // defining variables
 x = 4;    // undefined variables
 b = 7.8;  // defined variables
+
+// chaining variable definitions
+int i = j = k = 10; // all variables have the same value
 ```
 
-- In `C89` variables can only be declared at the start of programs
-- Since `C99` variables can be declared at any point in the program
+- In **C89** variables can only be declared at the start of programs
+- Since **C99** variables can be declared at any point in the program
 
 ## 9 Constants
 
@@ -537,11 +545,22 @@ buffer == "  014";
 
 ### 10.1 Precedence
 
-| Operation   | Operator | Precedence Level |
-| :---------- | :------- | :----------------|
-| Parenthesis | `()`     | 3                |
-| Addition    | `+`      | 2                |
-| Subtraction | `-`      | 1                |
+| Precedence | Operations                                                      |
+| :--------- | :-------------------------------------------------------------- |
+| 1          | Post-Increment and -Decrement                                   |
+| 2          | Pre-Increment and -Decrement, Unary Plus, Negation, Logical NOT |
+| 3          | Multiplication, Division, Modulo                                |
+| 4          | Addition, Subtraction                                           |
+| 5          | Bitwise Shifts                                                  |
+| 6          | Greater, Greater-Equals, Less, Less-Equals                      |
+| 7          | Equality, Inequality                                            |
+| 8          | Bitwise AND                                                     |
+| 9          | Bitwise XOR                                                     |
+| 10         | Bitwise OR                                                      |
+| 11         | Logical AND                                                     |
+| 12         | Logical OR                                                      |
+| 13         | Ternary Operator                                                |
+| 14         | Assignment, Compound Assignments                                |
 
 ```c
 // change precedence of operators
@@ -553,20 +572,26 @@ buffer == "  014";
 - Arithmetic operators perform mathematical operations on numeric values
 - Arithmetic operators may cause undefined behavior withinvalid operations
 
-| Operation        | Operator | syntax  |
-| :--------------- | :------- | :------ |
-| Addition         | `+`      | `x + y` |
-| Unary Plus       | `+`      | `+x`    |
-| Subtraction      | `-`      | `x - y` |
-| Unary Minus      | `-`      | `-y`    |
-| Multiplication   | `*`      | `x * y` |
-| Division         | `/`      | `x / y` |
-| Integer Division | `/`      | `x / y` |
-| Modulo           | `%`      | `x % y` |
-| Pre-Increment    | `++`     | `++x`   |
-| Post-Increment   | `++`     | `x++`   |
-| Pre-Decrement    | `--`     | `--x`   |
-| Post-Decrement   | `--`     | `x--`   |
+| Operation        | Symbol   | Arity  | Associativity |
+| :--------------- | :------- | :----- | :------------ |
+| Addition         | `+`      | Binary | Left          |
+| Unary Plus       | `+`      | Unary  | Right         |
+| Subtraction      | `-`      | Binary | Left          |
+| Negation         | `-`      | Unary  | Right         |
+| Multiplication   | `*`      | Binary | Left          |
+| Division         | `/`      | Binary | Left          |
+| Integer Division | `/`      | Binary | Left          |
+| Modulo           | `%`      | Binary | Left          |
+| Pre-Increment    | `++`     | Unary  | Right         |
+| Post-Increment   | `++`     | Unary  | Left          |
+| Pre-Decrement    | `--`     | Unary  | Right         |
+| Post-Decrement   | `--`     | Unary  | Left          |
+
+- The use of `0` as divident in divisions causes undefined behavior
+- In **C89** the result of divisions and modulos with a negative operators is implementation
+  defined
+- Since **C99** the result of divisions and modulos with a negative operators is rounded
+  towards 0
 
 ```c
 // addition
@@ -600,14 +625,14 @@ int x = 3; x-- == 3; // pre
 
 - Comparison operators compare values and return boolean results
 
-| Operation      | Operator | syntax   |
-| :------------- | :------- | :------- |
-| Equality       | `==`     | `x == y` |
-| Inequality     | `!=`     | `x != y` |
-| Greater        | `>`      | `x > y`  |
-| Greater-Equals | `>=`     | `x >= y` |
-| Less           | `<`      | `x < y`  |
-| Less-Equals    | `<=`     | `x <= y` |
+| Operation      | Symbol   | Arity  | Associativity |
+| :------------- | :------- | :----- | :------------ |
+| Equality       | `==`     | Binary | Left          |
+| Inequality     | `!=`     | Binary | Left          |
+| Greater        | `>`      | Binary | Left          |
+| Greater-Equals | `>=`     | Binary | Left          |
+| Less           | `<`      | Binary | Left          |
+| Less-Equals    | `<=`     | Binary | Left          |
 
 ```c
 // equality
@@ -628,11 +653,11 @@ int x = 3; x-- == 3; // pre
 - Logical operators perform boolean logic operations on truth values
 - Logical AND and OR use short-circuit evaluation
 
-| Operation | Operator | syntax   |
-| :-------- | :------- | :------- |
-| AND       | `&&`     | `x && y` |
-| OR        | `││`     | `x ││ y` |
-| NOT       | `!`      | `!x`     |
+| Operation | Symbol   | Arity  | Associativity |
+| :-------- | :------- | :----- | :------------ |
+| AND       | `&&`     | Binary | Left          |
+| OR        | `││`     | Binary | Left          |
+| NOT       | `!`      | Unary  | Right         |
 
 ```c
 // AND
@@ -650,14 +675,14 @@ true ││ false == true;
 - Bitwise operators manipulate individual bits values
 - They only work with integral types
 
-| Operation   | Operator | syntax   |
-| :---------- | :------- | :------- |
-| Bitwise AND | `&`      | `x & y`  |
-| Bitwise OR  | `│`      | `x │ y`  |
-| Bitwise NOT | `~`      | `~x`     |
-| Bitwise XOR | `^`      | `x ^ y`  |
-| Left Shift  | `<<`     | `x << n` |
-| Right Shift | `>>`     | `x >> n` |
+| Operation   | Symbol   | Arity  | Associativity |
+| :---------- | :------- | :----- | :------------ |
+| Bitwise AND | `&`      | Binary | Left          |
+| Bitwise OR  | `│`      | Binary | Left          |
+| Bitwise NOT | `~`      | Unary  | Right         |
+| Bitwise XOR | `^`      | Binary | Left          |
+| Left Shift  | `<<`     | Binary | Left          |
+| Right Shift | `>>`     | Binary | Left          |
 
 ```c
 // bitwise logical operations
@@ -675,25 +700,29 @@ true ││ false == true;
 
 - Assignment operators are assigning values to variables
   - Therefore the left operand must always be a variable
+- Assignment expressions themselves are evaluating to the assigned value
 
-| Operation                   | Operator | syntax    | Example                           |
-| :-------------------------- | :------- | :-------- | :-------------------------------- |
-| Assignment                  | `=`      | `x = y`   | `x = 3; x == 3;`                  |
-| Addition Assignment         | `+=`     | `x += y`  | `x = 3; x += 4; x == 7;`          |
-| Subtraction Assignment      | `-=`     | `x -= y`  | `x = 4; x -= 3; x == 1;`          |
-| Multiplication Assignment   | `*=`     | `x *= y`  | `x = 3; x *= 4; x == 12;`         |
-| Division Assignment         | `/=`     | `x /= y`  | `x = 3.0; x /= 2.0; x == 1.5;`    |
-| Integer Division Assignment | `/=`     | `x /= y`  | `x = 3; x /= 2; x == 1;`          |
-| Modulo Assignment           | `%=`     | `x %= y`  | `x = 11; x %= 4; x == 3;`         |
-| Bitwise AND Assignment      | `&=`     | `x &= y`  | `x = 0b01; x &= 0b11; x == 0b01;` |
-| Bitwise OR Assignment       | `│=`     | `x │= y`  | `x = 0b01; x │= 0b11; x == 0b11;` |
-| Bitwise XOR Assignment      | `^=`     | `x ^= y`  | `x = 0b01; x ^= 0b11; x == 0b10;` |
-| Left Shift Assignment       | `<<=`    | `x <<= y` | `x = 0b01; x <<= 1; x == 0b10;`   |
-| Right Shift Assignment      | `>>=`    | `x >>= y` | `x = 0b10; x >>= 1; x == 0b01;`   |
+| Operation                   | Symbol   | Arity  | Associativity |
+| :-------------------------- | :------- | :----- | :------------ |
+| Assignment                  | `=`      | Binary | Right         |
+| Addition Assignment         | `+=`     | Binary | Right         |
+| Subtraction Assignment      | `-=`     | Binary | Right         |
+| Multiplication Assignment   | `*=`     | Binary | Right         |
+| Division Assignment         | `/=`     | Binary | Right         |
+| Integer Division Assignment | `/=`     | Binary | Right         |
+| Modulo Assignment           | `%=`     | Binary | Right         |
+| Bitwise AND Assignment      | `&=`     | Binary | Right         |
+| Bitwise OR Assignment       | `│=`     | Binary | Right         |
+| Bitwise XOR Assignment      | `^=`     | Binary | Right         |
+| Left Shift Assignment       | `<<=`    | Binary | Right         |
+| Right Shift Assignment      | `>>=`    | Binary | Right         |
 
 ```c
 // regular assignment
-x = 3; x == 3;
+int x = 3; x == 3;
+
+// chained assignment
+int a = b = c = 12; // all variables have the same value
 
 // arithmetic assignment
 x = 3; x += 4; x == 7;       // addition
@@ -710,6 +739,9 @@ x = 0b01; x ^= 0b11; x == 0b10; // bitwise XOR
 x = 0b01; x <<= 1; x == 0b10;   // left shift
 x = 0b10; x >>= 1; x == 0b01;   // right shift
 ```
+
+- <u>Best practices</u>
+  - Don't use assignment expressions as subexpressions
 
 ### 10.7 Ternary Operator
 
