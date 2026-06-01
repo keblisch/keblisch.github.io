@@ -435,6 +435,30 @@ int i = j = k = 10; // all variables have the same value
 | `float`  | Floating-point Number | At least 4 | `0.0f`, `3.89f`, `-12.9f` |
 | `double` | Floating-point Number | At least 8 | `0.0`, `3.89`, `-12.9`    |
 
+- Boolean values are expressed as integer values
+  - True is `1` and equivalent to any non-zero number
+  - False is `0`
+
+The following primitive data types were introduced in **C99**:
+
+| Keyword | Representation        | Byte Size  | Literals |
+| :------ | :-------------------- | :--------- | :------- |
+| `_Bool` | Boolean               | 1          | `1`, `0` |
+
+- Any non-zero value used as a `_Bool` value is converted to `1`
+- The `stdbool.h` standard library header provides the following macros:
+  - `bool` for `_Bool`
+  - `true` for `1`
+  - `false` for `0`
+
+The following primitive data types were introduced in **C23**:
+
+| Keyword | Representation        | Byte Size  | Literals        |
+| :------ | :-------------------- | :--------- | :-------------- |
+| `bool`  | Boolean               | 1          | `true`, `false` |
+
+- The `bool` values `true` and `false` are equivalent to `1` and `0`
+
 ### 9.2 Compound Data Types
 
 #### 9.2.1 Arrays
@@ -756,11 +780,101 @@ const char* answer = x > 10 ? "x is greater than 10" : "x is 10 or less";
 
 ### 11.1 Conditions
 
-...
+```c
+#include <stdio.h>
+
+int x = 10;
+
+// only execute statement when condition is true
+if (x < 0)
+{
+    printf("x is negative.\n");
+}
+// only execute statement when no prior condition was true and condition is true
+else if (x > 0)
+{
+    printf("x is positive.\n");
+}
+// only execute statement when all prior conditions were false
+else
+{
+    printf("x is 0.\n");
+}
+
+// conditions with line statements
+if (x < 0)
+    printf("x is negative.\n");
+else if (x > 0)
+    printf("x is positive.\n");
+else
+    printf("x is 0.\n");
+```
+
+- <u>Best practices</u>:
+  - Prefer conditions with compound statements over conditions with line statements
 
 ### 11.2 Switches
 
-...
+```c
+#include <stdio.h>
+
+unsigned int x = 3;
+
+// switch for specific values
+switch (x)
+{
+    // start execution here when case matches value
+    case 0:
+        printf("x is 0.\n");
+        break; // exit switch (prevents fallthrough to consecutive cases)
+    // start execution here when case matches value
+    case 1:
+        printf("x is 1.\n");
+        break; // exit switch (prevents fallthrough to consecutive cases)
+    // start execution here when case matches value
+    case 2:
+        printf("x is 2.\n");
+        break; // exit switch (prevents fallthrough to consecutive cases)
+    // optional default case
+    default:
+        printf("x is greater than 2.\n");
+}
+
+// switch for value ranges
+switch (x)
+{
+    // start execution here when any case matches value
+    case 0: case 1: case 3: case 5: case 7: case 9:
+        printf("x is odd.\n");
+        break; // exit switch (prevents fallthrough to consecutive cases)
+    // start execution here when any case matches value
+    case 2: case 4: case 6: case 8:
+        printf("x is even.\n");
+        break; // exit switch (prevents fallthrough to consecutive cases)
+    // optional default case
+    default:
+        printf("x is 10 or greater.\n");
+}
+
+// switch that executes consecutive cases
+switch (x)
+{
+    case 3:
+        printf("Tick.\n");
+    // continue execution when previous case executed
+    case 2:
+        printf("Tick.\n");
+    // continue execution when previous case executed
+    case 1:
+        printf("Tick.\n");
+    // continue execution when previous case executed
+    default:
+        printf("RING! RING! RING!\n");
+}
+```
+
+- <u>Best practices</u>:
+  - Prefer switches over long cascades of conditions that check for equality
 
 ### 11.3 Loops
 
