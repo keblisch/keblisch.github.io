@@ -366,10 +366,10 @@ Example for literals in the language
 
 ### 11.1 Precedence
 
-| Operation   | Operator | Precedence Level |
-| :---------- | :------- | :----------------|
-| Addition    | `+`      | 2                |
-| Subtraction | `-`      | 1                |
+| Precedence | Operation                        |
+| :--------- | :------------------------------- |
+| 1          | Multiplication, Division, Modulo |
+| 2          | Addition, Subtraction            |
 
 Description how operator precedence can be changed.
 
@@ -377,10 +377,10 @@ Description how operator precedence can be changed.
 
 How arithmetic operators are treated in the language.
 
-| Operation   | Operator | Syntax  |
-| :---------- | :------- | :-------|
-| Addition    | `+`      | `x + y` |
-| Subtraction | `-`      | `x - y` |
+| Operation   | Symbol | Arity  | Associativity |
+| :---------- | :----- | :----- | :------------ |
+| Addition    | `+`    | Binray | Left          |
+| Subtraction | `-`    | Binary | Left          |
 
 <u>Best practices</u>:
 - First best practice
@@ -390,10 +390,10 @@ How arithmetic operators are treated in the language.
 
 How comparison operators are treated in the language.
 
-| Operation  | Operator | Syntax   |
-| :--------- | :------- | :--------|
-| Equality   | `==`     | `x == y` |
-| Inequality | `!=`     | `x == y` |
+| Operation  | Symbol | Arity  | Associativity |
+| :--------- | :----- | :----- | :------------ |
+| Equality   | `==`   | Binary | Left          |
+| Inequality | `!=`   | Binary | Left          |
 
 <u>Best practices</u>:
 - First best practice
@@ -403,10 +403,10 @@ How comparison operators are treated in the language.
 
 How logical operators are treated in the language.
 
-| Operation | Operator | Syntax     |
-| :-------- | :------- | :----------|
-| AND       | `&&`     | `x && y`   |
-| OR        | `\|\|`   | `x \|\| y` |
+| Operation | Symbol | Arity | Associativity |
+| :-------- | :----- | :---- | :------------ |
+| AND       | `&&`   | Binary | Left         |
+| OR        | `||`   | Binary | Left         |
 
 <u>Best practices</u>:
 - First best practice
@@ -416,10 +416,10 @@ How logical operators are treated in the language.
 
 How bitwise operators are treated in the language.
 
-| Operation   | Operator | Syntax     |
-| :---------- | :------- | :----------|
-| Bitwise AND | `&`      | `x & y`    |
-| Bitwise OR  | `\|`     | `x \| y`   |
+| Operation   | Symbol | Arity  | Associativity |
+| :---------- | :----- | :----- | :------------ |
+| Bitwise AND | `&`    | Binary | Left          |
+| Bitwise OR  | `|`    | Binary | Left          |
 
 <u>Best practices</u>:
 - First best practice
@@ -429,10 +429,10 @@ How bitwise operators are treated in the language.
 
 How assignment operators are treated in the language.
 
-| Operation           | Operator | Syntax   |
-| :------------------ | :------- | :--------|
-| Assignment          | `=`      | `x = y`  |
-| Addition Assignment | `+=`     | `x += y` |
+| Operation           | Symbol | Arity  | Associativity |
+| :------------------ | :----- | :----- | :------------ |
+| Assignment          | `=`    | Binary | Right         |
+| Addition Assignment | `+=`   | Binary | Right         |
 
 <u>Best practices</u>:
 - First best practice
