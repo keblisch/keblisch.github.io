@@ -12,9 +12,9 @@ title: C
 
 Short description of the language.
 
-| Paradigms                | Typing           | Memory Management | Execution |
-| :----------------------- | :--------------- | :---------------- | :-------- |
-| Procedural<br>Imperative | Strong<br>Static | Manual            | Compiled  |
+| Current Version | Paradigms                | Typing           | Memory Management | Execution |
+| :-------------- | :----------------------- | :--------------- | :---------------- | :-------- |
+| C23             | Procedural<br>Imperative | Strong<br>Static | Manual            | Compiled  |
 
 ```c
 #include <stdio.h>
@@ -199,6 +199,7 @@ graph TD
 - Keywords are reserved identifiers with special meaning
 - The following keywords do exist:
   - `auto`
+  - `bool`
   - `break`
   - `case`
   - `char`
@@ -210,13 +211,16 @@ graph TD
   - `else`
   - `enum`
   - `extern`
+  - `false`
   - `float`
   - `for`
   - `goto`
   - `if`
+  - `inline`
   - `int`
   - `long`
   - `register`
+  - `restrict`
   - `return`
   - `short`
   - `signed`
@@ -224,24 +228,16 @@ graph TD
   - `static`
   - `struct`
   - `switch`
+  - `true`
   - `typedef`
   - `union`
   - `unsigned`
   - `void`
   - `volative`
   - `while`
-
-- The following keywords were introduced in **C99**:
-  - `inline`
-  - `restrict`
   - `_Bool`
   - `_Complex`
   - `_Imaginary`
-
-- The following keywords were introduced in **C23**:
-  - `bool`
-  - `false`
-  - `true`
 
 ## 5 Structure
 
@@ -271,11 +267,11 @@ int main()
 - The parameter `argv` provides the actual command-line arguments as an array of C-strings
   - `argv[0]` is always the program name
   - `argv[1]` through `argv[argc-1]` are the user-provided arguments
+
 - The return value is the program's exit status code
   - `0` conventionally indicates success
   - Non-zero values indicate various error conditions
-
-- Since **C99** main functions don't need to return values explicitly
+- The return value of main functions can be omitted
   - In that case `0` is returned per default
 
 ```c
@@ -318,19 +314,15 @@ void main()
 - Comments are treated as whitespace by the compiler
 
 ```c
-/* This is a comment */
+// This is a line comment
+// This is another line comment
 
+/* This is a block comment */
 /* This is
 another
+block
 comment
 */
-```
-
-- Single-line comments were introduced in **C99**
-
-```c
-// This is a comment
-// This is another comment
 ```
 
 ## 7 Preprocessor Directives
@@ -423,9 +415,6 @@ b = 7.8;  // defined variables
 int i = j = k = 10; // all variables have the same value
 ```
 
-- In **C89** variables can only be declared at the start of programs
-- Since **C99** variables can be declared at any point in the program
-
 ## 9 Constants
 
 ...
@@ -434,49 +423,30 @@ int i = j = k = 10; // all variables have the same value
 
 ### 9.1 Integrals
 
-| Keyword                                  | Representation   | Byte Size  | Literals       |
-| :--------------------------------------- | :--------------- | :--------- | :------------- |
-| `int`                                    | Integer          | 2 or 4     | `3`, `242`     |
-| `unsigned int`                           | Positive integer | 2 or 4     | `3U`, `242u`   |
-| `short int`<br>`short`                   | Integer          | 2          | -              |
-| `unsigned short int`<br>`unsigned short` | Positive integer | 2          | -              |
-| `long int`<br>`long`                     | Integer          | 4 or 8     | `3L`, `242l`   |
-| `unsigned long int`<br>`unsigned long`   | Positive integer | 4 or 8     | `3UL`, `242ul` |
-| `char`                                   | ANSI-Character   | 1          | `'a'`, `'5'`   |
+| Keyword                                          | Representation   | Byte Size  | Literals        |
+| :----------------------------------------------- | :--------------- | :--------- | :-------------- |
+| `int`                                            | Integer          | 2 or 4     | `3`, `242`      |
+| `unsigned int`                                   | Positive integer | 2 or 4     | `3U`, `242u`    |
+| `short int`<br>`short`                           | Integer          | 2          | -               |
+| `unsigned short int`<br>`unsigned short`         | Positive integer | 2          | -               |
+| `long int`<br>`long`                             | Integer          | 4 or 8     | `3L`, `242l`    |
+| `unsigned long int`<br>`unsigned long`           | Positive integer | 4 or 8     | `3UL`, `242ul`  |
+| `long long int`<br>`long long`                   | Integer          | 8          | `3LL`, `2ll`    |
+| `unsigned long long int`<br>`unsigned long long` | Positive integer | 8          | `3ULL`, `2ull`  |
+| `char`                                           | ANSI character   | 1          | `'a'`, `'5'`    |
+| `bool`                                           | Boolean          | 1          | `true`, `false` |
 
-- Boolean values are expressed as integer values
-  - True is `1` and equivalent to any non-zero number
-  - False is `0`
+- The `bool` values `true` and `false` are equivalent to the `int` values `1` and `0`
+  - Additionally any non-zero evaluates to `true` in context of `bool`
 
 The base of integer literals can be specified with the following prefixes:
 
-| Prefix | Base | Literals                |
-| :----- | :--- | :---------------------- |
-| -      | 10   | `4`, `-18L`, `13U`      |
-| `0`    | 8    | `04`, `-022L`, `015U`   |
-| `0x`   | 16   | `0x4`, `-0x12L`, `0xdU` |
-
-The following integrals were introduced in **C99**:
-
-| Keyword                                       | Representation   | Byte Size  | Literals       |
-| :-------------------------------------------- | :--------------- | :--------- | :------------- |
-| `long long int`/`long long`                   | Integer          | 8          | `3LL`, `2ll`   |
-| `unsigned long long int`/`unsigned long long` | Positive integer | 8          | `3ULL`, `2ull` |
-| `_Bool`                                       | Boolean          | 1          | `1`, `0`       |
-
-- Any non-zero value used as a `_Bool` value is converted to `1`
-- The `stdbool.h` standard library header provides the following macros:
-  - `bool` for `_Bool`
-  - `true` for `1`
-  - `false` for `0`
-
-The following integrals were introduced in **C23**:
-
-| Keyword | Representation        | Byte Size  | Literals        |
-| :------ | :-------------------- | :--------- | :-------------- |
-| `bool`  | Boolean               | 1          | `true`, `false` |
-
-- The `bool` values `true` and `false` are equivalent to `1` and `0`
+| Prefix | Base | Literals                     |
+| :----- | :--- | :--------------------------- |
+| -      | 10   | `4`, `-18L`, `13U`           |
+| `0b`   | 2    | `0b101`, `-0b101L`, `0b101U` |
+| `0`    | 8    | `04`, `-022L`, `015U`        |
+| `0x`   | 16   | `0x4`, `-0x12L`, `0xdU`      |
 
 ### 9.2 Floating-Point Numbers
 
@@ -648,10 +618,7 @@ buffer == "  014";
 | Post-Decrement   | `--`     | Unary  | Left          |
 
 - The use of `0` as divident in divisions causes undefined behavior
-- In **C89** the result of divisions and modulos with a negative operators is implementation
-  defined
-- Since **C99** the result of divisions and modulos with a negative operators is rounded
-  towards 0
+- The result of divisions and modulos with a negative operators is rounded towards 0
 
 ```c
 // addition
@@ -947,7 +914,7 @@ do
 while (i < 10)
 
 // execute statement specified amount of times
-for (i = 0; i < 10; ++i) // initialization step, condition, updating step
+for (int i = 0; i < 10; ++i) // initialization step, condition, updating step
 {
     printf("%d", i);
 }
@@ -957,11 +924,11 @@ for (; i < 10; ++i) // no initialization takes place
 {
     printf("%d", i + j);
 }
-for (i = 0; ; ++i)  // condition is always true
+for (int i = 0; ; ++i)  // condition is always true
 {
     printf("%d", i + j);
 }
-for (i = 0; i < 10;) // no updare takes place
+for (int i = 0; i < 10;) // no updare takes place
 {
     printf("%d", i + j);
 }
@@ -994,18 +961,6 @@ do printf("%d", i); while (i < 10)
 for (i = 0; i < 10; ++i) printf("%d", i);
 ```
 
-- Since **C99** variables can be declared in the initialization step of for-loops
-  - These variables are only in the scope of the loop
-
-```c
-#include <stdio.h>
-
-for (int i = 0; i < 10; ++i)
-{
-    printf("%d", i);
-}
-```
-
 - <u>Best practices</u>:
   - Prefer loops with compound statements over loops with line statements
   - Declare index variables in the initialization step of for-loops
@@ -1013,6 +968,7 @@ for (int i = 0; i < 10; ++i)
 ### 11.4 Jumps
 
 - The `goto` statement can be used to jump to any point in a function
+  - But it can't be used to skip declarations of arrays with non-constant length
 
 ```c
 // jump to specified label
@@ -1026,9 +982,6 @@ int x = -1;
 
 x == -1;
 ```
-
-- Since **C99** the `goto` stetement can't be used to skip declarations of arrays with
-  non-constant length
 
 - <u>Best practices</u>:
   - Avoid `goto` because they can disturb the control flow in unpredictable ways
