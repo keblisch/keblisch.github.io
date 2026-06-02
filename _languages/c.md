@@ -19,10 +19,9 @@ Short description of the language.
 ```c
 #include <stdio.h>
 
-int main(int argc, char* argv[])
+void main()
 {
     printf("Hello, World!\n");
-    return 0;
 }
 ```
 
@@ -231,12 +230,18 @@ graph TD
   - `void`
   - `volative`
   - `while`
+
 - The following keywords were introduced in **C99**:
   - `inline`
   - `restrict`
   - `_Bool`
   - `_Complex`
   - `_Imaginary`
+
+- The following keywords were introduced in **C23**:
+  - `bool`
+  - `false`
+  - `true`
 
 ## 5 Structure
 
@@ -427,23 +432,37 @@ int i = j = k = 10; // all variables have the same value
 
 ## 9 Data Types
 
-### 9.1 Primitive Data Types
+### 9.1 Integrals
 
-| Keyword  | Representation        | Byte Size  | Literals                  |
-| :------- | :-------------------- | :--------- | :------------------------ |
-| `int`    | Integer               | At least 4 | `0`, `45`, `-12`          |
-| `float`  | Floating-point Number | At least 4 | `0.0f`, `3.89f`, `-12.9f` |
-| `double` | Floating-point Number | At least 8 | `0.0`, `3.89`, `-12.9`    |
+| Keyword                                  | Representation   | Byte Size  | Literals       |
+| :--------------------------------------- | :--------------- | :--------- | :------------- |
+| `int`                                    | Integer          | 2 or 4     | `3`, `242`     |
+| `unsigned int`                           | Positive integer | 2 or 4     | `3U`, `242u`   |
+| `short int`<br>`short`                   | Integer          | 2          | -              |
+| `unsigned short int`<br>`unsigned short` | Positive integer | 2          | -              |
+| `long int`<br>`long`                     | Integer          | 4 or 8     | `3L`, `242l`   |
+| `unsigned long int`<br>`unsigned long`   | Positive integer | 4 or 8     | `3UL`, `242ul` |
+| `char`                                   | ANSI-Character   | 1          | `'a'`, `'5'`   |
 
 - Boolean values are expressed as integer values
   - True is `1` and equivalent to any non-zero number
   - False is `0`
 
-The following primitive data types were introduced in **C99**:
+The base of integer literals can be specified with the following prefixes:
 
-| Keyword | Representation        | Byte Size  | Literals |
-| :------ | :-------------------- | :--------- | :------- |
-| `_Bool` | Boolean               | 1          | `1`, `0` |
+| Prefix | Base | Literals                |
+| :----- | :--- | :---------------------- |
+| -      | 10   | `4`, `-18L`, `13U`      |
+| `0`    | 8    | `04`, `-022L`, `015U`   |
+| `0x`   | 16   | `0x4`, `-0x12L`, `0xdU` |
+
+The following integrals were introduced in **C99**:
+
+| Keyword                                       | Representation   | Byte Size  | Literals       |
+| :-------------------------------------------- | :--------------- | :--------- | :------------- |
+| `long long int`/`long long`                   | Integer          | 8          | `3LL`, `2ll`   |
+| `unsigned long long int`/`unsigned long long` | Positive integer | 8          | `3ULL`, `2ull` |
+| `_Bool`                                       | Boolean          | 1          | `1`, `0`       |
 
 - Any non-zero value used as a `_Bool` value is converted to `1`
 - The `stdbool.h` standard library header provides the following macros:
@@ -451,7 +470,7 @@ The following primitive data types were introduced in **C99**:
   - `true` for `1`
   - `false` for `0`
 
-The following primitive data types were introduced in **C23**:
+The following integrals were introduced in **C23**:
 
 | Keyword | Representation        | Byte Size  | Literals        |
 | :------ | :-------------------- | :--------- | :-------------- |
@@ -459,15 +478,16 @@ The following primitive data types were introduced in **C23**:
 
 - The `bool` values `true` and `false` are equivalent to `1` and `0`
 
-### 9.2 Compound Data Types
+### 9.2 Floating-Point Numbers
 
-#### 9.2.1 Arrays
+| Keyword             | Representation        | Byte Size  |
+| :------------------ | :-------------------- | :--------- |
+| `float`             | Floating-point Number | At least 4 |
+| `double`            | Floating-point Number | At least 8 |
 
-...
+### 9.3 Strings
 
-#### 9.2.2 Strings
-
-##### 9.2.2.1 Escape Sequences
+#### 9.3.1 Escape Sequences
 
 - Escape sequences are used to insert special characters into strings
 
@@ -486,7 +506,7 @@ char* greeting = "Hello!\nHow are you?\n";
 | `\"`            | Insert double quote   |
 | `\\`            | Insert backslash      |
 
-##### 9.2.2.2 Format Strings
+#### 9.3.2 Format Strings
 
 - Format strings are strings that contain placeholders in which values with certain data types
   can be inserted
@@ -502,15 +522,28 @@ snprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f); // can't overflow buffer
 buffer == "3 + 4.5 = 7.5";
 ```
 
-| Format Specifier | Data Type         |
-| :--------------- | :---------------- |
-| `%d`/`%i`        | Signed integers   |
-| `%u`             | Unsigned integers |
-| `%f`             | `float`           |
-| `%lf`            | `double`          |
-| `%Lf`            | `long double`     |
-| `%c`             | `char`            |
-| `%s`             | Strings           |
+| Format Specifier | Data Type                         |
+| :--------------- | :-------------------------------- |
+| `%d`<br>`%i`     | `int` with base 10                |
+| `%u`             | `unsigned int` with base 10       |
+| `%o`             | `unsigned int` with base 8        |
+| `%x`<br>`%X`     | `unsigned int` with base 16       |
+| `%hd`<br>`%hi`   | `short` with base 10              |
+| `%hu`            | `unsigned short` with base 10     |
+| `%ho`            | `unsigned short` with base 8      |
+| `%hx`<br>`%hX`   | `unsigned short` with base 16     |
+| `%ld`<br>`%li`   | `long` with base 10               |
+| `%lu`            | `unsigned long` with base 10      |
+| `%lo`            | `unsigned long` with base 8       |
+| `%lx`<br>`%lX`   | `unsigned long` with base 16      |
+| `%lld`<br>`%lli` | `long long` with base 10          |
+| `%llu`           | `unsigned long long` with base 10 |
+| `%llo`           | `unsigned long long` with base 8  |
+| `%llx`<br>`%llX` | `unsigned long long` with base 16 |
+| `%f`             | `float`, `double`                 |
+| `%Lf`            | `long double`                     |
+| `%c`             | `char`                            |
+| `%s`             | `char*`                           |
 
 - Format specifiers can contain conversion specifiers to specify how the inserted values
   should be represented
@@ -541,29 +574,31 @@ snprintf(buffer, "%5.3d", 14); // minimum number of digits and minimum number of
 buffer == "  014";
 ```
 
-#### 9.2.3 Structs
+### 9.4 Structs
 
 ...
 
-#### 9.2.4 Enums
+### 9.5 Enums
 
 ...
 
-### 9.3 Type Aliases
+### 9.6 Type Aliases
 
 ...
 
-### 9.4 Type Conversion
+### 9.7 Type Conversion
 
 ...
 
-### 9.5 Type Casting
+### 9.8 Type Casting
 
 ...
 
-### 9.6 Type Size
+### 9.9 Type Size
 
-...
+- Integer overflows are handled in the following ways:
+  - Overflows of signed integers cause undefined behavior
+  - Overflows of unsigned integers perform a modulo operation with their bit-size on them
 
 ## 10 Operators
 
