@@ -421,23 +421,20 @@ int i = j = k = 10; // all variables have the same value
 
 ## 9 Data Types
 
-### 9.1 Integrals
+### 9.1 Arithmetic Types
 
-| Keyword                                          | Representation   | Byte Size  | Literals        |
-| :----------------------------------------------- | :--------------- | :--------- | :-------------- |
-| `int`                                            | Integer          | 2 or 4     | `3`, `242`      |
-| `unsigned int`                                   | Positive integer | 2 or 4     | `3U`, `242u`    |
-| `short int`<br>`short`                           | Integer          | 2          | -               |
-| `unsigned short int`<br>`unsigned short`         | Positive integer | 2          | -               |
-| `long int`<br>`long`                             | Integer          | 4 or 8     | `3L`, `242l`    |
-| `unsigned long int`<br>`unsigned long`           | Positive integer | 4 or 8     | `3UL`, `242ul`  |
-| `long long int`<br>`long long`                   | Integer          | 8          | `3LL`, `2ll`    |
-| `unsigned long long int`<br>`unsigned long long` | Positive integer | 8          | `3ULL`, `2ull`  |
-| `char`                                           | ANSI character   | 1          | `'a'`, `'5'`    |
-| `bool`                                           | Boolean          | 1          | `true`, `false` |
+#### 9.1 Integers
 
-- The `bool` values `true` and `false` are equivalent to the `int` values `1` and `0`
-  - Additionally any non-zero evaluates to `true` in context of `bool`
+| Keyword                                                                        | Representation   | Byte Size | Literals       |
+| :----------------------------------------------------------------------------- | :--------------- | :-------- | :------------- |
+| `int`<br>`signed int`                                                          | Integer          | 2 or 4    | `3`, `242`     |
+| `unsigned int`                                                                 | Positive integer | 2 or 4    | `3U`, `242u`   |
+| `short int`<br>`short`<br>`signed short int`<br>`signed short`                 | Integer          | 2         | -              |
+| `unsigned short int`<br>`unsigned short`                                       | Positive integer | 2         | -              |
+| `long int`<br>`long`<br>`signed long int`<br>`signed long`                     | Integer          | 4 or 8    | `3L`, `242l`   |
+| `unsigned long int`<br>`unsigned long`                                         | Positive integer | 4 or 8    | `3UL`, `242ul` |
+| `long long int`<br>`long long`<br>`signed long long int`<br>`signed long long` | Integer          | 8         | `3LL`, `2ll`   |
+| `unsigned long long int`<br>`unsigned long long`                               | Positive integer | 8         | `3ULL`, `2ull` |
 
 The base of integer literals can be specified with the following prefixes:
 
@@ -448,35 +445,68 @@ The base of integer literals can be specified with the following prefixes:
 | `0`    | 8    | `04`, `-022L`, `015U`        |
 | `0x`   | 16   | `0x4`, `-0x12L`, `0xdU`      |
 
-### 9.2 Floating-Point Numbers
+#### 9.2 Characters
 
-| Keyword             | Representation        | Byte Size  |
-| :------------------ | :-------------------- | :--------- |
-| `float`             | Floating-point Number | At least 4 |
-| `double`            | Floating-point Number | At least 8 |
+| Keyword         | Representation  | Byte Size | Literals     |
+| :-------------- | :-------------- | :-------- | :----------- |
+| `char`          | ASCII character | 1         | `'a'`, `'5'` |
+| `signed char`   | ASCII character | 1         | `'a'`, `'5'` |
+| `unsigned char` | ASCII character | 1         | `'a'`, `'5'` |
 
-### 9.3 Strings
+- `char` values are equivalent to integers representing their ASCII value
+  - Therefore they can be operated on as integers
+  - Thereby their signedness is implementation defined
 
-#### 9.3.1 Escape Sequences
+Characters can be escape sequences that represent special and non-printable characters:
 
-- Escape sequences are used to insert special characters into strings
+| Escape Sequence | Meaning                |
+| :-------------- | :--------------------- |
+| `\n`            | Insert line break      |
+| `\r`            | Insert carriage return |
+| `\t`            | Insert horizontal tab  |
+| `\v`            | Insert vertical tab    |
+| `\a`            | Ring system bell       |
+| `\b`            | Remove last character  |
+| `\'`            | Insert singe quote     |
+| `\"`            | Insert double quote    |
+| `\\`            | Insert backslash       |
 
 ```c
-// use escape sequences in string
-char* greeting = "Hello!\nHow are you?\n";
+// Insert character represented by numeric code
+'\101' == 'A'; // octal numeric escape
+'\x41' == 'A'; // hexadecimal numeric escape
 ```
 
-| Escape Sequence | Meaning               |
-| :-------------- | :-------------------- |
-| `\n`            | Insert line brean     |
-| `\t`            | Insert horizontal tab |
-| `\v`            | Insert vertical tab   |
-| `\a`            | Ring system bell      |
-| `\b`            | Remove last character |
-| `\"`            | Insert double quote   |
-| `\\`            | Insert backslash      |
+Characters can be checked and mapiulated with the `ctype` standard library:
 
-#### 9.3.2 Format Strings
+```c
+#include <ctype.h>
+
+// change letter case (when applicable)
+toupper('a') == 'A';
+tolower('A') == 'a';
+```
+
+#### 9.3 Booleans
+
+| Keyword | Representation | Byte Size | Literals        |
+| :------ | :------------- | :-------- | :-------------- |
+| `bool`  | Boolean        | 1         | `true`, `false` |
+
+- Boolean values are expressed as integers where true is represented as `1`
+  and false is represented as `0`
+  - Additionally any non-zero value expresses true
+  - Thereby the `bool` type is a macro that aliases `1` and `0` as `true` and `false`
+
+#### 9.4 Floating-Point Numbers
+
+| Keyword             | Representation | Byte Size  | Literals               |
+| :------------------ | :------------- | :--------- | :--------------------- |
+| `float`             | Real number    | At least 4 | `3.14F`, `4.f`, `.65f` |
+| `double`            | Real number    | At least 8 | `3.14`, `4.`, `.65`    |
+| `long double`       | Real number    | At least 8 | `3.14L`, `4.l`, `.65l` |
+
+### 9.3 Strings
 
 - Format strings are strings that contain placeholders in which values with certain data types
   can be inserted
@@ -1044,20 +1074,33 @@ int sum(int x, int y)
 ```c
 #include <stdio.h>
 
-// print to terminal
+// print strings to stdout
 printf("Hello, World!");         // regular string
 printf("%d + %d = %d", 3, 4, 7); // format string
 
-// read from terminal
+// print single character to stdout
+putchar('A');
+
+// read strings from stdin
 int id; float nc;          // storage variables
 scanf("%d", &id);          // read input into format string and store values in storage variables
 scanf("%d:%f.", &id, &nc); // pattern match input against format string (whitespaces are ignored)
 
-// check whether reading was successful
+// check whether input reading was successful
 int success = scanf("%d%f", &id, &score);
 if (!success)
 {
     printf("Couldn't read input!");
+}
+
+// read single character from stdin
+int in = getchar();
+
+// read all characters from stdin
+int c;
+while ((c = getchar()) != EOF)
+{
+    putchar(c);
 }
 ```
 
