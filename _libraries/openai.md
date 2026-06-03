@@ -137,7 +137,7 @@ response: ChatCompletion = client.chat.completions.create(
 )
 ```
 
-### 5.3 Reasonong
+### 5.3 Reasoning
 
 ```python
 from openai import OpenAI
@@ -156,6 +156,94 @@ response: ChatCompletion = client.chat.completions.create(
     ],
     reasonong_effort="medium", # none, minimal, low, medium, high, xhigh
 )
+```
+
+## 6 Tool Calls
+
+```python
+import json
+from typing import Any, cast
+
+from openai.types.chat import (
+    ChatCompletion,
+    ChatCompletionFunctionToolParam,
+    ChatCompletionMessage,
+    ChatCompletionMessageParam,
+)
+from openai.types.shared_params import FunctionDefinition
+
+
+# define arbitrary function as tool
+def shout(phrase: str) -> str:
+    return phrase.upper() + "!"
+
+
+# describe tool for LLM
+shout_tool: FunctionDefinition = {
+    "name": "shout",
+    "description": "Convert a phrase to uppercase and append an exclamation mark.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "phrase": {
+                "type": "string",
+                "description": "The phrase to convert.",
+            },
+        },
+        "required": ["phrase"],
+        "additionalProperties": False,
+    },
+}
+
+
+client: OpenAI = OpenAI(base_url="https://api.openai.com/v1", api_key="<your-api-secret-key>")
+
+history: list[ChatCompletionMessageParam] = [
+    {"role": "user", "content": "Please shout the phrase: \"Hello, World\""},
+]
+
+# provide tools for client
+tools: list[ChatCompletionFunctionToolParam] = [{"type": "function", "function": shout_tool}]
+
+completion: ChatCompletion = client.chat.completions.create(
+    model="gpt-4.1-nano",
+    messages=history,
+    tools=tools,
+)
+
+
+# handle tool calls as long as LLM calls tools
+while completion.choices[0].finish_reason == "tool_calls":
+    message: ChatCompletionMessage = completion.choices[0].message
+
+    # handle all tool calls
+    for tool_call in message.tool_calls or []:
+
+        # handle specific tool call
+        if tool_call.type == "function" and tool_call.function.name == "shout":
+            arguments: dict[str, Any] = json.loads(tool_call.function.arguments)
+            phrase: str = arguments.get("phrase", "")
+
+            # tool message
+            tool_message: ChatCompletionMessageParam = {
+                "role": "tool",
+                "content": shout(phrase=phrase),
+                "tool_call_id": tool_call.id,
+            }
+
+            # add tool call to context
+            history.append(cast(ChatCompletionMessageParam, message))
+            history.append(tool_message)
+
+    # generate response from tool result
+    completion = client.chat.completions.create(
+        model="gpt-4.1-nano",
+        messages=history,
+        tools=tools,
+    )
+
+
+print(completion.choices[0].message.content)
 ```
 
 {% endraw %}
