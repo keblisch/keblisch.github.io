@@ -423,18 +423,34 @@ int i = j = k = 10; // all variables have the same value
 
 ### 9.1 Arithmetic Types
 
-#### 9.1 Integers
+#### 9.1.1 Integers
 
-| Keyword                                                                        | Representation   | Byte Size | Literals       |
-| :----------------------------------------------------------------------------- | :--------------- | :-------- | :------------- |
-| `int`<br>`signed int`                                                          | Integer          | 2 or 4    | `3`, `242`     |
-| `unsigned int`                                                                 | Positive integer | 2 or 4    | `3U`, `242u`   |
-| `short int`<br>`short`<br>`signed short int`<br>`signed short`                 | Integer          | 2         | -              |
-| `unsigned short int`<br>`unsigned short`                                       | Positive integer | 2         | -              |
-| `long int`<br>`long`<br>`signed long int`<br>`signed long`                     | Integer          | 4 or 8    | `3L`, `242l`   |
-| `unsigned long int`<br>`unsigned long`                                         | Positive integer | 4 or 8    | `3UL`, `242ul` |
-| `long long int`<br>`long long`<br>`signed long long int`<br>`signed long long` | Integer          | 8         | `3LL`, `2ll`   |
-| `unsigned long long int`<br>`unsigned long long`                               | Positive integer | 8         | `3ULL`, `2ull` |
+| Keyword                                                                        | Representation   | Byte Size         | Literals       |
+| :----------------------------------------------------------------------------- | :--------------- | :---------------- | :------------- |
+| `int`<br>`signed int`                                                          | Integer          | Probably 4        | `3`, `242`     |
+| `unsigned int`                                                                 | Positive integer | Probably 4        | `3U`, `242u`   |
+| `short int`<br>`short`<br>`signed short int`<br>`signed short`                 | Integer          | Probably 2        | -              |
+| `unsigned short int`<br>`unsigned short`                                       | Positive integer | Probably 2        | -              |
+| `long int`<br>`long`<br>`signed long int`<br>`signed long`                     | Integer          | Probably 4 or 8   | `3L`, `242l`   |
+| `unsigned long int`<br>`unsigned long`                                         | Positive integer | Probably 4 or 8   | `3UL`, `242ul` |
+| `long long int`<br>`long long`<br>`signed long long int`<br>`signed long long` | Integer          | Probably 8        | `3LL`, `2ll`   |
+| `unsigned long long int`<br>`unsigned long long`                               | Positive integer | Probably 8        | `3ULL`, `2ull` |
+| `size_t`                                                                       | Positive integer | Architecture size | `SIZE_C(24)`   |
+
+The `stdint.h` standard library provides the following additional integer types:
+
+| Keyword     | Representation   | Byte Size    | Literals       |
+| :---------- | :--------------- | :----------- | :------------- |
+| `int8_t`    | Integer          | 1            | `INT8_C(-17)`  |
+| `uint8_t`   | Positive integer | 1            | `UINT8_C(17)`  |
+| `int16_t`   | Integer          | 2            | `INT16_C(-17)` |
+| `uint16_t`  | Positive integer | 2            | `UINT16_C(17)` |
+| `int32_t`   | Integer          | 4            | `INT32_C(-17)` |
+| `uint32_t`  | Positive integer | 4            | `UINT32_C(17)` |
+| `int64_t`   | Integer          | 8            | `INT64_C(-17)` |
+| `uint64_t`  | Positive integer | 8            | `UINT64_C(17)` |
+| `intptr_t`  | Integer          | Pointer size | -              |
+| `uintptr_t` | Positive integer | Pointer size | -              |
 
 The base of integer literals can be specified with the following prefixes:
 
@@ -445,7 +461,11 @@ The base of integer literals can be specified with the following prefixes:
 | `0`    | 8    | `04`, `-022L`, `015U`        |
 | `0x`   | 16   | `0x4`, `-0x12L`, `0xdU`      |
 
-#### 9.2 Characters
+- Integer overflows are handled in the following ways:
+  - Overflows of signed integers cause undefined behavior
+  - Overflows of unsigned integers perform a modulo operation with their bit-size on them
+
+#### 9.1.2 Characters
 
 | Keyword         | Representation  | Byte Size | Literals     |
 | :-------------- | :-------------- | :-------- | :----------- |
@@ -487,7 +507,7 @@ toupper('a') == 'A';
 tolower('A') == 'a';
 ```
 
-#### 9.3 Booleans
+#### 9.1.3 Booleans
 
 | Keyword | Representation | Byte Size | Literals        |
 | :------ | :------------- | :-------- | :-------------- |
@@ -498,7 +518,7 @@ tolower('A') == 'a';
   - Additionally any non-zero value expresses true
   - Thereby the `bool` type is a macro that aliases `1` and `0` as `true` and `false`
 
-#### 9.4 Floating-Point Numbers
+#### 9.1.4 Floating-Point Numbers
 
 | Keyword             | Representation | Byte Size  | Literals               |
 | :------------------ | :------------- | :--------- | :--------------------- |
@@ -506,7 +526,13 @@ tolower('A') == 'a';
 | `double`            | Real number    | At least 8 | `3.14`, `4.`, `.65`    |
 | `long double`       | Real number    | At least 8 | `3.14L`, `4.l`, `.65l` |
 
-### 9.3 Strings
+### 9.2 Compound Types
+
+#### 9.2.1 Arrays
+
+...
+
+#### 9.2.2 Strings
 
 - Format strings are strings that contain placeholders in which values with certain data types
   can be inserted
@@ -574,31 +600,59 @@ snprintf(buffer, "%5.3d", 14); // minimum number of digits and minimum number of
 buffer == "  014";
 ```
 
-### 9.4 Structs
+#### 9.2.3 Structs
 
 ...
 
-### 9.5 Enums
+#### 9.2.4 Enums
 
 ...
 
-### 9.6 Type Aliases
+#### 9.2.5 Unions
 
 ...
 
-### 9.7 Type Conversion
+### 9.3 Type Aliases
 
-...
+- Type aliases allow to define existing types with custom identifiers
+  - These are still equivalent to their original types
 
-### 9.8 Type Casting
+```c
+typedef unsigned char byte;
+byte x = 127; // unsigned char
+```
 
-...
+### 9.4 Type Conversion
 
-### 9.9 Type Size
+- Values are implicitly converted to other data types in the following situations:
+  - The operands of an operation have different data types
+  - A value has a different data type than the variable it is assigned to
+  - An argument has a different data type than its corresponding parameter
+  - A returned value has a different data type than the function's return type
+- Values are implicitly converted in the following ways:
+  - Smaller types are converted into larger types
+  - Integrals are converted into floating-point numbers
+  - Other conversions are possible, but may cause errors
 
-- Integer overflows are handled in the following ways:
-  - Overflows of signed integers cause undefined behavior
-  - Overflows of unsigned integers perform a modulo operation with their bit-size on them
+### 9.5 Type Casting
+
+```c
+// cast floating-point number into integral
+(int) 3.14 == 3;
+
+// cast larger type into smaller type
+short x = (short) 31721;
+```
+
+### 9.6 Type Size
+
+```c
+// get number of bytes for expression
+size_t expressionSize = sizeof(13);
+
+// get number of bytes for data type
+size_t typeSize = sizeof(int);
+```
 
 ## 10 Operators
 
