@@ -85,9 +85,9 @@ import gradio as gr
 # define callback for chats
 def chat(
     message: str,                   # user prompt to sent
-    history: list[dict[str, str]],  # OpenAI API conform chat history to use
+    history: list[dict[str, str]],  # OpenAI API conform chat history to store messages
 ) -> str:
-    return "understood."  # assistant response to send
+    return "understood."  # assistant response to send (could be iterator of streamed response)
 
 
 # define chat interface for chat callback
