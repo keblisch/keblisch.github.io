@@ -198,4 +198,39 @@ mardown: gr.Markdown = gr.Markdown(
 )
 ```
 
+## 7 Custom Layouts
+
+```python
+import gradio as gr
+
+
+# define callback to model
+def greet(name: str) -> str:
+    return f"Hello, my name is {name}!"
+
+
+# define interface with custom layout
+with gr.Blocks() as app:
+    # define row
+    with gr.Row():
+        # define column
+        with gr.Column():
+            name_widget: gr.Text = gr.Text(label="Your name")
+
+        # define column
+        with gr.Column():
+            greet_widget: gr.Text = gr.Text(label="Your greeting")
+
+        # define submit functionality for input widget
+        name_widget.submit(
+            fn=greet,
+            inputs=[name_widget],
+            outputs=[greet_widget],
+        ).then(fn=lambda: print("Submitted!"))  # optionally define submit hook
+
+
+# launch application
+app.launch()
+```
+
 {% endraw %}
