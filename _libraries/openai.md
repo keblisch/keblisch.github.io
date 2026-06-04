@@ -67,7 +67,7 @@ context: list[ChatCompletionMessageParam] = [
 ]
 ```
 
-## 5 Response Generation
+## 5 Text Generation
 
 ```python
 from openai import OpenAI
@@ -158,7 +158,48 @@ response: ChatCompletion = client.chat.completions.create(
 )
 ```
 
-## 6 Tool Calls
+## 6 Image Generation
+
+```python
+import base64
+
+from openai import OpenAI
+from openai.types.images_response import ImagesResponse
+
+
+# generate image
+response: ImagesResponse = client.images.generate(
+    model="gpt-image-1-mini",        # model to use
+    prompt="An image of an otter.",  # prompt for image generation
+    size="1024x1024",                # image dimensions to use
+    output_format="jpeg",            # image file format to use
+    n=1,                             # number of images to generate
+)
+
+# process generated image
+if response.data:
+    image_base64: str = response.data[0].b64_json or ""   # get raw response as base64 data
+    image_data: bytes = base64.b64decode(s=image_base64)  # decode base64 data into bytes
+```
+
+## 7 Text to Speech
+
+```python
+from openai import OpenAI, HttpxBinaryResponseContent
+
+
+# generate audio from text
+response: HttpxBinaryResponseContent = client.audio.speech.create(
+    model="gpt-4o-mini-tts",      # model to use
+    input="Hello! How are you?",  # text to transform into speech
+    voice="alloy",                # voice to use
+)
+
+# process generated audio
+audio_data: bytes =  response.content
+```
+
+## 8 Tool Calls
 
 ```python
 import json
