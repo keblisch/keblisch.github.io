@@ -308,6 +308,17 @@ void main()
   - `bin/`: Executable binaries
   - `test/`: Test files
 
+### 5.4 File Structure
+
+- The following file structure convention exists:
+  1. File imports
+  2. Macro definitions
+  3. Type definitions
+  4. Global variable definitions
+  5. Function declarations
+  6. Definition of `main`
+  7. Function definitions
+
 ## 6 Comments
 
 - Comments are text annotations in source code that aren't processed
@@ -421,7 +432,7 @@ int i = j = k = 10; // all variables have the same value
 
 ## 9 Data Types
 
-### 9.1 Arithmetic Types
+### 9.1 Scalar Types
 
 #### 9.1.1 Integers
 
@@ -530,7 +541,43 @@ tolower('A') == 'a';
 
 #### 9.2.1 Arrays
 
-...
+- Arrays are continous areas of memory in which multiple values can be stored
+- Arrays are syntactic sugar for pointers pointing to their first element
+  - Therefore array indexing is syntactic sugar for pointer arithmetic
+  - Therefore their bounds are unchecked
+- Arrays have a fixed length and data type for their elements
+  - Their length can be set at runtime when used in functions and don't have
+    static storage duration
+
+```c
+// declare empty array
+int a[5];    // specify data type of elements and number of elements
+int m[3][5]; // multidimensional array
+
+// initialize array with elements
+int b[5] = {1, 2, 3, 4, 5};
+int c[] = {1, 2, 3, 4, 5}; // deduce array length from initialization list
+int n[3][5] = {            // multidimensional array
+    {1, 2, 3, 4, 5},
+    {5, 4, 3, 2, 1},
+    {5, 1, 4, 2, 3}
+};
+
+// initialize array with zero values
+int d[5] = {1, 2, 3};            // fill remaining elements with 0
+int e[5] = {0};                  // fill all elements with 0
+int f[5] = {[0] = -1, [4] = 12}; // assign values to specific indices and fill rest with 0
+
+// access array elements by their index (zero-indexed)
+int x = b[0]; // get array element
+b[0] = -1;    // set array element
+n[0][3] = 12; // multidimensional array
+
+// get byte size of array
+size_t arrayBytes = sizeof(b);                         // array size
+size_t arrayElementBytes = sizeof(b[0]);               // array element size
+size_t arrayElements = arrayBytes / arrayElementBytes; // calculate array size
+```
 
 #### 9.2.2 Strings
 
@@ -1086,6 +1133,7 @@ int sum(int x, int y)
 
 // call function
 sum(4, 7) == 11;
+(void) sum(4, 7); // explicitly discard return value
 
 // define function with no return value or parameters
 void greet()
@@ -1096,6 +1144,8 @@ void greet()
 // call function with no return value or parameters
 greet();
 ```
+
+### 12.1 Function Declarations
 
 - Functions can be declared before they're defined later
   - This allows for separation of interface and implementation
@@ -1113,6 +1163,54 @@ int sum(int x, int y)
 {
     return x + y;
 }
+```
+
+### 12.2 Array Parameters
+
+```c
+// define array length as other argument
+int sum(int n, int a[n])
+{
+    int result = 0;
+    for (int i = 0; i < n; i++)
+    {
+        result += a[i];
+    }
+    return result;
+}
+
+// guarantee that the passed arrays has the specified minimum length
+int diff(int n, int a[static n])
+{
+    int result = 0;
+    for (int i = 0; i < n; i++)
+    {
+        result -= a[i];
+    }
+    return result;
+}
+
+// pass compound literal to create array in function call
+int result = sum(5, (int[]){1, 2, 3, 4, 5});
+```
+
+### 12.3 Static Local Variables
+
+- Static local variables are preserved between function calls
+
+```c
+int count(int n)
+{
+    // declare static variable
+    static int counter = 0; // declaration only takes place once
+    counter += n;           // variable is updated on each call
+
+    return counter;
+}
+
+// update static local variable on each call
+count(3) == 3;
+count(4) == 7;
 ```
 
 ## 13 Error Handling
@@ -1160,7 +1258,17 @@ while ((c = getchar()) != EOF)
 
 ## 16 Math
 
-...
+### 16.1 Random Number Generation
+
+```c
+#include <stdlib.h> // import srand and rand
+#include <time.h>   // import time
+
+// set seed for RNG
+srand(time(NULL)); // set seed to current time for ever changing seed
+
+int rng = rand(); // generate random integer
+```
 
 ## 17 Time and Date
 
@@ -1168,7 +1276,18 @@ while ((c = getchar()) != EOF)
 
 ## 18 System
 
-...
+### 18.1 Terminate Program
+
+```c
+#include <stdlib.h> // import exit and its macros
+
+// terminate program immediately
+exit(0); // specify status code of program
+
+// macros for status codes
+exit(EXIT_SUCCESS); // successful program run
+exit(EXIT_FAILURE); // failed program run
+```
 
 ## 19 Threads
 
