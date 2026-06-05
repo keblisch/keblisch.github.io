@@ -617,6 +617,7 @@ buffer == "3 + 4.5 = 7.5";
 | `%Lf`            | `long double`                     |
 | `%c`             | `char`                            |
 | `%s`             | `char*`                           |
+| `%p`             | `void*`                           |
 
 - Format specifiers can contain conversion specifiers to specify how the inserted values
   should be represented
@@ -1165,7 +1166,44 @@ int sum(int x, int y)
 }
 ```
 
-### 12.2 Array Parameters
+### 12.2 Pass by Reference
+
+- Function arguments and returns are passed by value
+  - Therefore values are copied when passed to and returned by functions
+  - Therefore functions can't modify their arguments
+- Parameters and return values can be defined as pointers to pass values by reference
+
+```c
+// define function with reference parameter
+void inc(int* n)
+{
+    ++(*n);
+}
+
+// pass argument by reference
+int x = 1;
+inc(&x);
+x == 2;
+
+// define function with unmutable reference parameter
+int dereference(const int* n)
+{
+    return *n;
+}
+
+// define function that returns pointer
+int* getCounter()
+{
+    static int x = 0;
+    return &x;
+}
+```
+
+- <u>Best practices</u>:
+  - Use reference parameters to pass large compound values
+  - Make reference parameters immutable when they don't need to be modified
+
+### 12.3 Array Parameters
 
 ```c
 // define array length as other argument
@@ -1194,7 +1232,7 @@ int diff(int n, int a[static n])
 int result = sum(5, (int[]){1, 2, 3, 4, 5});
 ```
 
-### 12.3 Static Local Variables
+### 12.4 Static Local Variables
 
 - Static local variables are preserved between function calls
 
@@ -1218,6 +1256,62 @@ count(4) == 7;
 ...
 
 ## 14 Memory Management
+
+### 14.1 Pointers
+
+- Pointers are variables that store memory addresses
+
+```c
+// declare pointer
+int* a;
+
+// get memory address of variable
+int b = 10;
+&b; // get memory address
+
+// initialize pointer
+int c = 9;
+int* d = &c; // initialize pointer with memory address
+
+// dereference pointers
+int e = 12;
+int* f = &e;
+*e == 12; // read value at pointed memory address
+*e = 20;  // modify value at pointed memory address
+
+// use null pointer
+int* g = NULL; // points to nothing
+g == NULL;     // check if pointer is null
+//*g;          // dereferencing causes error
+
+// make pointers immutable
+int h = 8;
+const int* i = &h;       // make value at pointed memory address immutable
+int* const j = &h;       // make pointer itself immutable
+const int* const k = &h; // make value at pointed memory address and pointer itself immutable
+
+// use pointers to pointers
+int l = 3;
+int* m = &j;  // pointer
+int** n = &k; // pointer to pointer
+int o = **k;  // dereference pointer to pointer
+
+// perform pointer arithmetic
+int* p = 12;
+p += 1; // move pointed memory address up
+p -= 1; // move pointed memory address down
+
+// use void pointers (generic pointer type)
+int q = 5;
+void* r = &q;     // point to any type
+int s = *(int*)r; // must cast before dereferencing
+```
+
+<u>Best practices</u>:
+  - Use null pointers instead of pointer declaration
+  - Avoid pointer arithmetic
+
+### 14.2 Memory Allocation
 
 ...
 
