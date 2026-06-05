@@ -577,6 +577,13 @@ n[0][3] = 12; // multidimensional array
 size_t arrayBytes = sizeof(b);                         // array size
 size_t arrayElementBytes = sizeof(b[0]);               // array element size
 size_t arrayElements = arrayBytes / arrayElementBytes; // calculate array size
+
+// access array as pointer
+int* g = b; // degrade array to pure pointer
+
+// index array via pointer arithmetic
+int h = *(b + 2); // get third array element
+*(b + 1) = -1;    // set second array element
 ```
 
 #### 9.2.2 Strings
@@ -1200,10 +1207,13 @@ int* getCounter()
 ```
 
 - <u>Best practices</u>:
-  - Use reference parameters to pass large compound values
+  - Use reference parameters to pass large structs
   - Make reference parameters immutable when they don't need to be modified
 
 ### 12.3 Array Parameters
+
+- Arrays passed as arguments are degraded to pure pointers
+  - Therefore there size can't be calculated with `sizeof` inside functions
 
 ```c
 // define array length as other argument
@@ -1298,8 +1308,9 @@ int o = **k;  // dereference pointer to pointer
 
 // perform pointer arithmetic
 int* p = 12;
-p += 1; // move pointed memory address up
-p -= 1; // move pointed memory address down
+p += 1;    // move pointed memory address up
+p -= 1;    // move pointed memory address down
+p < p + 1; // compare pointers (lower means prior memory address)
 
 // use void pointers (generic pointer type)
 int q = 5;
