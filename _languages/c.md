@@ -21,7 +21,7 @@ Short description of the language.
 
 void main()
 {
-    printf("Hello, World!\n");
+    puts("Hello, World!");
 }
 ```
 
@@ -246,15 +246,7 @@ graph TD
 - Every program must contain a `main` function as the entry point for execution
 
 ```cpp
-// main with command-line arguments
-int main(int argc, char* argv[])
-{
-    // code goes here
-
-    return 0;
-}
-
-// main without command-line arguments
+// start execution here
 int main()
 {
     // code goes here
@@ -263,14 +255,26 @@ int main()
 }
 ```
 
-- The parameter `argc` provides the count of command-line arguments
-- The parameter `argv` provides the actual command-line arguments as an array of C-strings
-  - `argv[0]` is always the program name
-  - `argv[1]` through `argv[argc-1]` are the user-provided arguments
+#### 5.1.1 Status Code
 
 - The return value is the program's exit status code
   - `0` conventionally indicates success
   - Non-zero values indicate various error conditions
+- The `stdlib.h` library provides macros for status codes
+
+```c
+#include <stdlib.h> // import status code macros
+
+int main()
+{
+    // indicate successful program run
+    return EXIT_SUCCESS; // 0
+
+    // indicate failed program run
+    return EXIT_FAILURE; // 1
+}
+```
+
 - The return value of main functions can be omitted
   - In that case `0` is returned per default
 
@@ -285,6 +289,22 @@ int main()
 void main()
 {
     // code goes here
+}
+```
+
+#### 5.1.2 Command-Line Arguments
+
+- Command-line arguments can be defined as parameters of the `main` function
+  - The actual command-line arguments are then passed as arguments
+- The parameter `argc` provides the count of command-line arguments
+- The parameter `argv` provides the actual command-line arguments as an array of strings
+  - `argv[0]` is always the program name
+  - `argv[1]` through `argv[argc-1]` are the user-provided arguments
+
+```c
+int main(int argc, char* argv[])
+{
+    return 0;
 }
 ```
 
@@ -543,6 +563,7 @@ tolower('A') == 'a';
 
 - Arrays are continous areas of memory in which multiple values can be stored
 - Arrays are syntactic sugar for pointers pointing to their first element
+  - Therefore all rules applying to pointers are also applying to arrays
   - Therefore array indexing is syntactic sugar for pointer arithmetic
   - Therefore their bounds are unchecked
 - Arrays have a fixed length and data type for their elements
@@ -583,10 +604,28 @@ int* g = b; // degrade array to pure pointer
 
 // index array via pointer arithmetic
 int h = *(b + 2); // get third array element
+
 *(b + 1) = -1;    // set second array element
 ```
 
 #### 9.2.2 Strings
+
+- Strings are syntactic sugar for arrays of characters (`char*` or `char[]`)
+  - Therefore all rules applying to arrays are also applying to strings
+  - Thereby their last character is the null terminator `\0` to determine the end of the string
+
+```c
+// create string
+char* firstName = "John";                     // from string literal
+char[] lastName = {'J', 'o', 'h', 'n', '\0'}; // from character array
+
+// use multi-line string
+char* description = "This is "
+                    "a description "
+                    "that I provide.";
+```
+
+##### 9.2.2.1 Format Strings
 
 - Format strings are strings that contain placeholders in which values with certain data types
   can be inserted
@@ -594,9 +633,10 @@ int h = *(b + 2); // get third array element
 ```c
 #include <stdio.h>
 
+// buffer for format string
 char buffer[100];
 
-// use format string
+// create format string
 sprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f);  // can overflow buffer
 snprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f); // can't overflow buffer
 buffer == "3 + 4.5 = 7.5";
@@ -653,6 +693,41 @@ snprintf(buffer, "%-5d", 14);  // minimum number of characters (left justified)
 buffer == "14   ";
 snprintf(buffer, "%5.3d", 14); // minimum number of digits and minimum number of characters
 buffer == "  014";
+
+// specify strings
+snprintf(buffer, "%5s", "Hi");             // minimum number of characters (left justified)
+buffer == "   Hi";
+snprintf(buffer, "%-5s", "Hi");            // minimum number of characters (right justified)
+buffer == "Hi   ";
+snprintf(buffer, "%.5s", "Hello, World!"); // number of characters
+buffer == "Hello";
+```
+
+##### 9.2.2.2 String Processing
+
+- The `string.h` standard library provides functions to process strings
+
+```c
+#include <string.h>
+
+// get string length (excluding null terminator)
+size_t length = strlen("Hello!");
+length == 6;
+
+// compare string contents lexicographically
+strcmp("Hello", "Hello") == 0;
+strcmp("HELLO", "hello") == -32; // difference of first different characters
+strcmp("hello", "HELLO") == 32;  // difference of first different characters
+
+// copy string contents
+char name[100];                        // storage buffer
+name = strcpy(name, "John Doe");       // copy second into first string (may overflow)
+name = strncpy(name, "John Doe", 100); // copy second into first string up to specified limit
+
+// concatenate string contents
+char abc[100] = "abc";          // storage buffer
+abc = strcat(abc, "def");       // concatenate second into first string (may overflow)
+abc = strncat(abc, "def", 100); // concatenate second into first string up to specified limit
 ```
 
 #### 9.2.3 Structs
@@ -1328,17 +1403,40 @@ int s = *(int*)r; // must cast before dereferencing
 
 ## 15 IO
 
+### 15.1 Output
+
 ```c
 #include <stdio.h>
 
-// print strings to stdout
-printf("Hello, World!");         // regular string
-printf("%d + %d = %d", 3, 4, 7); // format string
+// print string to stdout
+puts("Hello, World!"); // append newline character
 
 // print single character to stdout
 putchar('A');
 
-// read strings from stdin
+// print format strings to stdout
+printf("Hello, World!\n");
+printf("%d + %d = %d\n", 3, 4, 7);
+```
+
+### 15.2 Input
+
+```c
+// read string from stdin
+char name[100];          // storage buffer
+fgets(name, 100, stdin); // read specified amount of characters into buffer
+
+// read single character from stdin
+int in = getchar(); // store character as ASCII value
+
+// read all characters from stdin
+int c; // storage variable
+while ((c = getchar()) != EOF)
+{
+    putchar(c);
+}
+
+// read format strings from stdin
 int id; float nc;          // storage variables
 scanf("%d", &id);          // read input into format string and store values in storage variables
 scanf("%d:%f.", &id, &nc); // pattern match input against format string (whitespaces are ignored)
@@ -1348,16 +1446,6 @@ int success = scanf("%d%f", &id, &score);
 if (!success)
 {
     printf("Couldn't read input!");
-}
-
-// read single character from stdin
-int in = getchar();
-
-// read all characters from stdin
-int c;
-while ((c = getchar()) != EOF)
-{
-    putchar(c);
 }
 ```
 
