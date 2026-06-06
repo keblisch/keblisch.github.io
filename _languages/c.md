@@ -405,27 +405,100 @@ The following syntax is supported by most modern compilers as a compiler-extensi
 ### 7.3 Macros
 
 ```c
+#include <stdio.h>
+
 // define macros
 #define PI 3.14159
 #define MAX_SIZE 100
+#define DEBUG // empty macro
 
-// define function macros
-#define SQUARE(x) (x * x)
-#define MAX(a, b) ((a) > (b) ? (a) : (b)) // parentheses prevent precedence issues
+// define parameterized macros
+#define SQUARE(x) ((x) * (x))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))          // parentheses prevent precedence issues
+#define LOG(format, ...) puts(format, __VA_ARGS__) // variadic macro parameters
 
-// using macros
-int area = SQUARE(5);      // expands to ((5) * (5))
-int maximum = MAX(10, 20); // expands to ((10) > (20) ? (10) : (20))
+// use parameterized macros
+int area = SQUARE(5);            // expands to ((5) * (5))
+int maximum = MAX(10, 20);       // expands to ((10) > (20) ? (10) : (20))
+char *name = TO_STRING(example); // expands to "example"
+
+// define parameterized macros with macro operators
+#define TO_STRING(x) #x   // stringify macro argument
+#define JOIN(a, b) a ## b // concatenate tokens
+
+// use parameterized macros with macro operators
+int JOIN(my, Value) = 42; // expands to int myValue = 42;
+LOG("%s mode\n", MODE);   // expands to printf("%s mode\n", MODE)
 
 // undefine macros
 #undef PI
 #undef SQUARE
+
+// check whether macros are defined
+defined(DEBUG) == true;
 ```
 
 <u>Best practices</u>:
   - Prefer `const` variables over macros when possible
   - Use constant case for macro identifiers
   - Always use parentheses in macro expressions to avoid precedence issues
+
+### 7.4 Predefined Macros
+
+- Predefined macros can be used to get information about the program and compilatio at runtime
+
+| Macro      | Definition                       |
+| :--------- | :------------------------------- |
+| `__FILE__` | Current file name                |
+| `__LINE__` | Current line number              |
+| `__DATE__` | Compilation date (mm dd yyyy)    |
+| `__TIME__` | Compilation time (hh:mm:ss)      |
+| `__STDC__` | Used C standard (C89, C99, etc.) |
+
+### 7.5 Conditional Compilation
+
+```c
+#include <stdio.h>
+
+// compile code only if macro is defined
+#ifdef DEBUG
+    puts("Debug Mode!");
+#endif
+
+// compile code only if macro is not defined
+#ifndef DEBUG
+    puts("Release Mode!");
+#endif
+
+// compile code conditionally
+#if defined(WINDOWS)
+    puts("Windows");
+#elif defined(LINUX)
+    puts("Linux");
+#else
+    puts("Unknown platform");
+#endif
+```
+
+### 7.6 Error and Warning Generation
+
+```c
+// generate compiler error
+#error This configuration is not supported
+
+// generate compiler warning
+#warning This feature is deprecated
+```
+
+### 7.7 Preprocessor Manipulation
+
+```c
+// define current line number (continuous)
+#line 10
+
+// define current line number (continuous) and file name
+#line 10 foo.c
+```
 
 ## 8 Variables
 
@@ -1334,6 +1407,20 @@ int count(int n)
 // update static local variable on each call
 count(3) == 3;
 count(4) == 7;
+```
+
+### 12.5 Metadata
+
+```c
+#include <stdio.h>
+
+char* log()
+{
+    // get identifier of currently executing function
+    char* func = __func__;
+
+    return func;
+}
 ```
 
 ## 13 Error Handling
