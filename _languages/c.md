@@ -311,7 +311,7 @@ int main(int argc, char* argv[])
 ### 5.2 Header and Source Files
 
 - C code can be organized into header files and source files
-  - Header files contain declarations and constants
+  - Header files contain declarations, constants and macros
   - Source files contain definitions
   - This separation allows for the separation of interface and implementation
 - File extensions don't affect compilation, but the following conventions exist:
@@ -517,11 +517,26 @@ b = 7.8;  // defined variables
 
 // chaining variable definitions
 int i = j = k = 10; // all variables have the same value
+
+// access global variable from other file
+extern int n; // uses same memory space as already declared external global variable
+
+// prevent global variable from being accessed in other files
+static int counter = 0;
 ```
+
+<u>Best practices</u>:
+  - Identifiers of variables should be written in camel case (except for structs)
 
 ## 9 Constants
 
-...
+```c
+// declare immutable constant (must be initialized)
+const int MAX_SIZE = 100;
+```
+
+<u>Best practices</u>:
+  - Identifiers of constants should be written in constant case
 
 ## 9 Data Types
 
@@ -1300,6 +1315,9 @@ void greet()
 // call function with no return value or parameters
 greet();
 ```
+
+<u>Best practices</u>:
+  - Identifiers of functions should be written in camel case
 
 ### 12.1 Function Declarations
 
