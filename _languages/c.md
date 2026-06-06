@@ -669,13 +669,16 @@ int c[] = {1, 2, 3, 4, 5}; // deduce array length from initialization list
 int n[3][5] = {            // multidimensional array
     {1, 2, 3, 4, 5},
     {5, 4, 3, 2, 1},
-    {5, 1, 4, 2, 3}
+    {5, 1, 4, 2, 3},
 };
+
+// compound literal to assign after initialization
+c = (int[]){1, 2, 3, 4, 5};
 
 // initialize array with zero values
 int d[5] = {1, 2, 3};            // fill remaining elements with 0
 int e[5] = {0};                  // fill all elements with 0
-int f[5] = {[0] = -1, [4] = 12}; // assign values to specific indices and fill rest with 0
+int f[5] = {[0] = -1, [4] = 12}; // designated initilization to specific indices
 
 // access array elements by their index (zero-indexed)
 int x = b[0]; // get array element
@@ -764,31 +767,31 @@ char buffer[100];
 
 // specify floating-point numbers
 snprintf(buffer, "%.2f", 83.2801);   // number of decimal places
-buffer == "83.28";
+buffer; // "83.28"
 snprintf(buffer, "%10.f", 83.2801);  // minimum number of characters (left justified)
-buffer == "   83.2801";
+buffer; // "   83.2801"
 snprintf(buffer, "%-10.f", 83.2801); // minimum number of characters (right justified)
-buffer == "83.2801   ";
+buffer; // "83.2801   "
 snprintf(buffer, "%8.2f", 83.2801);  // number of decimal places and minimum number of characters
-buffer == "   83.28";
+buffer; // "   83.28"
 
 // specify integers
 snprintf(buffer, "%.3d", 14);  // minimum number of digits
-buffer == "014";
+buffer; // "014"
 snprintf(buffer, "%5d", 14);   // minimum number of characters (left justified)
-buffer == "   14";
+buffer; // "   14"
 snprintf(buffer, "%-5d", 14);  // minimum number of characters (left justified)
-buffer == "14   ";
+buffer; // "14   "
 snprintf(buffer, "%5.3d", 14); // minimum number of digits and minimum number of characters
-buffer == "  014";
+buffer; // "  014"
 
 // specify strings
 snprintf(buffer, "%5s", "Hi");             // minimum number of characters (left justified)
-buffer == "   Hi";
+buffer; // "   Hi"
 snprintf(buffer, "%-5s", "Hi");            // minimum number of characters (right justified)
-buffer == "Hi   ";
+buffer; // "Hi   "
 snprintf(buffer, "%.5s", "Hello, World!"); // number of characters
-buffer == "Hello";
+buffer; // "Hello"
 ```
 
 ##### 9.2.2.2 String Processing
@@ -820,15 +823,186 @@ abc = strncat(abc, "def", 100); // concatenate second into first string up to sp
 
 #### 9.2.3 Structs
 
-...
+- Structs are user-defined types that group related values as members
+  - Thereby structs build their own scope for their members
+- Structs are continuous areas of memory in which all their members are stored
+
+```c
+// declare unique structs
+struct
+{
+    const char* name;
+    int age;
+} john, jane;
+
+// declare structs with tag for reusability
+struct Person
+{
+    const char* name;
+    int age;
+} alice, bob;
+struct Person charlie; // use struct tag as type
+
+// define struct as type
+typedef struct
+{
+    const char* name;
+    int age;
+} Person;
+Person max;
+
+// initialize structs
+Person moritz = {"Moritz", 18};              // positional initialization
+Person maria = {.name = "Maria", .age = 20}; // designated initialization to specific memebers
+
+// compound literal to assign after initialization
+maria = (Person){.name = "Maria", .age = 20};
+
+// access struct members
+moritz.age == 18;           // get struct member
+moritz.name = "Maximilian"; // assign to struct member
+
+// use pointers to structs
+Person* ptr = &moritz;
+(*ptr).age = 32;   // dereference pointer to struct before member access
+ptr->name = "Moe"; // automatically dereference pointer to struct
+```
+
+<u>Best practices</u>:
+  - Identifiers of structs should be written in Pascal case
+  - Members of structs should be written in camel case
 
 #### 9.2.4 Enums
 
-...
+- Enums are user-defined types that group discrete sets of values as members
+  - Thereby only one member can be active at any given time
+  - Thereby their underlying values are starting from `0` and count upwards
+  - Thereby their underlying data type is `int`
+
+```c
+#include <stdio.h>
+
+// declare unique enums
+enum
+{
+    RED,   // 0
+    GREEN, // 1
+    BLUE,  // 2
+} c1, c2;
+
+// declare enum with custom values
+enum
+{
+    RED = 0,
+    GREEN = 1,
+    BLUE = -1,
+} c3;
+
+// declare enuma with tag for reusability
+enum Color
+{
+    RED,
+    GREEN,
+    BLUE,
+} c4, c5;
+enum Color c6; // use enum tag as type
+
+// define enum as type
+typedef enum
+{
+    RED,
+    GREEN,
+    BLUE,
+} Color;
+Color c7; // use enum as type
+
+// assign enum values
+c7 = RED;   // set enum value
+c7 == BLUE; // get enum value
+c7 = 1;     // equivalent to setting member with according value
+
+// use enum in switch statement
+switch (c7)
+{
+    case RED:
+        puts("red");
+        break;
+    case GREEN:
+        puts("green");
+        break;
+    case BLUE:
+        puts("blue");
+        break;
+}
+```
+
+<u>Best practices</u>:
+  - Identifiers of enums should be written in Pascal case
+  - Identifiers of enum members should be written in constant case
+  - Enum members should be prefixed to avoid naming conflicts in the surrounding scope
 
 #### 9.2.5 Unions
 
-...
+- Unions are user-defined types that store multiple values at the same memory location as members
+  - Thereby only one member can hold a value at any given time
+  - Thereby unions build their own scope for their members
+- The size of unions equal the size of their largest member
+
+```c
+// declare unique unions
+union
+{
+    int intValue;
+    float floatValue;
+    char charValue;
+} data1, data2;
+
+// declare unions with tag for reusability
+union Number
+{
+    int i;
+    float f;
+    double d;
+} n1, n2;
+union Number n3; // use union tag as type
+
+// define union as type
+typedef union
+{
+    int i;
+    float f;
+    double d;
+} Number;
+Number n4;
+
+// initialize unions
+Number n5 = {42};          // positional initialization to first member
+Number n6 = {.f = 3.14f};  // designated initialization to specific member
+
+// compound literal to assign after initialization
+n6 = (Number){.d = 2.718};
+
+// access union members
+n5.i == 100; // get union member
+n5.f = 3.14; // assign to union member (activates according member)
+
+// track active union member with discriminator
+typedef struct
+{
+    enum {INT, FLOAT, DOUBLE} kind; // discriminator
+    union
+    {
+        int i;
+        float f;
+        double d;
+    } data;
+} TaggedNumber;
+TaggedNumber tagged = {INT, {.i = 42}};
+```
+
+<u>Best practices</u>:
+  - Identifiers of unions should be written in Pascal case
+  - Always track which member is active using a discriminator
 
 ### 9.3 Type Aliases
 
