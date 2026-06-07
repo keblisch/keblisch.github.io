@@ -1605,6 +1605,39 @@ char* log()
 }
 ```
 
+### 12.6 Function Pointers
+
+- Pointers can reference functions to pass them around and call them at runtime
+  - This enables the use of functional programming patterns
+
+```c
+// arbitrary function
+int add(int a, int b) {
+    return a + b;
+}
+
+// function pointer declaration
+int (*funcPtr)(int, int); // function must have specified parameters and return type
+
+// assign function to function pointer
+funcPtr = add;  // implicit pointer
+funcPtr = &add; // explicit pointer
+
+// call function pointed to by function pointer
+funcPtr(3, 4) == 7;    // implicit dereference
+(*funcPtr)(3, 4) == 7; // explicit dereference
+
+// pass function pointer as argument and return value
+int (*pipeFunction(int (*f)(int, int)))(int, int) {
+    return f;
+}
+int (*newAdd)(int, int) = pipeFunction(add); // call function that passes function pointers
+
+// alias function pointer as type
+typedef int (*arithmetic)(int, int); // define specific function type
+arithmetic op = add;                 // declare value of specific function type
+```
+
 ## 13 Error Handling
 
 ### 13.1 Error and Warning Generation
@@ -1682,6 +1715,11 @@ p < p + 1; // compare pointers (lower means prior memory address)
 int q = 5;
 void* r = &q;     // point to any type
 int s = *(int*)r; // must cast before dereferencing
+int* t = r;       // convert to any other pointer type
+
+// restrict access to memory location to specified pointer (not guaranteed, mostly semantic)
+int u = 3;
+int* restrict v = &u; // restrict access for current scope
 ```
 
 <u>Best practices</u>:
@@ -1690,7 +1728,42 @@ int s = *(int*)r; // must cast before dereferencing
 
 ### 14.2 Memory Allocation
 
-...
+- Memory can be allocated on the heap to manage its lifetime manually
+  - Thereby it also must be freed manually to prevent memory leaks
+
+```c
+#include <stdlib.h> // import malloc, calloc, realloc and free
+
+// allocate area on the heap with specified amount of bytes
+void* ptr = malloc(10 * sizeof(int)); // get generic pointer to allocated area
+
+// allocate cleared/zeroed area on the heap for specified amount of elements with specified size
+ptr = calloc(10, sizeof(int)); // get generic pointer to allocated cleared/zeroed area
+
+// resize allocated area on the heap to specified amount of bytes (might move area)
+ptr = realloc(ptr, 20 * sizeof(int)); // get generic pointer to reallocated area
+
+// free allocated area on the heap
+free(ptr); // pointer to freed area is now dangling
+
+// check whether allocation was successfull (didn't return null pointer)
+if (!ptr)
+{
+    #error Memory allocation failed
+}
+```
+
+### 14.3 Memory Manipulation
+
+```c
+#include <string.h> // import memcpy and memmove
+
+// copy specified amount of bytes from one memory location into another
+int dest[5];
+int src[] = {1, 2, 3};
+memcpy(dest, src, sizeof(arr));  // memory mustn't overlap
+memmove(dest, src, sizeof(arr)); // memory can overlap
+```
 
 ## 15 IO
 
