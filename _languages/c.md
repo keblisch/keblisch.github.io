@@ -513,10 +513,16 @@ extern int n; // uses same memory space as already declared external global vari
 
 // prevent global variable from being accessed in other files
 static int counter = 0;
+
+// request variable to be stored in a register instead of the stack (may be ignored)
+{   // must be declared in a block
+    register int idx = 0; // can't get pointer to variable
+}
 ```
 
 <u>Best practices</u>:
   - Identifiers of variables should be written in camel case (except for structs)
+  - Only use `register` as semantic hint
 
 ## 9 Constants
 
@@ -1591,7 +1597,30 @@ count(3) == 3;
 count(4) == 7;
 ```
 
-### 12.5 Metadata
+### 12.5 Private Functions
+
+```c
+// function isn't visible outside its file
+static int add(int x, int y)
+{
+    return x + y;
+}
+```
+
+### 12.6 Inline Functions
+
+```c
+// request function to be inlined (may be ignored)
+inline int add(int x, int y)
+{
+    return x + y;
+}
+```
+
+- <u>Best practices</u>:
+  - Avoid using `inline` and rely on automatic compiler optimizations instead
+
+### 12.7 Metadata
 
 ```c
 #include <stdio.h>
@@ -1605,7 +1634,7 @@ char* log()
 }
 ```
 
-### 12.6 Function Pointers
+### 12.8 Function Pointers
 
 - Pointers can reference functions to pass them around and call them at runtime
   - This enables the use of functional programming patterns
@@ -1725,6 +1754,7 @@ int* restrict v = &u; // restrict access for current scope
 <u>Best practices</u>:
   - Use null pointers instead of pointer declaration
   - Avoid pointer arithmetic
+  - Only use `restrict` as semantic hint and don't rely on its functionality
 
 ### 14.2 Memory Allocation
 
