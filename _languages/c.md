@@ -480,17 +480,7 @@ defined(DEBUG) == true;
 #endif
 ```
 
-### 7.6 Error and Warning Generation
-
-```c
-// generate compiler error
-#error This configuration is not supported
-
-// generate compiler warning
-#warning This feature is deprecated
-```
-
-### 7.7 Preprocessor Manipulation
+### 7.6 Preprocessor Manipulation
 
 ```c
 // define current line number (continuous)
@@ -1617,7 +1607,29 @@ char* log()
 
 ## 13 Error Handling
 
-...
+### 13.1 Error and Warning Generation
+
+```c
+// generate compiler error
+#error This configuration is not supported
+
+// generate compiler warning
+#warning This feature is deprecated
+```
+
+### 13.2 Assertions
+
+```c
+#include <assert.h> // import assert
+
+// use assertion
+int x = 3;
+assert(x > 0); // crash program with error message when false
+
+// deactivate assertions
+#define NDEBUG // no further assertion will compile
+assert(x < 0); // won't be compiled
+```
 
 ## 14 Memory Management
 
