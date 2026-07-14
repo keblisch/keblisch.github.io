@@ -10,7 +10,8 @@ title: C
 # C
 {: .no_toc }
 
-Short description of the language.
+C is a minimalistic programming language that provides low-level control over system resources and
+is mainly used for systems programming.
 
 | Current Version | Paradigms                | Typing           | Memory Management | Execution |
 | :-------------- | :----------------------- | :--------------- | :---------------- | :-------- |
