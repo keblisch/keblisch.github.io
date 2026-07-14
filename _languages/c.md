@@ -340,6 +340,17 @@ int main(int argc, char* argv[])
   6. Definition of `main`
   7. Function definitions
 
+### 5.5 Libraries
+
+- The following conventions do exist to create libraries:
+  - Use header files as interfaces for the library
+  - Use static variables and functions to make them private to their file
+  - Declare macros for custom private and public keywords for better readability
+    - Thereby a private keyword should be an alias for `static` and a public keyword should
+      be empty
+  - Public identifiers should be prefixed in a way that signalizes their affiliation with
+    the library
+
 ## 6 Comments
 
 - Comments are text annotations in source code that aren't processed
