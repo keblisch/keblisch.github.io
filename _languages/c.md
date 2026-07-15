@@ -526,6 +526,9 @@ extern int n; // uses same memory space as already declared external global vari
 // prevent global variable from being accessed in other files
 static int counter = 0;
 
+// mark variable's memory location as being accessed from outside the program
+volatile int key = 23;
+
 // request variable to be stored in a register instead of the stack (may be ignored)
 {   // must be declared in a block
     register int idx = 0; // can't get pointer to variable
@@ -1183,7 +1186,7 @@ true ││ false == true;
 
 ### 10.5 Bitwise Operators
 
-- Bitwise operators manipulate individual bits values
+- Bitwise operators manipulate individual bits of values
 - They only work with integral types
 
 | Operation   | Symbol   | Arity  | Associativity |
