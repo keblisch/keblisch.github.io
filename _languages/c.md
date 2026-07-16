@@ -52,7 +52,7 @@ void main()
 
 - C was developed in 1973 by Dennis Ritchie and Ken Thompson at Bell Labs
   - It was intended to port the UNIX operating system to any platform
-  - It was dervived from their previous prototype B, which itself was derived from BCPL
+  - It was derived from their previous prototype B, which itself was derived from BCPL
 - The book "The C Programming Language" was published in 1979 by Brian Kernighan and
   Dennis Ritchie
   - It became the first de-facto standard for C
@@ -199,12 +199,15 @@ graph TD
 
 - Keywords are reserved identifiers with special meaning
 - The following keywords do exist:
+  - `alignas`
+  - `alignof`
   - `auto`
   - `bool`
   - `break`
   - `case`
   - `char`
   - `const`
+  - `constexpr`
   - `continue`
   - `default`
   - `do`
@@ -220,6 +223,7 @@ graph TD
   - `inline`
   - `int`
   - `long`
+  - `nullptr`
   - `register`
   - `restrict`
   - `return`
@@ -227,18 +231,60 @@ graph TD
   - `signed`
   - `sizeof`
   - `static`
+  - `static_assert`
   - `struct`
   - `switch`
+  - `thread_local`
   - `true`
   - `typedef`
+  - `typeof`
+  - `typeof_unqual`
   - `union`
   - `unsigned`
   - `void`
-  - `volative`
+  - `volatile`
   - `while`
+  - `_Alignas`
+  - `_Alignof`
+  - `_Atomic`
   - `_Bool`
   - `_Complex`
+  - `_Generic`
   - `_Imaginary`
+  - `_Noreturn`
+  - `_Static_assert`
+  - `_Thread_local`
+
+### 4.6 Attributes
+
+- Attributes add optional metadata to declarations, labels, and statements for the compiler
+
+```c
+// mark a function as deprecated
+[[deprecated("use add instead")]]
+int sum(int x, int y)
+{
+    return x + y;
+}
+
+// warn when a return value is ignored
+[[nodiscard]]
+int parse(char* text);
+
+// mark an intentionally unused variable
+[[maybe_unused]] int debugValue = 12;
+
+// mark intentional fallthrough in switches
+switch (debugValue)
+{
+    case 1:
+        debugValue++;
+        [[fallthrough]];
+    case 2:
+        debugValue++;
+        break;
+}
+```
 
 ## 5 Structure
 
@@ -348,7 +394,7 @@ int main(int argc, char* argv[])
   - Declare macros for custom private and public keywords for better readability
     - Thereby a private keyword should be an alias for `static` and a public keyword should
       be empty
-  - Public identifiers should be prefixed in a way that signalizes their affiliation with
+  - Public identifiers should be prefixed in a way that signals their affiliation with
     the library
 
 ## 6 Comments
@@ -371,7 +417,7 @@ comment
 ## 7 Preprocessor Directives
 
 - Preprocessor directives are executed by the preprocessor before compilation
-  - Thereby they're replaced with their result
+  - Thereby they are replaced with their result
 
 ### 7.1 Includes
 
@@ -490,7 +536,7 @@ defined(DEBUG) == true;
 
 ### 7.4 Predefined Macros
 
-- Predefined macros can be used to get information about the program and compilatio at runtime
+- Predefined macros can be used to get information about the program and compilation at runtime
 
 | Macro      | Definition                       |
 | :--------- | :------------------------------- |
@@ -650,7 +696,7 @@ Characters can be escape sequences that represent special and non-printable char
 | `\v`            | Insert vertical tab    |
 | `\a`            | Ring system bell       |
 | `\b`            | Remove last character  |
-| `\'`            | Insert singe quote     |
+| `\'`            | Insert single quote    |
 | `\"`            | Insert double quote    |
 | `\\`            | Insert backslash       |
 
@@ -660,7 +706,7 @@ Characters can be escape sequences that represent special and non-printable char
 '\x41' == 'A'; // hexadecimal numeric escape
 ```
 
-Characters can be checked and mapiulated with the `ctype` standard library:
+Characters can be checked and manipulated with the `ctype` standard library:
 
 ```c
 #include <ctype.h>
@@ -693,7 +739,7 @@ tolower('A') == 'a';
 
 #### 9.2.1 Arrays
 
-- Arrays are continous areas of memory in which multiple values can be stored
+- Arrays are continuous areas of memory in which multiple values can be stored
 - Arrays are syntactic sugar for pointers pointing to their first element
   - Therefore all rules applying to pointers are also applying to arrays
   - Therefore array indexing is syntactic sugar for pointer arithmetic
@@ -722,7 +768,7 @@ c = (int[]){1, 2, 3, 4, 5};
 // initialize array with zero values
 int d[5] = {1, 2, 3};            // fill remaining elements with 0
 int e[5] = {0};                  // fill all elements with 0
-int f[5] = {[0] = -1, [4] = 12}; // designated initilization to specific indices
+int f[5] = {[0] = -1, [4] = 12}; // designated initialization to specific indices
 
 // access array elements by their index (zero-indexed)
 int x = b[0]; // get array element
@@ -735,7 +781,7 @@ size_t arrayElementBytes = sizeof(b[0]);               // array element size
 size_t arrayElements = arrayBytes / arrayElementBytes; // calculate array size
 
 // access array as pointer
-int* g = b; // degrade array to pure pointer
+int* g = b; // decay array to pure pointer
 
 // index array via pointer arithmetic
 int h = *(b + 2); // get third array element
@@ -899,7 +945,7 @@ Person max;
 
 // initialize structs
 Person moritz = {"Moritz", 18};              // positional initialization
-Person maria = {.name = "Maria", .age = 20}; // designated initialization to specific memebers
+Person maria = {.name = "Maria", .age = 20}; // designated initialization to specific members
 
 // compound literal to assign after initialization
 maria = (Person){.name = "Maria", .age = 20};
@@ -947,7 +993,7 @@ enum
     BLUE = -1,
 } c3;
 
-// declare enuma with tag for reusability
+// declare enum with tag for reusability
 enum Color
 {
     RED,
@@ -1063,7 +1109,19 @@ typedef unsigned char byte;
 byte x = 127; // unsigned char
 ```
 
-### 9.4 Type Conversion
+### 9.4 Type Inference
+
+```c
+// infer type of specified expression
+const int x = 3;
+typeof(x) y = 4; // const int
+
+// infer unqualified type of specified expression
+const int limit = 100;
+typeof_unqual(limit) y = 10; // int
+```
+
+### 9.5 Type Conversion
 
 - Values are implicitly converted to other data types in the following situations:
   - The operands of an operation have different data types
@@ -1075,7 +1133,7 @@ byte x = 127; // unsigned char
   - Integrals are converted into floating-point numbers
   - Other conversions are possible, but may cause errors
 
-### 9.5 Type Casting
+### 9.6 Type Casting
 
 ```c
 // cast floating-point number into integral
@@ -1085,7 +1143,7 @@ byte x = 127; // unsigned char
 short x = (short) 31721;
 ```
 
-### 9.6 Type Size
+### 9.7 Type Size
 
 ```c
 // get number of bytes for expression
@@ -1093,6 +1151,24 @@ size_t expressionSize = sizeof(13);
 
 // get number of bytes for data type
 size_t typeSize = sizeof(int);
+```
+
+### 9.8 Alignment
+
+- Alignment specifies the memory address boundaries on which objects may be stored
+
+```c
+// get alignment requirement of a type
+size_t intAlignment = alignof(int);
+
+// request specific alignment for an object
+alignas(16) int values[4];
+
+// request specific alignment for a struct member
+struct Block
+{
+    alignas(32) char bytes[32];
+};
 ```
 
 ## 10 Operators
@@ -1125,7 +1201,7 @@ size_t typeSize = sizeof(int);
 ### 10.2 Arithmetic Operators
 
 - Arithmetic operators perform mathematical operations on numeric values
-- Arithmetic operators may cause undefined behavior withinvalid operations
+- Arithmetic operators may cause undefined behavior with invalid operations
 
 | Operation        | Symbol   | Arity  | Associativity |
 | :--------------- | :------- | :----- | :------------ |
@@ -1142,8 +1218,8 @@ size_t typeSize = sizeof(int);
 | Pre-Decrement    | `--`     | Unary  | Right         |
 | Post-Decrement   | `--`     | Unary  | Left          |
 
-- The use of `0` as divident in divisions causes undefined behavior
-- The result of divisions and modulos with a negative operators is rounded towards 0
+- The use of `0` as dividend in divisions causes undefined behavior
+- The result of divisions and modulos with negative operands is rounded towards 0
 
 ```c
 // addition
@@ -1281,7 +1357,7 @@ x = 3; x += 4; x == 7;       // addition
 x = 4; x -= 3; x == 1;       // subtraction
 x = 3; x *= 4; x == 12;      // multiplication
 x = 3.0; x /= 2.0; x == 1.5; // division
-x = 3; x /= 2; x == 1;       // integer deivision
+x = 3; x /= 2; x == 1;       // integer division
 x = 11; x %= 4; x == 3;      // modulo
 
 // bitwise-operation assignment
@@ -1453,7 +1529,7 @@ for (int i = 0; ; ++i)  // condition is always true
 {
     printf("%d", i + j);
 }
-for (int i = 0; i < 10;) // no updare takes place
+for (int i = 0; i < 10;) // no update takes place
 {
     printf("%d", i + j);
 }
@@ -1581,7 +1657,7 @@ int x = 1;
 inc(&x);
 x == 2;
 
-// define function with unmutable reference parameter
+// define function with immutable reference parameter
 int dereference(const int* n)
 {
     return *n;
@@ -1601,8 +1677,8 @@ int* getCounter()
 
 ### 12.3 Array Parameters
 
-- Arrays passed as arguments are degraded to pure pointers
-  - Therefore there size can't be calculated with `sizeof` inside functions
+- Arrays passed as arguments decay to pure pointers
+  - Therefore their size can't be calculated with `sizeof` inside functions
 
 ```c
 // define array length as other argument
@@ -1734,8 +1810,12 @@ arithmetic op = add;                 // declare value of specific function type
 
 ### 13.2 Assertions
 
+- Assertions are checks that express assumptions directly in source code
+
+#### 13.2.1 Runtime Assertions
+
 ```c
-#include <assert.h> // import assert
+#include <assert.h> // import assert macro
 
 // use assertion
 int x = 3;
@@ -1744,6 +1824,16 @@ assert(x > 0); // crash program with error message when false
 // deactivate assertions
 #define NDEBUG // no further assertion will compile
 assert(x < 0); // won't be compiled
+```
+
+#### 13.2.2 Compile-Time Assertions
+
+```c
+// check a condition at compile time
+static_assert(sizeof(int) >= 4);
+
+// check a condition at compile time with a diagnostic message
+static_assert(sizeof(long) >= sizeof(int), "long must not be smaller than int");
 ```
 
 ## 14 Memory Management
@@ -1771,9 +1861,13 @@ int* f = &e;
 *e = 20;  // modify value at pointed memory address
 
 // use null pointer
-int* g = NULL; // points to nothing
-g == NULL;     // check if pointer is null
-//*g;          // dereferencing causes error
+int* g = nullptr; // points to nothing
+g == nullptr;     // check if pointer is null
+//*g;             // dereferencing causes error
+
+// use null pointer type
+nullptr_t noPointer = nullptr;
+g = noPointer;
 
 // make pointers immutable
 int h = 8;
@@ -1829,7 +1923,7 @@ ptr = realloc(ptr, 20 * sizeof(int)); // get generic pointer to reallocated area
 // free allocated area on the heap
 free(ptr); // pointer to freed area is now dangling
 
-// check whether allocation was successfull (didn't return null pointer)
+// check whether allocation was successful (didn't return null pointer)
 if (!ptr)
 {
     #error Memory allocation failed
