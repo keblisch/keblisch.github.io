@@ -914,7 +914,7 @@ Person* ptr = &moritz;
 ptr->name = "Moe"; // automatically dereference pointer to struct
 
 // get number of bytes between start of structure and its specified member
-offsetof(Person, age)
+int offset = offsetof(Person, age);
 ```
 
 <u>Best practices</u>:
