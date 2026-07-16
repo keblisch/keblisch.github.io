@@ -255,37 +255,6 @@ graph TD
   - `_Static_assert`
   - `_Thread_local`
 
-### 4.6 Attributes
-
-- Attributes add optional metadata to declarations, labels, and statements for the compiler
-
-```c
-// mark a function as deprecated
-[[deprecated("use add instead")]]
-int sum(int x, int y)
-{
-    return x + y;
-}
-
-// warn when a return value is ignored
-[[nodiscard]]
-int parse(char* text);
-
-// mark an intentionally unused variable
-[[maybe_unused]] int debugValue = 12;
-
-// mark intentional fallthrough in switches
-switch (debugValue)
-{
-    case 1:
-        debugValue++;
-        [[fallthrough]];
-    case 2:
-        debugValue++;
-        break;
-}
-```
-
 ## 5 Structure
 
 ### 5.1 Entry Point
@@ -581,7 +550,38 @@ defined(DEBUG) == true;
 #line 10 foo.c
 ```
 
-## 8 Variables
+## 8 Attributes
+
+- Attributes add optional metadata to declarations, labels, and statements for the compiler
+
+```c
+// mark a function as deprecated
+[[deprecated("use add instead")]]
+int sum(int x, int y)
+{
+    return x + y;
+}
+
+// warn when a return value is ignored
+[[nodiscard]]
+int parse(char* text);
+
+// mark an intentionally unused variable
+[[maybe_unused]] int debugValue = 12;
+
+// mark intentional fallthrough in switches
+switch (debugValue)
+{
+    case 1:
+        debugValue++;
+        [[fallthrough]];
+    case 2:
+        debugValue++;
+        break;
+}
+```
+
+## 9 Variables
 
 - Variables are named storage locations that hold values of specific data types
 
@@ -618,7 +618,7 @@ volatile int key = 23;
   - Identifiers of variables should be written in camel case (except for structs)
   - Only use `register` as semantic hint
 
-## 9 Constants
+## 10 Constants
 
 ```c
 // declare immutable constant (must be initialized)
@@ -628,11 +628,11 @@ const int MAX_SIZE = 100;
 <u>Best practices</u>:
   - Identifiers of constants should be written in constant case
 
-## 9 Data Types
+## 11 Data Types
 
-### 9.1 Scalar Types
+### 11.1 Scalar Types
 
-#### 9.1.1 Integers
+#### 11.1.1 Integers
 
 | Keyword                                                                        | Representation   | Byte Size         | Literals       |
 | :----------------------------------------------------------------------------- | :--------------- | :---------------- | :------------- |
@@ -674,7 +674,7 @@ The base of integer literals can be specified with the following prefixes:
   - Overflows of signed integers cause undefined behavior
   - Overflows of unsigned integers perform a modulo operation with their bit-size on them
 
-#### 9.1.2 Characters
+#### 11.1.2 Characters
 
 | Keyword         | Representation  | Byte Size | Literals     |
 | :-------------- | :-------------- | :-------- | :----------- |
@@ -716,7 +716,7 @@ toupper('a') == 'A';
 tolower('A') == 'a';
 ```
 
-#### 9.1.3 Booleans
+#### 11.1.3 Booleans
 
 | Keyword | Representation | Byte Size | Literals        |
 | :------ | :------------- | :-------- | :-------------- |
@@ -727,7 +727,7 @@ tolower('A') == 'a';
   - Additionally any non-zero value expresses true
   - Thereby the `bool` type is a macro that aliases `1` and `0` as `true` and `false`
 
-#### 9.1.4 Floating-Point Numbers
+#### 11.1.4 Floating-Point Numbers
 
 | Keyword             | Representation | Byte Size  | Literals               |
 | :------------------ | :------------- | :--------- | :--------------------- |
@@ -735,9 +735,9 @@ tolower('A') == 'a';
 | `double`            | Real number    | At least 8 | `3.14`, `4.`, `.65`    |
 | `long double`       | Real number    | At least 8 | `3.14L`, `4.l`, `.65l` |
 
-### 9.2 Compound Types
+### 11.2 Compound Types
 
-#### 9.2.1 Arrays
+#### 11.2.1 Arrays
 
 - Arrays are continuous areas of memory in which multiple values can be stored
 - Arrays are syntactic sugar for pointers pointing to their first element
@@ -789,7 +789,7 @@ int h = *(b + 2); // get third array element
 *(b + 1) = -1;    // set second array element
 ```
 
-#### 9.2.2 Strings
+#### 11.2.2 Strings
 
 - Strings are syntactic sugar for arrays of characters (`char*` or `char[]`)
   - Therefore all rules applying to arrays are also applying to strings
@@ -806,7 +806,7 @@ char* description = "This is "
                     "that I provide.";
 ```
 
-##### 9.2.2.1 Format Strings
+##### 11.2.2.1 Format Strings
 
 - Format strings are strings that contain placeholders in which values with certain data types
   can be inserted
@@ -884,7 +884,7 @@ snprintf(buffer, "%.5s", "Hello, World!"); // number of characters
 buffer; // "Hello"
 ```
 
-##### 9.2.2.2 String Processing
+##### 11.2.2.2 String Processing
 
 - The `string.h` standard library provides functions to process strings
 
@@ -911,7 +911,7 @@ abc = strcat(abc, "def");       // concatenate second into first string (may ove
 abc = strncat(abc, "def", 100); // concatenate second into first string up to specified limit
 ```
 
-#### 9.2.3 Structs
+#### 11.2.3 Structs
 
 - Structs are user-defined types that group related values as members
   - Thereby structs build their own scope for their members
@@ -967,7 +967,7 @@ int offset = offsetof(Person, age);
   - Identifiers of structs should be written in Pascal case
   - Members of structs should be written in camel case
 
-#### 9.2.4 Enums
+#### 11.2.4 Enums
 
 - Enums are user-defined types that group discrete sets of values as members
   - Thereby only one member can be active at any given time
@@ -1036,7 +1036,7 @@ switch (c7)
   - Identifiers of enum members should be written in constant case
   - Enum members should be prefixed to avoid naming conflicts in the surrounding scope
 
-#### 9.2.5 Unions
+#### 11.2.5 Unions
 
 - Unions are user-defined types that store multiple values at the same memory location as members
   - Thereby only one member can hold a value at any given time
@@ -1099,7 +1099,7 @@ TaggedNumber tagged = {INT, {.i = 42}};
   - Identifiers of unions should be written in Pascal case
   - Always track which member is active using a discriminator
 
-### 9.3 Type Aliases
+### 11.3 Type Aliases
 
 - Type aliases allow to define existing types with custom identifiers
   - These are still equivalent to their original types
@@ -1109,7 +1109,7 @@ typedef unsigned char byte;
 byte x = 127; // unsigned char
 ```
 
-### 9.4 Type Inference
+### 11.4 Type Inference
 
 ```c
 // infer type of specified expression
@@ -1121,7 +1121,7 @@ const int limit = 100;
 typeof_unqual(limit) y = 10; // int
 ```
 
-### 9.5 Type Conversion
+### 11.5 Type Conversion
 
 - Values are implicitly converted to other data types in the following situations:
   - The operands of an operation have different data types
@@ -1133,7 +1133,7 @@ typeof_unqual(limit) y = 10; // int
   - Integrals are converted into floating-point numbers
   - Other conversions are possible, but may cause errors
 
-### 9.6 Type Casting
+### 11.6 Type Casting
 
 ```c
 // cast floating-point number into integral
@@ -1143,7 +1143,7 @@ typeof_unqual(limit) y = 10; // int
 short x = (short) 31721;
 ```
 
-### 9.7 Type Size
+### 11.7 Type Size
 
 ```c
 // get number of bytes for expression
@@ -1153,7 +1153,7 @@ size_t expressionSize = sizeof(13);
 size_t typeSize = sizeof(int);
 ```
 
-### 9.8 Alignment
+### 11.8 Alignment
 
 - Alignment specifies the memory address boundaries on which objects may be stored
 
@@ -1171,9 +1171,9 @@ struct Block
 };
 ```
 
-## 10 Operators
+## 12 Operators
 
-### 10.1 Precedence
+### 12.1 Precedence
 
 | Precedence | Operations                                                      |
 | :--------- | :-------------------------------------------------------------- |
@@ -1198,7 +1198,7 @@ struct Block
 (3 + 4) * (5 - 3) == 14;
 ```
 
-### 10.2 Arithmetic Operators
+### 12.2 Arithmetic Operators
 
 - Arithmetic operators perform mathematical operations on numeric values
 - Arithmetic operators may cause undefined behavior with invalid operations
@@ -1249,7 +1249,7 @@ int x = 3; --x == 2; // post
 int x = 3; x-- == 3; // pre
 ```
 
-### 10.3 Comparison Operators
+### 12.3 Comparison Operators
 
 - Comparison operators compare values and return boolean results
 
@@ -1276,7 +1276,7 @@ int x = 3; x-- == 3; // pre
 3 <= 4 == true;
 ```
 
-### 10.4 Logical Operators
+### 12.4 Logical Operators
 
 - Logical operators perform boolean logic operations on truth values
 - Logical AND and OR use short-circuit evaluation
@@ -1298,7 +1298,7 @@ true ││ false == true;
 !false == true;
 ```
 
-### 10.5 Bitwise Operators
+### 12.5 Bitwise Operators
 
 - Bitwise operators manipulate individual bits of values
 - They only work with integral types
@@ -1324,7 +1324,7 @@ true ││ false == true;
 0b1100 >> 2 == 0b0011; // right
 ```
 
-### 10.6 Assignment Operators
+### 12.6 Assignment Operators
 
 - Assignment operators are assigning values to variables
   - Therefore the left operand must always be a variable
@@ -1371,7 +1371,7 @@ x = 0b10; x >>= 1; x == 0b01;   // right shift
 - <u>Best practices</u>
   - Don't use assignment expressions as subexpressions
 
-### 10.7 Ternary Operator
+### 12.7 Ternary Operator
 
 - The ternary operator provides a concise way to write simple if-else expressions
 
@@ -1380,7 +1380,7 @@ int x = 4;
 const char* answer = x > 10 ? "x is greater than 10" : "x is 10 or less";
 ```
 
-### 10.8 Comma Operator
+### 12.8 Comma Operator
 
 - The comma operator evaluates multiple expressions from left to right
 - The result of a comma expression is the result of its right operand
@@ -1392,9 +1392,9 @@ int y = (x = 3, x);
 x == 3 && y == 3;
 ```
 
-## 11 Control Flow Structures
+## 13 Control Flow Structures
 
-### 11.1 Conditions
+### 13.1 Conditions
 
 ```c
 #include <stdio.h>
@@ -1429,7 +1429,7 @@ else
 - <u>Best practices</u>:
   - Prefer conditions with compound statements over conditions with line statements
 
-### 11.2 Switches
+### 13.2 Switches
 
 ```c
 #include <stdio.h>
@@ -1492,7 +1492,7 @@ switch (x)
 - <u>Best practices</u>:
   - Prefer switches over long cascades of conditions that check for equality
 
-### 11.3 Loops
+### 13.3 Loops
 
 ```c
 #include <stdio.h>
@@ -1566,7 +1566,7 @@ for (i = 0; i < 10; ++i) printf("%d", i);
   - Prefer loops with compound statements over loops with line statements
   - Declare index variables in the initialization step of for-loops
 
-### 11.4 Jumps
+### 13.4 Jumps
 
 - The `goto` statement can be used to jump to any point in a function
   - But it can't be used to skip declarations of arrays with non-constant length
@@ -1587,7 +1587,7 @@ x == -1;
 - <u>Best practices</u>:
   - Avoid `goto` because they can disturb the control flow in unpredictable ways
 
-## 12 Functions
+## 14 Functions
 
 - Functions are reusable blocks of code that perform specific tasks and can take parameters
   and return values
@@ -1618,7 +1618,7 @@ greet();
 <u>Best practices</u>:
   - Identifiers of functions should be written in camel case
 
-### 12.1 Function Declarations
+### 14.1 Function Declarations
 
 - Functions can be declared before they're defined later
   - This allows for separation of interface and implementation
@@ -1638,7 +1638,7 @@ int sum(int x, int y)
 }
 ```
 
-### 12.2 Pass by Reference
+### 14.2 Pass by Reference
 
 - Function arguments and returns are passed by value
   - Therefore values are copied when passed to and returned by functions
@@ -1675,7 +1675,7 @@ int* getCounter()
   - Use reference parameters to pass large structs
   - Make reference parameters immutable when they don't need to be modified
 
-### 12.3 Array Parameters
+### 14.3 Array Parameters
 
 - Arrays passed as arguments decay to pure pointers
   - Therefore their size can't be calculated with `sizeof` inside functions
@@ -1707,7 +1707,7 @@ int diff(int n, int a[static n])
 int result = sum(5, (int[]){1, 2, 3, 4, 5});
 ```
 
-### 12.4 Static Local Variables
+### 14.4 Static Local Variables
 
 - Static local variables are preserved between function calls
 
@@ -1726,7 +1726,7 @@ count(3) == 3;
 count(4) == 7;
 ```
 
-### 12.5 Private Functions
+### 14.5 Private Functions
 
 ```c
 // function isn't visible outside its file
@@ -1736,7 +1736,7 @@ static int add(int x, int y)
 }
 ```
 
-### 12.6 Inline Functions
+### 14.6 Inline Functions
 
 ```c
 // request function to be inlined (may be ignored)
@@ -1749,7 +1749,7 @@ inline int add(int x, int y)
 - <u>Best practices</u>:
   - Avoid using `inline` and rely on automatic compiler optimizations instead
 
-### 12.7 Metadata
+### 14.7 Metadata
 
 ```c
 #include <stdio.h>
@@ -1763,7 +1763,7 @@ char* log()
 }
 ```
 
-### 12.8 Function Pointers
+### 14.8 Function Pointers
 
 - Pointers can reference functions to pass them around and call them at runtime
   - This enables the use of functional programming patterns
@@ -1796,9 +1796,9 @@ typedef int (*arithmetic)(int, int); // define specific function type
 arithmetic op = add;                 // declare value of specific function type
 ```
 
-## 13 Error Handling
+## 15 Error Handling
 
-### 13.1 Error and Warning Generation
+### 15.1 Error and Warning Generation
 
 ```c
 // generate compiler error
@@ -1808,11 +1808,11 @@ arithmetic op = add;                 // declare value of specific function type
 #warning This feature is deprecated
 ```
 
-### 13.2 Assertions
+### 15.2 Assertions
 
 - Assertions are checks that express assumptions directly in source code
 
-#### 13.2.1 Runtime Assertions
+#### 15.2.1 Runtime Assertions
 
 ```c
 #include <assert.h> // import assert macro
@@ -1826,7 +1826,7 @@ assert(x > 0); // crash program with error message when false
 assert(x < 0); // won't be compiled
 ```
 
-#### 13.2.2 Compile-Time Assertions
+#### 15.2.2 Compile-Time Assertions
 
 ```c
 // check a condition at compile time
@@ -1836,9 +1836,9 @@ static_assert(sizeof(int) >= 4);
 static_assert(sizeof(long) >= sizeof(int), "long must not be smaller than int");
 ```
 
-## 14 Memory Management
+## 16 Memory Management
 
-### 14.1 Pointers
+### 16.1 Pointers
 
 - Pointers are variables that store memory addresses
 
@@ -1903,7 +1903,7 @@ int* restrict v = &u; // restrict access for current scope
   - Avoid pointer arithmetic
   - Only use `restrict` as semantic hint and don't rely on its functionality
 
-### 14.2 Memory Allocation
+### 16.2 Memory Allocation
 
 - Memory can be allocated on the heap to manage its lifetime manually
   - Thereby it also must be freed manually to prevent memory leaks
@@ -1930,7 +1930,7 @@ if (!ptr)
 }
 ```
 
-### 14.3 Memory Manipulation
+### 16.3 Memory Manipulation
 
 ```c
 #include <string.h> // import memcpy and memmove
@@ -1942,9 +1942,9 @@ memcpy(dest, src, sizeof(arr));  // memory mustn't overlap
 memmove(dest, src, sizeof(arr)); // memory can overlap
 ```
 
-## 15 IO
+## 17 IO
 
-### 15.1 Output
+### 17.1 Output
 
 ```c
 #include <stdio.h>
@@ -1960,7 +1960,7 @@ printf("Hello, World!\n");
 printf("%d + %d = %d\n", 3, 4, 7);
 ```
 
-### 15.2 Input
+### 17.2 Input
 
 ```c
 // read string from stdin
@@ -1990,9 +1990,9 @@ if (!success)
 }
 ```
 
-## 16 Math
+## 18 Math
 
-### 16.1 Random Number Generation
+### 18.1 Random Number Generation
 
 ```c
 #include <stdlib.h> // import srand and rand
@@ -2004,13 +2004,13 @@ srand(time(NULL)); // set seed to current time for ever changing seed
 int rng = rand(); // generate random integer
 ```
 
-## 17 Time and Date
+## 19 Time and Date
 
 ...
 
-## 18 System
+## 20 System
 
-### 18.1 Terminate Program
+### 20.1 Terminate Program
 
 ```c
 #include <stdlib.h> // import exit and its macros
@@ -2023,7 +2023,7 @@ exit(EXIT_SUCCESS); // successful program run
 exit(EXIT_FAILURE); // failed program run
 ```
 
-## 19 Threads
+## 21 Threads
 
 ...
 
