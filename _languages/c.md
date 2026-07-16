@@ -387,6 +387,39 @@ comment
 #include "utilities/helper.h"
 ```
 
+- The following standard library headers do exist:
+  - `<assert.h>`: Diagnostics
+  - `<complex.h>`: Complex arithmetic
+  - `<ctype.h>`: Character handling
+  - `<errno.h>`: Errors
+  - `<fenv.h>`: Floating-point environment
+  - `<float.h>`: Characteristics of floating types
+  - `<inttypes.h>`: Format conversion of integer types
+  - `<iso646.h>`: Alternative operator spellings
+  - `<limits.h>`: Characteristics and limits of integer types
+  - `<locale.h>`: Localization
+  - `<math.h>`: Mathematics
+  - `<setjmp.h>`: Nonlocal jumps
+  - `<signal.h>`: Signal handling
+  - `<stdalign.h>`: Alignment
+  - `<stdarg.h>`: Variadic arguments
+  - `<stdatomic.h>`: Atomic operations
+  - `<stdbit.h>`: Bit and byte utilities
+  - `<stdbool.h>`: Boolean type and values
+  - `<stdckdint.h>`: Checked integer arithmetic
+  - `<stddef.h>`: Common definitions
+  - `<stdint.h>`: Fixed-width and other integer types
+  - `<stdio.h>`: Input/output
+  - `<stdlib.h>`: General utilities
+  - `<stdnoreturn.h>`: Non-returning function macro
+  - `<string.h>`: String and memory handling
+  - `<tgmath.h>`: Type-generic mathematics
+  - `<threads.h>`: Threads
+  - `<time.h>`: Date and time
+  - `<uchar.h>`: Unicode character utilities
+  - `<wchar.h>`: Extended multibyte and wide-character utilities
+  - `<wctype.h>`: Wide-character classification and mapping utilities
+
 <u>Best practices</u>:
   - Include directives should be used to import header files
   - Include directives should be placed at the beginning of files
@@ -839,6 +872,8 @@ abc = strncat(abc, "def", 100); // concatenate second into first string up to sp
 - Structs are continuous areas of memory in which all their members are stored
 
 ```c
+#include <stddef.h> // include the offsetof macro
+
 // declare unique structs
 struct
 {
@@ -877,6 +912,9 @@ moritz.name = "Maximilian"; // assign to struct member
 Person* ptr = &moritz;
 (*ptr).age = 32;   // dereference pointer to struct before member access
 ptr->name = "Moe"; // automatically dereference pointer to struct
+
+// get number of bytes between start of structure and its specified member
+offsetof(Person, age)
 ```
 
 <u>Best practices</u>:
