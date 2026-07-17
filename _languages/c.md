@@ -646,7 +646,9 @@ const int MAX_SIZE = 100;
 | `unsigned long long int`<br>`unsigned long long`                               | Positive integer | Probably 8        | `3ULL`, `2ull` |
 | `size_t`                                                                       | Positive integer | Architecture size | `SIZE_C(24)`   |
 
-The `stdint.h` standard library provides the following additional integer types:
+- The `size_t` type must be imported from a header such as `stddef.h`
+
+The `stdint.h` standard library header provides the following additional integer types:
 
 | Keyword     | Representation   | Byte Size    | Literals       |
 | :---------- | :--------------- | :----------- | :------------- |
