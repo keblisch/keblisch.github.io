@@ -749,6 +749,8 @@ tolower('A') == 'a';
     static storage duration
 
 ```c
+#include <stddef.h> // import size_t
+
 // declare empty array
 int a[5];    // specify data type of elements and number of elements
 int m[3][5]; // multidimensional array
@@ -1146,6 +1148,8 @@ short x = (short) 31721;
 ### 11.7 Type Size
 
 ```c
+#include <stddef.h> // import size_t
+
 // get number of bytes for expression
 size_t expressionSize = sizeof(13);
 
@@ -1158,6 +1162,8 @@ size_t typeSize = sizeof(int);
 - Alignment specifies the memory address boundaries on which objects may be stored
 
 ```c
+#include <stddef.h> // import size_t
+
 // get alignment requirement of a type
 size_t intAlignment = alignof(int);
 
@@ -1843,6 +1849,8 @@ static_assert(sizeof(long) >= sizeof(int), "long must not be smaller than int");
 - Pointers are variables that store memory addresses
 
 ```c
+#include <stddef.h> // import nullptr_t
+
 // declare pointer
 int* a;
 
@@ -1963,6 +1971,8 @@ printf("%d + %d = %d\n", 3, 4, 7);
 ### 17.2 Input
 
 ```c
+#include <stdio.h>
+
 // read string from stdin
 char name[100];          // storage buffer
 fgets(name, 100, stdin); // read specified amount of characters into buffer
