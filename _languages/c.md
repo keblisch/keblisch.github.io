@@ -1677,6 +1677,12 @@ int* getCounter()
     static int x = 0;
     return &x;
 }
+
+// mark parameters as having no overlapping memory
+bool compare(int* restrict x, int* restrict y)
+{
+    return *x == *y;
+}
 ```
 
 - <u>Best practices</u>:
@@ -1908,7 +1914,7 @@ int u = 3;
 int* restrict v = &u; // restrict access for current scope
 ```
 
-<u>Best practices</u>:
+- <u>Best practices</u>:
   - Use null pointers instead of pointer declaration
   - Avoid pointer arithmetic
   - Only use `restrict` as semantic hint and don't rely on its functionality
@@ -1954,7 +1960,9 @@ memmove(dest, src, sizeof(arr)); // memory can overlap
 
 ## 17 IO
 
-### 17.1 Output
+### 17.1 Terminal
+
+#### 17.1.1 Output
 
 ```c
 #include <stdio.h>
@@ -1970,7 +1978,7 @@ printf("Hello, World!\n");
 printf("%d + %d = %d\n", 3, 4, 7);
 ```
 
-### 17.2 Input
+#### 17.1.2 Input
 
 ```c
 #include <stdio.h>
@@ -2001,6 +2009,128 @@ if (!success)
     printf("Couldn't read input!");
 }
 ```
+
+### 17.2 Files
+
+```c
+#include <stdio.h>
+
+// open stream to specified file in specified read/write mode
+FILE* f = fopen("path/to/file.txt", "r+");
+
+// close stream to specified file
+int success = fclose(f);
+if (success != EOF) // check whether file could be closes
+{
+    puts("File closed successfully");
+}
+
+// check whether stream to file is open/could be opened
+if (f != nullptr)
+{
+    puts("File is open");
+}
+
+// redirect open file stream to specified file in specified read/write mode
+f = freopen("path/to/destination.txt", "w", stdin);
+```
+
+- The following read/write modes for files do exist:
+  - `"r"`: read text file (file must exist)
+  - `"w"`: write text file (file is being created or overwritten)
+  - `"a"`: append to text file (file might be created)
+  - `"r+"`: read and write text file (file must exist)
+  - `"w+"`: read and write text file (file is being created or overwritten)
+  - `"a+"`: read and append text file (file might be created)
+  - `"rb+"`/`"r+b"`: read and write binary file (file must exist)
+  - `"wb+"`/`"w+b"`: read and write binary file (file is being created or overwritten)
+  - `"ab+"`/`"a+b"`: read and append binary file (file must exist)
+
+- The following predefined file streams do exist:
+  - `stdin`: Stream to stdin
+  - `stdout`: Stream to stdout
+  - `stderr`: Stream to stderr
+
+- <u>Best practices</u>:
+  - Always check whether files could be opened
+  - Always close streams to files when they're no longer used
+
+#### 17.2.1 File Manipulation
+
+```c
+#include <stdio.h>
+
+// rename/move specified file to specified name/location
+int success = rename("path/to/old-file.txt", "path/to/new-file.txt");
+
+// delete specified file
+int success = remove("path/to/new-file.txt");
+
+// check whether file manipulation was successful
+if (success != EOF)
+{
+    puts("File manipulated successfully");
+}
+```
+
+- <u>Best practices</u>:
+  - Always check whether file manipulations were successful
+  - Always close streams to files before renaming, moving or deleting them
+
+#### 17.2.2 Temporary Files
+
+```c
+#include <stdio.h>
+
+// create and open stream to temporary file in w+ mode
+FILE* tmp = tmpfile();
+
+// get pointer to internaly stored unique file name
+char* fileName = tmpnam(NULL);
+
+// store unique file name in buffer and get pointer to it
+char buffer[L_tmpnam];
+fileName = tmpnam(buffer);
+```
+
+- <u>Best practices</u>:
+  - Avoid using `tmpnam` because it may be subject to TOCTOU-race-conditions
+
+#### 17.2.3 Buffering
+
+```c
+#include <stdio.h>
+
+// flush buffer of output streams
+int success = fflush(stdout); // specified stream
+success = fflush(NULL);       // all streams
+
+// check whether flushing was successful
+if (success != EOF)
+{
+    puts("Buffer flushed successfully");
+}
+
+// set buffer for stream to specified mode and byte size
+int bufferSize = 100;
+char buffer[bufferSize];
+success = setvbuf(stdout, buffer, _IOFBF, bufferSize); // use manually managed buffer
+success = setvbuf(stdout, NULL, _IOFBF, bufferSize);   // use automatically managed buffer
+
+// check whether buffer could be set
+if (success == 0)
+{
+    puts("Buffer set successfully");
+}
+```
+
+- The follofing buffer modes do exist:
+  - `_IOFBF`: Full buffering (default) -> Data is read/written when the buffer is empty/full
+  - `_IOLBF`: Line buffering -> Data is read/written from/to the buffer one line at a time
+  - `_IONBF`: No buffering -> Data is read/written directly from/to the stream
+
+- <u>Best practices</u>:
+  - Always check whether buffer flushings and buffer settings were successful
 
 ## 18 Math
 
