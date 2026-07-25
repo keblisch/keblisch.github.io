@@ -2115,12 +2115,51 @@ if (charsWritten != EOF)
 {
     puts("Written successfully");
 }
+
+// write specified character to specified output stream
+int writtenChar = fputc(stderr, 'A'); // function implementation
+writtenChar = putc(stderr, 'A');      // macro implementation
+
+// check whether character write operation was successful
+if (writtenChar != EOF)
+{
+    puts("Written successfully");
+}
 ```
+
+- <u>Best practices</u>:
+  - Prefer `fputc` over `putc` because it's more reliable
 
 ### 18.2 Input
 
 ```c
+// read character from specified input stream
+int readChar = fgetc(stdin); // function implementation
+readChar = getc(stdin);      // macro implementation
+
+// check whether character read operation was successful
+if (writtenChar != EOF)
+{
+    puts("Written successfully");
+}
+
+// receive read character value
+char character = (char)readChar;
+
+// move position in specified stream one character back and place specified character ahead of it
+int placedChar = ungetc('A', stdin);
+
+// check whether character placing operation was successful
+if (placedChar != EOF)
+{
+    puts("Placed successfully");
+}
 ```
+
+- <u>Best practices</u>:
+  - Prefer `fgetc` over `getc` because it's more reliable
+  - Only convert the return value of `fgetc` and `getc` to `char` after it has been checked for
+    `EOF`
 
 ### 18.3 File Manipulation
 
