@@ -1958,27 +1958,37 @@ memcpy(dest, src, sizeof(arr));  // memory mustn't overlap
 memmove(dest, src, sizeof(arr)); // memory can overlap
 ```
 
-## 17 IO
+## 17 Terminal
 
-### 17.1 Terminal
-
-#### 17.1.1 Output
+### 17.1 Output
 
 ```c
 #include <stdio.h>
 
-// print string to stdout
-puts("Hello, World!"); // append newline character
+// write string to stdout with appended newline character
+int charsWritten = puts("Hello, World!");
 
-// print single character to stdout
-putchar('A');
+// write format strings to stdout
+charsWritten = printf("Hello, World!\n");
+charsWritten = printf("%d + %d = %d\n", 3, 4, 7);
 
-// print format strings to stdout
-printf("Hello, World!\n");
-printf("%d + %d = %d\n", 3, 4, 7);
+// check whether string write operation was successful
+if (charsWritten != EOF)
+{
+    puts("Written successfully");
+}
+
+// write single character to stdout
+int writtenChar = putchar('A');
+
+// check whether character write operation was successful
+if (writtenChar != EOF)
+{
+    puts("Written successfully");
+}
 ```
 
-#### 17.1.2 Input
+### 17.2 Input
 
 ```c
 #include <stdio.h>
@@ -2010,7 +2020,7 @@ if (!success)
 }
 ```
 
-### 17.2 Files
+## 18 Files
 
 ```c
 #include <stdio.h>
@@ -2055,7 +2065,28 @@ f = freopen("path/to/destination.txt", "w", stdin);
   - Always check whether files could be opened
   - Always close streams to files when they're no longer used
 
-#### 17.2.1 File Manipulation
+### 18.1 Output
+
+```c
+#include <stdio.h>
+
+// write format strings to specified output stream
+int charsWritten = fprintf(stderr, "Hello, World!\n");
+charsWritten = fprintf(stderr, "%d + %d = %d\n", 3, 4, 7);
+
+// check whether write operation was successful
+if (charsWritten != EOF)
+{
+    puts("Written successfully");
+}
+```
+
+### 18.2 Input
+
+```c
+```
+
+### 18.3 File Manipulation
 
 ```c
 #include <stdio.h>
@@ -2077,7 +2108,7 @@ if (success != EOF)
   - Always check whether file manipulations were successful
   - Always close streams to files before renaming, moving or deleting them
 
-#### 17.2.2 Temporary Files
+### 18.4 Temporary Files
 
 ```c
 #include <stdio.h>
@@ -2096,7 +2127,10 @@ fileName = tmpnam(buffer);
 - <u>Best practices</u>:
   - Avoid using `tmpnam` because it may be subject to TOCTOU-race-conditions
 
-#### 17.2.3 Buffering
+### 18.5 Buffering
+
+- Read and write operations always use buffers internally to optimize these
+  - But the buffering can be configured manually
 
 ```c
 #include <stdio.h>
@@ -2132,9 +2166,35 @@ if (success == 0)
 - <u>Best practices</u>:
   - Always check whether buffer flushings and buffer settings were successful
 
-## 18 Math
+### 18.6 Error Handling
 
-### 18.1 Random Number Generation
+- When streams aren't readable/writable this is indicated by the value `EOF` returned by functions
+  interacting with them
+- The inability to read/write from/to streams can be either because they referenced a file whose
+  end has been reached or because an error occured
+  - Which of the reasons applies is indicated by internal flags of the stream
+
+```c
+#include <stdio.h>
+
+File* f = fopen("path/to/sile.txt");
+
+// check whether stream has already reached end of referenced file
+int reachedEOF = feof(f); // return value mirrors boolean value
+
+// check whether stream has already encountered error
+int encounteredError = ferror(f); // return value mirrors boolean value
+
+// cleanse stream from error flags
+clearerr(f);
+```
+
+- <u>Best practices</u>:
+  - Always wait until a stream produces `EOF` before checking its cause with `feof` and `ferror`
+
+## 19 Math
+
+### 19.1 Random Number Generation
 
 ```c
 #include <stdlib.h> // import srand and rand
@@ -2146,13 +2206,13 @@ srand(time(NULL)); // set seed to current time for ever changing seed
 int rng = rand(); // generate random integer
 ```
 
-## 19 Time and Date
+## 20 Time and Date
 
 ...
 
-## 20 System
+## 21 System
 
-### 20.1 Terminate Program
+### 21.1 Terminate Program
 
 ```c
 #include <stdlib.h> // import exit and its macros
@@ -2165,7 +2225,7 @@ exit(EXIT_SUCCESS); // successful program run
 exit(EXIT_FAILURE); // failed program run
 ```
 
-## 21 Threads
+## 22 Threads
 
 ...
 
