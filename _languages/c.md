@@ -822,37 +822,48 @@ char* description = "This is "
 char buffer[100];
 
 // create format string
-sprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f);  // can overflow buffer
-snprintf(buffer, "%d + %f = %f", 3, 4.5f, 7.5f); // can't overflow buffer
+sprintf(buffer, "%d + %.1f = %.1f", 3, 4.5, 7.5);                  // can overflow buffer
+snprintf(buffer, sizeof(buffer), "%d + %.1f = %.1f", 3, 4.5, 7.5); // write up to buffer size
 buffer == "3 + 4.5 = 7.5";
 ```
 
-| Format Specifier | Data Type                         |
-| :--------------- | :-------------------------------- |
-| `%d`<br>`%i`     | `int` with base 10                |
-| `%u`             | `unsigned int` with base 10       |
-| `%o`             | `unsigned int` with base 8        |
-| `%x`<br>`%X`     | `unsigned int` with base 16       |
-| `%hd`<br>`%hi`   | `short` with base 10              |
-| `%hu`            | `unsigned short` with base 10     |
-| `%ho`            | `unsigned short` with base 8      |
-| `%hx`<br>`%hX`   | `unsigned short` with base 16     |
-| `%ld`<br>`%li`   | `long` with base 10               |
-| `%lu`            | `unsigned long` with base 10      |
-| `%lo`            | `unsigned long` with base 8       |
-| `%lx`<br>`%lX`   | `unsigned long` with base 16      |
-| `%lld`<br>`%lli` | `long long` with base 10          |
-| `%llu`           | `unsigned long long` with base 10 |
-| `%llo`           | `unsigned long long` with base 8  |
-| `%llx`<br>`%llX` | `unsigned long long` with base 16 |
-| `%f`             | `float`, `double`                 |
-| `%Lf`            | `long double`                     |
-| `%c`             | `char`                            |
-| `%s`             | `char*`                           |
-| `%p`             | `void*`                           |
+| Conversion Specifier | Data Type                                              |
+| :------------------- | :----------------------------------------------------- |
+| `%d`<br>`%i`         | `int` with base 10                                     |
+| `%u`                 | `unsigned int` with base 10                            |
+| `%o`                 | `unsigned int` with base 8                             |
+| `%x`<br>`%X`         | `unsigned int` with base 16                            |
+| `%f`<br>`%F`         | `double` as decimal floating-point number              |
+| `%e`<br>`%E`         | `double` as scientific notation                        |
+| `%g`<br>`%G`         | `double` as shortest of decimal or scientific notation |
+| `%a`<br>`%A`         | `double` as hexadecimal floating-point number          |
+| `%c`                 | `int` as character                                     |
+| `%s`                 | `char*` as null-terminated string                      |
+| `%p`                 | `void*` as pointer address                             |
+| `%n`                 | `int*` to store amount of written characters           |
+| `%%`                 | Percent sign                                           |
 
-- Format specifiers can contain conversion specifiers to specify how the inserted values
-  should be represented
+| Length Modifier | Example          | Data Type                                     |
+| :-------------- | :--------------- | :-------------------------------------------- |
+| `hh`            | `%hhd`<br>`%hhu` | `signed char`<br>`unsigned char`              |
+| `h`             | `%hd`<br>`%hu`   | `short`<br>`unsigned short`                   |
+| `l`             | `%ld`<br>`%lu`   | `long`<br>`unsigned long`                     |
+| `ll`            | `%lld`<br>`%llu` | `long long`<br>`unsigned long long`           |
+| `j`             | `%jd`<br>`%ju`   | `intmax_t`<br>`uintmax_t`                     |
+| `z`             | `%zu`<br>`%zd`   | `size_t`<br>corresponding signed integer      |
+| `t`             | `%td`<br>`%tu`   | `ptrdiff_t`<br>corresponding unsigned integer |
+| `L`             | `%Lf`<br>`%Le`   | `long double`                                 |
+
+| Flag | Effect                                      |
+| :--- | :------------------------------------------ |
+| `-`  | Left-justify value within the minimum width |
+| `+`  | Always write sign for signed numbers        |
+| ` `  | Prefix positive signed numbers with a space |
+| `0`  | Pad numbers with zeroes instead of spaces   |
+| `#`  | Use alternative representation              |
+
+- Format specifiers can contain flags, width and precision to specify how the inserted
+  values should be represented
 
 ```c
 #include <stdio.h>
@@ -860,33 +871,58 @@ buffer == "3 + 4.5 = 7.5";
 char buffer[100];
 
 // specify floating-point numbers
-snprintf(buffer, "%.2f", 83.2801);   // number of decimal places
+snprintf(buffer, sizeof(buffer), "%.2f", 83.2801);    // number of decimal places
 buffer; // "83.28"
-snprintf(buffer, "%10.f", 83.2801);  // minimum number of characters (left justified)
-buffer; // "   83.2801"
-snprintf(buffer, "%-10.f", 83.2801); // minimum number of characters (right justified)
-buffer; // "83.2801   "
-snprintf(buffer, "%8.2f", 83.2801);  // number of decimal places and minimum number of characters
-buffer; // "   83.28"
+snprintf(buffer, sizeof(buffer), "%10.2f", 83.2801);  // minimum number of characters
+buffer; // "     83.28"
+snprintf(buffer, sizeof(buffer), "%-10.2f", 83.2801); // left justify in minimum width
+buffer; // "83.28     "
+snprintf(buffer, sizeof(buffer), "%+.2f", 83.2801);   // always show sign
+buffer; // "+83.28"
+snprintf(buffer, sizeof(buffer), "%.2e", 83.2801);    // scientific notation
+buffer; // "8.33e+01"
+snprintf(buffer, sizeof(buffer), "%.4g", 83.2801);    // shortest representation
+buffer; // "83.28"
 
 // specify integers
-snprintf(buffer, "%.3d", 14);  // minimum number of digits
+snprintf(buffer, sizeof(buffer), "%.3d", 14);  // minimum number of digits
 buffer; // "014"
-snprintf(buffer, "%5d", 14);   // minimum number of characters (left justified)
+snprintf(buffer, sizeof(buffer), "%5d", 14);   // minimum number of characters
 buffer; // "   14"
-snprintf(buffer, "%-5d", 14);  // minimum number of characters (left justified)
+snprintf(buffer, sizeof(buffer), "%-5d", 14);  // left justify in minimum width
 buffer; // "14   "
-snprintf(buffer, "%5.3d", 14); // minimum number of digits and minimum number of characters
+snprintf(buffer, sizeof(buffer), "%05d", 14);  // pad with zeroes
+buffer; // "00014"
+snprintf(buffer, sizeof(buffer), "%#x", 14);   // alternative representation
+buffer; // "0xe"
+snprintf(buffer, sizeof(buffer), "%5.3d", 14); // minimum number of digits and characters
 buffer; // "  014"
+snprintf(buffer, sizeof(buffer), "%zu", sizeof(buffer)); // use size-specific specifier
 
 // specify strings
-snprintf(buffer, "%5s", "Hi");             // minimum number of characters (left justified)
+snprintf(buffer, sizeof(buffer), "%5s", "Hi");             // minimum number of characters
 buffer; // "   Hi"
-snprintf(buffer, "%-5s", "Hi");            // minimum number of characters (right justified)
+snprintf(buffer, sizeof(buffer), "%-5s", "Hi");            // left justify in minimum width
 buffer; // "Hi   "
-snprintf(buffer, "%.5s", "Hello, World!"); // number of characters
+snprintf(buffer, sizeof(buffer), "%.5s", "Hello, World!"); // maximum number of characters
 buffer; // "Hello"
+
+// use dynamic width and precision
+snprintf(buffer, sizeof(buffer), "%*d", 5, 14);       // width from argument
+buffer; // "   14"
+snprintf(buffer, sizeof(buffer), "%.*f", 2, 83.2801); // precision from argument
+buffer; // "83.28"
+
+// use escaped percent sign
+snprintf(buffer, sizeof(buffer), "%d%%", 50);
+buffer; // "50%"
 ```
+
+- <u>Best practices</u>:
+  - Prefer `snprintf` over `sprintf` to avoid buffer overflows
+  - Check the return value of `snprintf` to detect encoding errors and truncation
+  - Don't use user input directly as format string
+  - Avoid `%n` unless the amount of written characters explicitly needs to be stored
 
 ##### 11.2.2.2 String Processing
 
