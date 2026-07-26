@@ -814,16 +814,6 @@ rounding direction for floating-point addition with the following values:
 | `2`   | Toward positive infinity |
 | `3`   | Toward negative infinity |
 
-The `float.h` standard library header provides the `FLT_EVAL_METHOD` macro which represents the
-used precision for floating-point arithmetic with the following values:
-
-| Value | Meaning                     |
-| :-----| :-------------------------- |
-| `-1`  | Indeterminable              |
-| `0`   | Precision of provided types |
-| `1`   | Precision of `double`       |
-| `2`   | Precision of `long double`  |
-
 ### 11.2 Compound Types
 
 #### 11.2.1 Arrays
@@ -1978,6 +1968,18 @@ static_assert(sizeof(int) >= 4);
 static_assert(sizeof(long) >= sizeof(int), "long must not be smaller than int");
 ```
 
+### 15.3 Error Checking
+
+- The `errno.h` standard library header provides the `errno` variable in which representations
+  of occurred errors can be stored for global error checking
+
+The following values can be stored inside `errno`:
+
+| Value    | Meaning      | Description                                                    |
+| :------- | :----------- | :------------------------------------------------------------- |
+| `EDOM`   | Domain Error | An argument is outside a function's domain                     |
+| `ERANGE` | Range Error  | A return value is beyond the range of a function's return type |
+
 ## 16 Memory Management
 
 ### 16.1 Pointers
@@ -2452,7 +2454,102 @@ clearerr(f);
 
 ## 19 Math
 
-### 19.1 Random Number Generation
+- Many functions in the `math.h` standard library header use the `errno` variable of the
+  `errno.h` standard library header to store occurred errors
+
+The `math.h` standard library header provides the following macros with special meaning
+that can also be returned by mathematical functions:
+
+| Macro                       | Representation                                 |
+| :-------------------------- | :--------------------------------------------- |
+| `HUGE_VAL` (`double`)       | Huge value that can't be hold by any data type |
+| `HUGE_VALF` (`float`)       | Huge value that can't be hold by any data type |
+| `HUGE_VALL` (`long double`) | Huge value that can't be hold by any data type |
+| `INFINITY` (`float`)        | Infinity                                       |
+| `NAN` (`float`)             | Not A Number (non-valid number)                |
+
+### 19.1 Classification
+
+- The `math.h` standard library header provides parameterized macros for classification of numbers
+
+```c
+#include <math.h>
+
+// check whether value isn't a special macro value or zero
+int isNormal = isnormal(3.4);
+
+// check whether value is finite
+int isFinite = isfinite(3.4);
+
+// check whether value is infinite
+int isInfinite = isinf(3.4);
+
+// check whether value is NaN
+int isNan = isnan(3.4);
+
+// check which class of number the value belongs to
+int classification = fpcalssify(3.4);
+
+// check whether value has a sign bit
+int hasSignBit = signbit(3.4);
+```
+
+The `fpclassify` macro returns one of the following macros to determine the class of its argument:
+
+| Macro         | Meaning                                   |
+| :------------ | :---------------------------------------- |
+| `FP_NORMAL`   | Value isn't a special macro value or zero |
+| `FP_INFINITE` | Value is `INFINITE`                       |
+| `FP_NAN`      | Value is `NAN`                            |
+| `FP_ZERO`     | Value is zero                             |
+
+### 19.2 Arithmetic
+
+```c
+#include <math.h>
+
+// round value to nearest integer
+double result = round(3.4);         // double
+float resultf = roundf(3.4F);       // float
+long double resultl = roundl(3.4L); // long double
+
+// round value up
+result = ceil(3.4);    // double
+resultf = ceilf(3.4F); // float
+resultl = ceill(3.4L); // long double
+
+// round value down
+result = floor(3.4);    // double
+resultf = floorf(3.4F); // float
+resultl = floorl(3.4L); // long double
+
+// calculate remainder of the first specified value divided by the second specified value
+result = fmod(5.5, 2.2);     // double
+resultf = fmodf(5.5F, 2.2F); // float
+resultl = fmodl(5.5L, 2.2L); // long double
+
+// calculate absolute value
+result = fabs(-3.7);    // double
+resultf = fabsf(-3.7F); // float
+resultl = fabsl(-3.7L); // long double
+
+// calculate positive difference between two values
+result = fdim(0.4, 6.1);     // double
+resultf = fdimf(0.4F, 6.1F); // float
+resultl = fdiml(0.4L, 6.1L); // long double
+
+// calculate smaller of two values
+result = fmin(0.4, 6.1);     // double
+resultf = fminf(0.4F, 6.1F); // float
+resultl = fminl(0.4L, 6.1L); // long double
+
+// calculate larger of two values
+result = fmax(0.4, 6.1);     // double
+resultf = fmaxf(0.4F, 6.1F); // float
+resultl = fmaxl(0.4L, 6.1L); // long double
+```
+
+### 19.3 Random Number Generation
 
 ```c
 #include <stdlib.h> // import srand and rand
@@ -2462,6 +2559,114 @@ clearerr(f);
 srand(time(NULL)); // set seed to current time for ever changing seed
 
 int rng = rand(); // generate random integer
+```
+
+### 19.4 Exponentials and Logarithms
+
+```c
+#include <math.h>
+
+// calculate e raised to the power of the specified value
+double result = exp(3.2);        // double
+float resultf = exp(3.2F);       // float
+long double resultl = exp(3.2L); // long double
+
+// calculate the first specified number raised to the power of the second specified number
+result = pow(3.2, 2.0);     // double
+resultf = powf(3.2F, 2.0F); // float
+resultl = powl(3.2L, 2.0L); // long double
+
+// calculate the square root of the specified value
+result = sqrt(3.2);    // double
+resultf = sqrtf(3.2F); // float
+resultl = sqrtl(3.2L); // long double
+
+// calculate the cube root of the specified value
+result = cbrt(3.2);    // double
+resultf = cbrtf(3.2F); // float
+resultl = cbrtl(3.2L); // long double
+
+// calculate the logarithm of the specified number to the base e
+result = log(3.2);    // double
+resultf = logf(3.2F); // float
+resultl = logl(3.2L); // long double
+
+// calculate the logarith of the specified number to the base 10
+result = log10(3.2);    // double
+resultf = log10f(3.2F); // float
+resultl = log10l(3.2L); // long double
+
+// calculate the logarith of the specified number to the base 2
+result = log2(3.2);    // double
+resultf = log2f(3.2F); // float
+resultl = log2l(3.2L); // long double
+
+// split specified number into integer and fractional part
+double intPart, fractPart;
+intPart = modf(3.2, &fractPart);     // double
+float intPartf, fractPartf;
+intPartf = modff(3.2F, &fractPartf); // float
+long double intPartl, fractPartl;
+intPartl = modfl(3.2L, &fractPartl); // long double
+```
+
+### 19.5 Trigonometry
+
+```c
+#include <math.h>
+
+// calculate the cosine of the specified value (in radians)
+double result = cos(0.5);         // double
+float resultf = cosf(0.5F);       // float
+long double resultl = cosl(0.5L); // long double
+
+// calculate the sine of the specified value (in radians)
+result = sin(0.5);    // double
+resultf = sinf(0.5F); // float
+resultl = sinl(0.5L); // long double
+
+// calculate the tangent of the specified value (in radians)
+result = tan(0.5);    // double
+resultf = tanf(0.5F); // float
+resultl = tanl(0.5L); // long double
+
+// calculate the arc cosine of the specified value (in radians)
+result = acos(1.0);    // double
+resultf = acosf(1.0F); // float
+resultl = acosl(1.0L); // long double
+
+// calculate the arc sine of the specified value (in radians)
+result = asin(1.0);    // double
+resultf = asinf(1.0F); // float
+resultl = asinl(1.0L); // long double
+
+// calculate the arc tangent of the specified value (in radians)
+result = atan(1.0);    // arc tangent of one value (double)
+resultf = atanf(1.0F); // arc tangent of one value (double)
+resultl = atanl(1.0L); // arc tangent of one value (double)
+result = atan2(1.0, 1.0);     // arc tangent of y/x with correct quadrant (double)
+resultf = atan2f(1.0F, 1.0F); // arc tangent of y/x with correct quadrant (float)
+resultl = atan2l(1.0L, 1.0L); // arc tangent of y/x with correct quadrant (long double)
+
+// calculate the hyperbolic cosine of the specified value (in radians)
+result = cosh(0.5);    // double
+resultf = coshf(0.5F); // float
+resultl = coshl(0.5L); // long double
+
+// calculate the hyperbolic sine of the specified value (in radians)
+result = sinh(0.5);    // double
+resultf = sinhf(0.5F); // float
+resultl = sinhl(0.5L); // long double
+
+// calculate the hyperbolic tangent of the specified value (in radians)
+result = tanh(0.5);    // double
+resultf = tanhf(0.5F); // float
+resultl = tanhl(0.5L); // long double
+
+// calculate the hypotenuse of a right triangle with the legs x and y
+result = hypot(0.5, 0.8);     // double
+resultf = hypotf(0.5F, 0.8F); // float
+resultl = hypotl(0.5L, 0.8L); // long double
 ```
 
 ## 20 Time and Date
