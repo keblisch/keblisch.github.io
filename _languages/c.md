@@ -2115,7 +2115,7 @@ f = freopen("path/to/destination.txt", "w", stdin);
 ```c
 #include <stdio.h>
 
-// write strings to specified output stream
+// write string to specified output stream
 int charsWritten = fputs("Hello, World!\n", stderr);
 
 // write format strings to specified output stream
@@ -2132,8 +2132,20 @@ if (charsWritten != EOF)
 int writtenChar = fputc(stderr, 'A'); // function implementation
 writtenChar = putc(stderr, 'A');      // macro implementation
 
-// check whether character write operation was successful
+// check whether character writing operation was successful
 if (writtenChar != EOF)
+{
+    puts("Written successfully");
+}
+
+// Write specified amount of specified block of data to specified output stream
+char buffer[] = "Hello!\nHow are you?\n";
+size_t elemSize = sizeof(char);
+size_t elemNumber = sizeof(buffer) / elemSize;
+size_t writtenElements = fwrite(buffer, elemSize, elemNumber, stderr);
+
+// check whether data block writing operation was successful
+if (writtenElements == elemNumber)
 {
     puts("Written successfully");
 }
@@ -2146,7 +2158,7 @@ if (writtenChar != EOF)
 
 ```c
 // read line from specified stream
-char name[100];          // storage buffer
+char name[100];                              // storage buffer
 char* bufferStart = fgets(name, 100, stdin); // read specified amount of characters into buffer
 
 // check whether line reading operation was successful
@@ -2175,6 +2187,18 @@ int placedChar = ungetc('A', stdin);
 if (placedChar != EOF)
 {
     puts("Placed successfully");
+}
+
+// Read specified amount of data from specified input stream into specified buffer
+char buffer[10];
+size_t elemSize = sizeof(char);
+size_t elemNumber = sizeof(buffer) / elemSize;
+size_t readElements = fread(buffer, elemSize, elemNumber, stdin);
+
+// check whether data block reading operation was successful
+if (readElements == elemNumber)
+{
+    puts("Read successfully");
 }
 ```
 
