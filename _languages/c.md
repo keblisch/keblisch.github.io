@@ -2029,9 +2029,15 @@ if (writtenChar != EOF)
 ```c
 #include <stdio.h>
 
-// read string from stdin
-char name[100];          // storage buffer
-fgets(name, 100, stdin); // read specified amount of characters into buffer
+// read line from stdin
+char name[100]; // storage buffer
+char* bufferStart = gets(name);     // read all characters into buffer (may overflow)
+
+// check whether line reading operation was successful
+if (bufferStart != nullptr)
+{
+    puts("Read successfully");
+}
 
 // read single character from stdin
 int in = getchar(); // store character as ASCII value
@@ -2055,6 +2061,9 @@ if (!success)
     printf("Couldn't read input!");
 }
 ```
+
+- <u>Best practices</u>:
+  - Prefer `fgets` over `gets` because it's save against overflows
 
 ## 18 Files
 
@@ -2088,9 +2097,9 @@ f = freopen("path/to/destination.txt", "w", stdin);
   - `"r+"`: read and write text file (file must exist)
   - `"w+"`: read and write text file (file is being created or overwritten)
   - `"a+"`: read and append text file (file might be created)
-  - `"rb+"`/`"r+b"`: read and write binary file (file must exist)
-  - `"wb+"`/`"w+b"`: read and write binary file (file is being created or overwritten)
-  - `"ab+"`/`"a+b"`: read and append binary file (file must exist)
+  - `"rb+"`/`"r+b"`: read and write text or binary file (file must exist)
+  - `"wb+"`/`"w+b"`: read and write text or binary file (file is being created or overwritten)
+  - `"ab+"`/`"a+b"`: read and append text or binary file (file must exist)
 
 - The following predefined file streams do exist:
   - `stdin`: Stream to stdin
@@ -2106,8 +2115,11 @@ f = freopen("path/to/destination.txt", "w", stdin);
 ```c
 #include <stdio.h>
 
+// write strings to specified output stream
+int charsWritten = fputs("Hello, World!\n", stderr);
+
 // write format strings to specified output stream
-int charsWritten = fprintf(stderr, "Hello, World!\n");
+charsWritten = fprintf(stderr, "Hello, World!\n");
 charsWritten = fprintf(stderr, "%d + %d = %d\n", 3, 4, 7);
 
 // check whether write operation was successful
@@ -2133,11 +2145,21 @@ if (writtenChar != EOF)
 ### 18.2 Input
 
 ```c
+// read line from specified stream
+char name[100];          // storage buffer
+char* bufferStart = fgets(name, 100, stdin); // read specified amount of characters into buffer
+
+// check whether line reading operation was successful
+if (bufferStart != nullptr)
+{
+    puts("Read successfully");
+}
+
 // read character from specified input stream
 int readChar = fgetc(stdin); // function implementation
 readChar = getc(stdin);      // macro implementation
 
-// check whether character read operation was successful
+// check whether character reading operation was successful
 if (writtenChar != EOF)
 {
     puts("Written successfully");
@@ -2188,7 +2210,7 @@ if (success != EOF)
 ```c
 #include <stdio.h>
 
-// create and open stream to temporary file in w+ mode
+// create and open stream to temporary file in wb+ mode
 FILE* tmp = tmpfile();
 
 // get pointer to internaly stored unique file name
