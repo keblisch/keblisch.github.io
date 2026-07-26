@@ -1021,7 +1021,7 @@ buffer; // "50%"
 
 ##### 11.2.2.2 String Processing
 
-- The `string.h` standard library provides functions to process strings
+- The `string.h` standard library header provides functions to process strings
 
 ```c
 #include <string.h>
