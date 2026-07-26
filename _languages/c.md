@@ -737,6 +737,62 @@ tolower('A') == 'a';
 | `double`            | Real number    | At least 8 | `3.14`, `4.`, `.65`    |
 | `long double`       | Real number    | At least 8 | `3.14L`, `4.l`, `.65l` |
 
+The `float.h` standard library header provides the following macros for information about
+floating-point types during runtime:
+
+| Macro             | Value                                                                 |
+| :---------------- | :-------------------------------------------------------------------- |
+| `FLT_RADIX`       | Radix of exponent representation                                      |
+| `FLT_MANT_DIG`    | Number of significant digits in `float` (base `FLT_RADIX`)            |
+| `DGL_MANT_DIG`    | Number of significant digits in `double` (base `FLT_RADIX`)           |
+| `LDBL_MANT_DIG`   | Number of significant digits in `long double` (base `FLT_RADIX`)      |
+| `FLT_DIG`         | Number of significant digits in `float` (base 10)                     |
+| `DBL_DIG`         | Number of significant digits in `double` (base 10)                    |
+| `LDBL_DIG`        | Number of significant digits in `long double` (base 10)               |
+| `DECIMAL_DIG`     | Number of significant digits in largest floating-point type (base 10) |
+| `FLT_MIN_EXP`     | Smallest number in `float` to which `FLT_RADIX` can be raised         |
+| `DBL_MIN_EXP`     | Smallest number in `double` to which `FLT_RADIX` can be raised        |
+| `LDBL_MIN_EXP`    | Smallest number in `long double` to which `FLT_RADIX` can be raised   |
+| `FLT_MIN_10_EXP`  | Smallest number in `float` to which 10 can be raised                  |
+| `DBL_MIN_10_EXP`  | Smallest number in `double` to which 10 can be raised                 |
+| `LDBL_MIN_10_EXP` | Smallest number in `long double` to which 10 can be raised            |
+| `FLT_MAX_EXP`     | Largest number in `float` to which `FLT_RADIX` can be raised          |
+| `DBL_MAX_EXP`     | Largest number in `double` to which `FLT_RADIX` can be raised         |
+| `LDBL_MAX_EXP`    | Largest number in `long double` to which `FLT_RADIX` can be raised    |
+| `FLT_MAX_10_EXP`  | Largest number in `float` to which 10 can be raised                   |
+| `DBL_MAX_10_EXP`  | Largest number in `double` to which 10 can be raised                  |
+| `LDBL_MAX_10_EXP` | Largest number in `long double` to which 10 can be raised             |
+| `FLT_MIN`         | Smallest positive value `float` can represent                         |
+| `DBL_MIN`         | Smallest vpositive alue `double` can represent                        |
+| `LDBL_MIN`        | Smallest positive value `long double` can represent                   |
+| `FLT_MAX`         | Largest positive value `float` can represent                          |
+| `DBL_MAX`         | Largest vpositive alue `double` can represent                         |
+| `LDBL_MAX`        | Largest positive value `long double` can represent                    |
+| `FLT_EPSILON`     | Smallest representable difference between two `float` values          |
+| `DBL_EPSILON`     | Smallest representable difference between two `double` values         |
+| `LDBL_EPSILON`    | Smallest representable difference between two `long double` values    |
+
+The `float.h` standard library header provides the `FLT_ROUNDS` macro which represents the
+rounding direction for floating-point addition with the following values:
+
+| Value | Meaning                  |
+| :-----| :----------------------- |
+| `-1`  | Indeterminable           |
+| `0`   | Toward zero              |
+| `1`   | To nearest               |
+| `2`   | Toward positive infinity |
+| `3`   | Toward negative infinity |
+
+The `float.h` standard library header provides the `FLT_EVAL_METHOD` macro which represents the
+used precision for floating-point arithmetic with the following values:
+
+| Value | Meaning                     |
+| :-----| :-------------------------- |
+| `-1`  | Indeterminable              |
+| `0`   | Precision of provided types |
+| `1`   | Precision of `double`       |
+| `2`   | Precision of `long double`  |
+
 ### 11.2 Compound Types
 
 #### 11.2.1 Arrays
