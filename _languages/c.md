@@ -676,6 +676,24 @@ The base of integer literals can be specified with the following prefixes:
   - Overflows of signed integers cause undefined behavior
   - Overflows of unsigned integers perform a modulo operation with their bit-size on them
 
+The `limits.h` standard library header provides the following macros for information about
+integer-types during runtime:
+
+| Macro       | Value                                          |
+| :---------- | :--------------------------------------------- |
+| `SHRT_MIN`  | Smallest possible value of `short`             |
+| `SHRT_MAX`  | Largest possible value of `short`              |
+| `USHRT_MAX` | Largest possible value of `unsigned short`     |
+| `INT_MIN`   | Smallest possible value of `int`               |
+| `INT_MAX`   | Largest possible value of `int`                |
+| `UINT_MAX`  | Largest possible value of `unsigned int`       |
+| `LONG_MIN`  | Smallest possible value of `long`              |
+| `LONG_MAX`  | Largest possible value of `long`               |
+| `ULONG_AX`  | Largest possible value of `unsigned long`      |
+| `LLONG_MIN` | Smallest possible value of `long long`         |
+| `LLONG_MAX` | Largest possible value of `long long`          |
+| `ULLONG_AX` | Largest possible value of `unsigned long long` |
+
 #### 11.1.2 Characters
 
 | Keyword         | Representation  | Byte Size | Literals     |
@@ -717,6 +735,19 @@ Characters can be checked and manipulated with the `ctype` standard library:
 toupper('a') == 'A';
 tolower('A') == 'a';
 ```
+
+The `limits.h` standard library header provides the following macros for information about
+`char` during runtime:
+
+| Macro        | Value                                                           |
+| :----------- | :-------------------------------------------------------------- |
+| `CHAR_BIT`   | Number of bits per byte                                         |
+| `CHAR_MIN`   | Smallest possible value of `char`                               |
+| `CHAR_MAX`   | Largest possible value of `char`                                |
+| `SCHAR_MIN`  | Smallest possible value of `signed char`                        |
+| `SCHAR_MAX`  | Largest possible value of `signed char`                         |
+| `UCHAR_MAX`  | Largest possible value of `unsigned char`                       |
+| `MB_LEN_MAX` | Largest amount of possibly bytes in any multi-byte `char` value |
 
 #### 11.1.3 Booleans
 
