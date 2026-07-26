@@ -2229,7 +2229,51 @@ if (success != EOF)
   - Always check whether file manipulations were successful
   - Always close streams to files before renaming, moving or deleting them
 
-### 18.4 Temporary Files
+### 18.4 File Positioning
+
+- Every stream has a file position determining the position of operations therein
+  - When streams are opened the file position starts at their beginning
+    (except for appending modes which start the file position at their end)
+  - Every operation moves the file position forward accordingly
+
+```c
+#include <stdio.h>
+
+FILE* f = fopen("path/to/file.txt");
+
+// move file position specified amount of bytes from specified relative position
+int success = fseek(f, 12, SEEK_SET); // move from beginning of file
+success = fseek(f, -10, SEEK_END);    // move from end of file
+success = fseek(f, 8, SEEK_CUR);      // move from current position
+
+// check whether file positioning was successful
+if (success)
+{
+    puts("Move succesfully");
+}
+
+// set file position of specified stream to beginning and clear its error flags
+rewind(f);
+
+// get current file position of specified stream (may overflow)
+long currentPosition = ftell(f);
+
+// manage lare file positions
+fpos_t filePosition;                 // storage variable for high file positions
+success = fgetpos(f, &filePosition); // save current file position in storage variable
+success = fsetpos(f, &filePosition); // set file position to value in storage variable
+
+// check whether file positioning was successful
+if (success)
+{
+    puts("Move succesfully");
+}
+```
+
+- <u>Best practices</u>:
+  - Use `fgetpos` and `fsetpos` for file positions that may overflow
+
+### 18.5 Temporary Files
 
 ```c
 #include <stdio.h>
@@ -2248,7 +2292,7 @@ fileName = tmpnam(buffer);
 - <u>Best practices</u>:
   - Avoid using `tmpnam` because it may be subject to TOCTOU-race-conditions
 
-### 18.5 Buffering
+### 18.6 Buffering
 
 - Read and write operations always use buffers internally to optimize these
   - But the buffering can be configured manually
@@ -2287,7 +2331,7 @@ if (success == 0)
 - <u>Best practices</u>:
   - Always check whether buffer flushings and buffer settings were successful
 
-### 18.6 Error Handling
+### 18.7 Error Handling
 
 - When streams aren't readable/writable this is indicated by the value `EOF` returned by functions
   interacting with them
