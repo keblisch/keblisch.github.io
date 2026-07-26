@@ -731,9 +731,22 @@ Characters can be checked and manipulated with the `ctype` standard library:
 ```c
 #include <ctype.h>
 
+// classify characters
+isalnum((int)'A') == true;  // whether it is alphanumeric
+isalpha((int)'A') == true;  // whether it is alphabetic
+islower((int)'a') == true;  // whether it is alphabetic and lower case
+isupper((int)'A') == true;  // whether it is alphabetic and upper case
+isdigit((int)'4') == true;  // whether it is numeric
+ispunct((int)'!') == true;  // whether it is alphanumeric
+isblank((int)' ') == true;  // whether it is a blank
+isspace((int)' ') == true;  // whether it is whitespace
+iscntrl((int)'\n') == true; // whether it is a control character
+isgraph((int)'A') == true;  // whether it is a visible character (excluding blanks)
+isprint((int)'A') == true;  // whether it is a visible character (including blanks)
+
 // change letter case (when applicable)
-toupper('a') == 'A';
-tolower('A') == 'a';
+int upper = toupper((int)'a'); // to upper case
+int lower = tolower((int)'A'); // to lower case
 ```
 
 The `limits.h` standard library header provides the following macros for information about
