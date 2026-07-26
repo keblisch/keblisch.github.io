@@ -825,6 +825,11 @@ char buffer[100];
 sprintf(buffer, "%d + %.1f = %.1f", 3, 4.5, 7.5);                  // can overflow buffer
 snprintf(buffer, sizeof(buffer), "%d + %.1f = %.1f", 3, 4.5, 7.5); // write up to buffer size
 buffer == "3 + 4.5 = 7.5";
+
+// read format strings from specified strings
+int id; float nc;                   // storage variables
+scanf("12", "%d", &id);             // read into format string and store value in storage variable
+scanf("1:4.4", "%d:%f.", &id, &nc); // pattern match against format string (whitespace is ignored)
 ```
 
 | Conversion Specifier | Data Type                                              |
@@ -2109,6 +2114,7 @@ f = freopen("path/to/destination.txt", "w", stdin);
 - <u>Best practices</u>:
   - Always check whether files could be opened
   - Always close streams to files when they're no longer used
+  - Always open files in binary mode to provide cross-platform support
 
 ### 18.1 Output
 
