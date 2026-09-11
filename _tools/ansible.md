@@ -12,9 +12,9 @@ title: Ansible
 
 Ansible is an automation tool to deploy IT systems via declarative configurations.
 
-| Usage | Implementation | License         | Current Version |
-| :---- | :------------- | :-------------- | :-------------- |
-| CLI   | Python         | GPL-3.0 license | 2.21.4          |
+| Usage         | Implementation | License         | Current Version |
+| :------------ | :------------- | :-------------- | :-------------- |
+| CLI<br>Config | Python         | GPL-3.0 license | 2.21.4          |
 
 ## Table of Contents
 {: .no_toc .text-delta }
@@ -124,7 +124,8 @@ my_alias              # group existing host definition by its alias
 [my_parent_group:children]
 my_group
 
-# set configurations for entire group (doesn't overwrite individually set configurations)
+# set variables/configurations for entire group
+# (doesn't overwrite individually set variables/configurations)
 [my_group:vars]
 ansible_connection=ssh
 ```
@@ -184,7 +185,8 @@ all:
         server1.company.com:   # group existing host definition
         my_alias:              # group existing host definition by its alias
 
-      # set configurations for entire group (doesn't overwrite individually set configurations)
+      # set variables/configurations for entire group
+      # (doesn't overwrite individually set variables/configurations)
       vars:
         ansible_connection: ssh
 
@@ -212,18 +214,22 @@ all:
 Variables can be defined inside playbooks in the following way:
 
 ```yaml
-# define variable block
-vars:
-  name: "John Doe"  # define single value as variable
-  hobbies:          # define list as variable
-    - "jogging"
-    - "reading"
-  credentials:      # define dictionary as variable
-    username: "john"
-    password: "qwerty"
+---
+- name: "My Playbook"
+  hosts: "all"
+
+  # define variable block
+  vars:
+    name: "John Doe"  # define single value as variable
+    hobbies:          # define list as variable
+      - "jogging"
+      - "reading"
+    credentials:      # define dictionary as variable
+      username: "john"
+      password: "qwerty"
 ```
 
-Variables can be defined inside variable files in the following way:
+Variables can be defined inside dedicated variable files in the following way:
 
 ```yaml
 # define variables
@@ -244,8 +250,8 @@ sentences:
   - "One of my hobbies is {{ hobbies[0] }}."             # reference item of list variable
   - "You can add me under: {{ credentials.username }}."  # reference item of dictionary variable
   - "My password is: {{ credentials['password'] }}."     # reference item of dictionary variable
-hobbies: {{ hobbies }}                                   # reference dictionary variable
-credentials: {{ credentials }}                           # reference list variable
+hobbies: "{{ hobbies }}"                                 # reference dictionary variable
+credentials: "{{ credentials }}"                         # reference list variable
 ```
 
 The following magic variables exist that are automatically defined by Ansible:
@@ -259,7 +265,7 @@ The following magic variables exist that are automatically defined by Ansible:
 | `hostvars`                   | Dictionary | All hosts that contain dictionaries with all their variables    |
 
 The variable `ansible_facts` is a dictionary defined automatically by Ansible with information
-about the target host that are called Facts:
+about the target host, these are called Facts:
 
 | Key                    | Data Type | Value                                  |
 | :--------------------- | :-------- | :------------------------------------- |
