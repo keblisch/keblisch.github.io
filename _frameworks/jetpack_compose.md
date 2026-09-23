@@ -211,6 +211,23 @@ fun MyComposable() {
 }
 ```
 
+### 5.3 Spacers
+
+- Spacers can be used to add space between composables
+- Spacer composables require a modifier object to set their size (see [6 Modifiers](#6-modifiers)).
+
+```kotlin
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.runtime.Composable
+
+@Composable
+fun MyComposable() {
+
+    // Display an empty space composable.
+    Spacer()
+}
+```
+
 ## 6 Modifiers
 
 - Modifiers change the appearance, layout, and behavior of composables.
@@ -237,6 +254,9 @@ fun MyComposable(modifier: Modifier = Modifier) {
 
         // Adjust the passed modifier; modifier order is relevant.
         modifier = modifier
+            .width(width = 12.dp)              // Set width.
+            .height(width = 12.dp)             // Set height.
+            .size(size = 12.dp)                // Set width and height.
             .padding(all = 16.dp)              // Set padding for all sides.
             .padding(                          // Set padding for individual sides.
                 start = 16.dp,
