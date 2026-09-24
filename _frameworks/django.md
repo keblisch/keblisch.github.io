@@ -47,7 +47,7 @@ poetry add django
 ## 3 Concepts
 
 - Each Django project consists of one or multiple apps
-  - Thereby each app encapsulates related business logic
+  - Thereby each app encapsulates related content
   - Thereby apps can exist independantly of a project and incorporated into projects
     as needed
 
@@ -117,6 +117,7 @@ python manage.py createsuperuser
   - This file is pre-populated with default settings
   - The following settings can be applied there:
     - The Django apps to include in the Django project
+    - The databases to use
 
 ```python
 from pathlib import Path
@@ -141,9 +142,10 @@ INSTALLED_APPS: list[str] = [
     "myapp",
 ]
 
+
 # define database connections (elements depend on backend and database type)
 DATABASES: dict[str, Any] = {
-    # define default database to manage internal data (SQLite per default)
+    # define default database (SQLite per default)
     "default": {
         "ENGINE': "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
@@ -153,7 +155,7 @@ DATABASES: dict[str, Any] = {
 
 ## 7 Views
 
-- Views are mappings of functions or class methods to HTTP requests
+- Views are mappings of functions or classes to HTTP requests
 
 ```python
 from django.http import HttpResponse
@@ -174,6 +176,10 @@ class Hello(View):
     # define method for GET request to view
     def get(self, request) -> HttpResponse:
         return HttpResponse("Hello, World!")
+
+    # define method for POST request to view
+    def post(self, request) -> HttpResponse:
+        return HttpResponse("Success!")
 
 
 def greet(request) -> HttpResponse:
@@ -228,8 +234,11 @@ from django.urls import URLPattern, include, path
 
 # map URLs prefixes to app URLs
 urlpatterns: list[URLPattern] = [
-    path(route="admin/", view=admin.site.urls),      # map URL prefix to internal admin app
-    path(route="", view=include(arg="myapp.urls")),  # map URL prefix to all URLs of specified app
+    # map URL prefix to internal admin app
+    path(route="admin/", view=admin.site.urls),
+
+    # map URL prefix to all URLs of specified app
+    path(route="", view=include(arg="myapp.urls")),
 ]
 ```
 
@@ -244,8 +253,19 @@ from . import views
 
 # map URLs to views
 urlpatterns: list[URLPattern] = [
-    path(route="hello", view=views.hello),      # map URL to view function
-    path(route="hi", view=views.Hi.as_view()),  # map URL to view class
+    # map URL to view function
+    path(
+        route="hello",     # URL path to map
+        view=views.hello,  # view function to map
+        name="hello",      # internal mapping name for templates
+    ),
+
+    # map URL to view class
+    path(
+        route="hi",               # URL path to map
+        view=views.Hi.as_view(),  # view class to map
+        name="hi",                # internal mapping name for templates
+    ),
 ]
 ```
 
@@ -285,6 +305,22 @@ class Person(Model):
     registrated_at: DateField = DateField(
         auto_now=True,  # populate with current datetime automatically
     )
+
+    # define string representation function (used by admin panel)
+    def __str__(self) -> str:
+        return self.name
+```
+
+- Models can be used to access and manipulate their represented database entries
+
+```python
+from multiprocessing.managers import BaseManager
+
+from .models import MyModel
+
+
+# query database for all entities of specified model
+result: BaseManager[MyModel] = MyModel.objects.all()
 ```
 
 ## 10 Forms
@@ -330,6 +366,15 @@ class Registration(forms.ModelForm):
         <!-- insert value from view into template -->
         <p>Hello, {{ name }}!</p>
 
+        <!-- insert element of dictionary from view into template -->
+        <p>Hello, {{ person.name }}!</p>
+
+        <!-- loop over list or set from view and generate HTML with each iteration -->
+        {% for my_item in my_inserted_object %}
+            <!-- access element of current iteration -->
+            <p>{{ my_item.name }}</p>
+        {% endfor %}
+
         <!-- defin forms in template -->
         <form method="POST">
             {% csrf_token %}  <!-- insert CSRF token for form (required!) -->
@@ -339,6 +384,44 @@ class Registration(forms.ModelForm):
     </body>
 
 </html>
+```
+
+- Django templates can be inserted into other templates in the following way:
+
+`base.html`:
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+    </head>
+
+    <body>
+        <!-- define block in which templates can be inserted -->
+        {% block my_insertion %}
+        {% endblock %}
+    </body>
+
+</html>
+```
+
+`insert.html`:
+
+```html
+<!-- define template in which to insert -->
+{% extends "base.html" %}
+
+<!-- define block of template in which to insert -->
+{% block my_insertion %}
+<p>
+    This is my dynamically inserted HTML!
+</p>
+{% endblock %}
 ```
 
 ## 12 Administration
