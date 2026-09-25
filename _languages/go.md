@@ -317,8 +317,9 @@ comment. */ var y int = 4
 
 ## 7 Variables
 
-Variables are named placeholders for values and can be assigned freely. Thereby they can only
-hold values of the same data type, which must be defined at their creation.
+Variables are named storage locations for values. Each variable has a
+specific type, and only values assignable to that type can be assigned
+to the variable.
 
 ```go
 // Declare variables.
@@ -334,10 +335,16 @@ x, y = 9, 3.12   // Multiple variables of different types.
 var a int = 9        // Single variable.
 var b, c int = 3, 4  // Multiple variables of the same type.
 
-// Initialize variables with type inference (only possible inside functions).
-alice := 9               // Single variable.
-bob, charly := 3, 4      // Multiple variables of the same type.
-dickons, elly := 7, 1.2  // Multiple variables of different types.
+// Initialize variables with type inference.
+var alice = 9               // Single variable.
+var bob, charly = 3, 4      // Multiple variables of the same type.
+var dickons, elly = 7, 1.2  // Multiple variables of different types.
+
+// Initialize variables with shorthand type inference (only possible inside functions).
+foo := 9             // Single variable.
+bar, foobar := 3, 4  // Multiple variables of the same type.
+zig, zag := 7, 1.2   // Multiple variables of different types.
+zig, zug := 7, 1.2   // Mixed initialization and redefinition.
 ```
 
 <u>Best practices</u>:
