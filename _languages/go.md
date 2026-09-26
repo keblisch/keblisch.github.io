@@ -345,6 +345,13 @@ foo := 9             // Single variable.
 bar, foobar := 3, 4  // Multiple variables of the same type.
 zig, zag := 7, 1.2   // Multiple variables of different types.
 zig, zug := 7, 1.2   // Mixed initialization and redefinition.
+
+// Create multiple variables in one var block.
+var (
+	min int        // Declare variable.
+	max int = 100  // Initialize variable.
+	default        // Reuse the type and expression list from the previous declaration.
+)
 ```
 
 <u>Best practices</u>:
@@ -374,6 +381,8 @@ const (
 	charly         // Takes the same constant expression as the preceding declaration.
 )
 ```
+
+Every literal value is a constant expression and is therefore untyped.
 
 <u>Best practices</u>:
 - Identifiers of exported constants should use Pascal case, while unexported constants should use
@@ -451,7 +460,136 @@ The zero value of strings is the empty string `""`.
 | :------- | :-------------------- | :--------------------- |
 | `string` | 4 for every character | `"Hi!"`, `"1 + 2 = 3"` |
 
-### 9.2 Data Type Conversion
+#### 9.1.6 Arrays
+
+Arrays are fixed-sized containers for multiple values. They can only hold values of the
+same data type.
+
+The zero value of arrays are arrays of zero values of their contained data type.
+
+```go
+// Declare array of specified size and type.
+var arr [5]int
+
+// Define array of specified size and type.
+arr = [5]int{1, 2, 3, 4, 5}
+
+// Access array elements by their index.
+arr[0] = 1
+arr[0] == 1
+
+// Create multi-dimensional array.
+var matrix int[4][4] = int[4][4]{
+	{1, 2, 3, 4},
+	{2, 4, 6, 8},
+	{3, 5, 7, 9},
+	{1, 3, 5, 7},
+}
+
+// Access element of multi-dimensional array.
+matrix[0][2] = 3
+matrix[0][2] == 3
+```
+
+### 9.2 Reference Data Types
+
+Reference data types are pointers to dynamic data structures that are stored in heap memory.
+
+The zero value of reference data types is `nil`.
+
+#### 9.2.1 Slices
+
+Slices are dynamic views into arrays. Therefore any change to the slice also changes the
+underlying array.
+
+```go
+// Create slice of an existing array.
+arr := [5]int{1, 2, 3, 4, 5}
+var slice1 []int = arr[1:3]  // Slice from and to (exclusive) specified element.
+var slice2 []int = arr[:3]   // Slice from start to specified element (exclusive).
+var slice3 []int = arr[1:]   // Slice from specified element to end.
+
+// Create slice literal with its own internal array.
+var dyn []int = []int{1, 2, 3, 4, 5}
+
+// Create slices with specific length and capacity.
+dyn = make([]int, 5)     // Specify data type and length.
+dyn = make([]int, 5, 8)  // Specify data type, length and capacity.
+
+// Access slice elements by their index.
+dyn[0] = 5
+dyn[0] == 5
+
+// Get length of slice.
+len(dyn) == 5  // Number of elements.
+cap(dyn) == 5  // Current capacity for elements.
+
+// Change length of slice.
+dyn = dyn[:2]  // Reduce to two elements.
+dyn = dyn[:8]  // Extend to eight elements (also increases capacity).
+dyn = dyn[2:]  // Drop first two elements.
+
+// Append elements to slice.
+dyn = append(dyn, 4)        // Append single element.
+dyn = append(dyn, 7, 2, 5)  // Append multiple elements.
+
+// Create multi-dimensional slice.
+var matrix int[][] = []int{
+	[]int{1, 2, 3, 4},
+	[]int{2, 4, 6, 8},
+	[]int{3, 5, 7, 9},
+	[]int{1, 3, 5, 7},
+}
+
+// Access element of multi-dimensional slice.
+matrix[0][2] = 3
+matrix[0][2] == 3
+```
+
+#### 9.2.2 Maps
+
+Maps are dynamic mappings between keys and values.
+
+```go
+// Declare map with specified key and value data types.
+var scores map[string]int
+
+// Define map with key-value pairs.
+scores = map[string]int{
+	"John": 9,
+	"Jane": 7,
+}
+
+// Create maps with specific capacity.
+scores = make(map[string]int)     // Specify data type.
+scores = make(map[string]int, 8)  // Specify data type and capacity.
+
+// Access map elements by their key.
+scores["John"] = 8
+scores["John"] == 8
+
+// Check whether keys exist in map.
+elem, ok := scores["John"]     // Existing key.
+elem == 8                     // Existing value or rero value of data type.
+ok == true                    // Whether key exists.
+
+// Add key-value pair to map.
+scores["Max"] = 7
+
+// Remove key-value pair from map.
+delete(scores, "Jane")
+
+// Create map with structure as values.
+type Person struct {
+	Name string
+	age int
+}
+registry := map[string]Person{
+	"John": { Name: "John", Age: 21 }  // Omit structure name in key-value pair insertion.
+}
+```
+
+### 9.3 Data Type Conversion
 
 To use values in places where other data types are expected, their data type must be
 converted first.
@@ -470,149 +608,379 @@ var a rune = rune(65)
 var b int = int('A')
 ```
 
-## 10 Literals
+## 10 Operators
 
-How literals are treated in the language.
+Operators manipulate and chain expressions into new values.
 
-```text
-Example for literals in the language
+### 10.1 Precedence
+
+The precedence of operators decides in which order chained operations are evaluated.
+
+| Precedence Level | Operators                   |
+| :--------------- | :-------------------------- |
+| 1                | `+` `-` `*` `/` `%`         |
+| 2                | `&` `│` `^` `<<` `>>` `&^`  |
+| 3                | `==` `!=` `<` `<=` `>` `>=` |
+| 4                | `&&` `││` `!`               |
+| 5                | `&` `*`                     |
+| 6                | `<-`                        |
+
+```go
+// Give operations higher precedence.
+(3 + 4) * (5 - 3) == 14
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+### 10.2 Arithmetic Operators
 
-## 11 Operators
+Arithmetic operators perform operations on integers and floating-point numbers.
 
-### 11.1 Precedence
+| Operation        | Symbol   | Arity  | Associativity |
+| :--------------- | :------- | :----- | :------------ |
+| Addition         | `+`      | Binary | Left          |
+| Unary Plus       | `+`      | Unary  | Right         |
+| Subtraction      | `-`      | Binary | Left          |
+| Negation         | `-`      | Unary  | Right         |
+| Multiplication   | `*`      | Binary | Left          |
+| Division         | `/`      | Binary | Left          |
+| Modulo           | `%`      | Binary | Left          |
 
-| Precedence | Operation                        |
-| :--------- | :------------------------------- |
-| 1          | Multiplication, Division, Modulo |
-| 2          | Addition, Subtraction            |
+```go
+// Perform additions.
+3 + 4 == 7  // Binary plus.
++(5) == 5   // Unary plus.
 
-Description how operator precedence can be changed.
+// Perform subtractions.
+4 - 3 == 1  // Binary minus.
+-(4) == -4  // Unary minus.
 
-### 11.2 Arithmetic Operators
+// Perform multiplication.
+3 * 2 == 6
 
-How arithmetic operators are treated in the language.
+// Perform division.
+3.0 / 2 == 1.5  // Floating-point division.
 
-| Operation   | Symbol | Arity  | Associativity |
-| :---------- | :----- | :----- | :------------ |
-| Addition    | `+`    | Binray | Left          |
-| Subtraction | `-`    | Binary | Left          |
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 11.3 Comparison Operators
-
-How comparison operators are treated in the language.
-
-| Operation  | Symbol | Arity  | Associativity |
-| :--------- | :----- | :----- | :------------ |
-| Equality   | `==`   | Binary | Left          |
-| Inequality | `!=`   | Binary | Left          |
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 11.4 Logical Operators
-
-How logical operators are treated in the language.
-
-| Operation | Symbol | Arity | Associativity |
-| :-------- | :----- | :---- | :------------ |
-| AND       | `&&`   | Binary | Left         |
-| OR        | `||`   | Binary | Left         |
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 11.5 Bitwise Operators
-
-How bitwise operators are treated in the language.
-
-| Operation   | Symbol | Arity  | Associativity |
-| :---------- | :----- | :----- | :------------ |
-| Bitwise AND | `&`    | Binary | Left          |
-| Bitwise OR  | `|`    | Binary | Left          |
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 11.6 Assignment Operators
-
-How assignment operators are treated in the language.
-
-| Operation           | Symbol | Arity  | Associativity |
-| :------------------ | :----- | :----- | :------------ |
-| Assignment          | `=`    | Binary | Right         |
-| Addition Assignment | `+=`   | Binary | Right         |
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 11.7 Ternary Operator
-
-How the ternary operator is treated in the language.
-
-```text
-Example for the ternary operator in the language
+// Perform modulo division.
+11 % 4 == 3
 ```
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+Incrementation and decrementation operations do exist, but only as statements.
+
+```go
+// Perform incrementation.
+x := 3
+x++  // Increment statement.
+x == 4
+
+// Perform decrementation.
+y := 3
+y--  // Decrement statement.
+y == 2
+```
+
+### 10.3 Comparison Operators
+
+Comparison operators compare two values and evaluate to boolean values. Less and greater
+comparisons can only be performed on integers and floating-point numbers.
+
+| Operation      | Symbol   | Arity  | Associativity |
+| :------------- | :------- | :----- | :------------ |
+| Equality       | `==`     | Binary | Left          |
+| Inequality     | `!=`     | Binary | Left          |
+| Greater        | `>`      | Binary | Left          |
+| Greater-Equals | `>=`     | Binary | Left          |
+| Less           | `<`      | Binary | Left          |
+| Less-Equals    | `<=`     | Binary | Left          |
+
+```go
+// Perform equality check.
+4 == 4 == true
+3 != 4 == true
+
+// Perform greater-than check.
+4 > 3 == true
+4 >= 3 == true
+
+// Perform less-than check.
+3 < 4 == true
+3 <= 4 == true
+```
+
+### 10.4 Logical Operators
+
+Logical operators perform logical operations on boolean values and evaluate themselves to
+booleans.
+
+| Operation | Symbol   | Arity  | Associativity |
+| :-------- | :------- | :----- | :------------ |
+| AND       | `&&`     | Binary | Left          |
+| OR        | `││`     | Binary | Left          |
+| NOT       | `!`      | Unary  | Right         |
+
+```go
+// Perform logical AND.
+true && true == true
+
+// Perform logical OR.
+true ││ false == true
+
+// Perform logical NOT.
+!false == true
+```
+
+### 10.5 Bitwise Operators
+
+Bitwise operators manipulate individual bits of values and can only work with integral types.
+
+| Operation   | Symbol   | Arity  | Associativity |
+| :---------- | :------- | :----- | :------------ |
+| Bitwise AND | `&`      | Binary | Left          |
+| Bitwise OR  | `│`      | Binary | Left          |
+| Bitwise NOT | `^`      | Unary  | Right         |
+| Bitwise XOR | `^`      | Binary | Left          |
+| Left Shift  | `<<`     | Binary | Left          |
+| Right Shift | `>>`     | Binary | Left          |
+
+```go
+// Perform bitwise logical operations.
+0b0110 & 0b0011 == 0b0010  // Bitwise AND.
+0b0110 │ 0b0011 == 0b0111  // Bitwise OR.
+^0b0110 == 0b1001          // Bitwise NOT.
+0b0110 ^ 0b0011 == 0b0101  // Bitwise XOR.
+
+// Perform bitwise shifts.
+0b0011 << 2 == 0b1100  // Left shift.
+0b1100 >> 2 == 0b0011  // Right shift.
+```
+
+### 10.6 Assignment Operators
+
+Assignment operators are assigning values to variables, therefore the left operand must always be
+a variable. Assignment operations can only be used as statements.
+
+| Operation                   | Symbol  | Arity  | Associativity |
+| :-------------------------- | :------ | :----- | :------------ |
+| Assignment                  | `=`     | Binary | Right         |
+| Shorthand Assignment        | `:=`    | Binary | Right         |
+| Addition Assignment         | `+=`    | Binary | Right         |
+| Subtraction Assignment      | `-=`    | Binary | Right         |
+| Multiplication Assignment   | `*=`    | Binary | Right         |
+| Division Assignment         | `/=`    | Binary | Right         |
+| Integer Division Assignment | `/=`    | Binary | Right         |
+| Modulo Assignment           | `%=`    | Binary | Right         |
+| Bitwise AND Assignment      | `&=`    | Binary | Right         |
+| Bitwise OR Assignment       | `│=`    | Binary | Right         |
+| Bitwise XOR Assignment      | `^=`    | Binary | Right         |
+| Left Shift Assignment       | `<<=`   | Binary | Right         |
+| Right Shift Assignment      | `>>=`   | Binary | Right         |
+
+```go
+// Perform single assignment.
+var x int = 3
+x == 3
+
+// Perform shorthand assignment (only inside functions).
+y := 4
+y == 4
+
+// Perform addition assignment.
+var a int = 3
+a += 2
+a == 5
+
+// Perform subtraction assignment.
+var b int = 3
+b -= 2
+b == 1
+
+// Perform multiplication assignment.
+var c int = 3
+c *= 2
+c == 6
+
+// Perform division assignment.
+var d int = 6
+d /= 2
+d == 3
+
+// Perform division assignment.
+var e int = 6
+e %= 2
+e == 0
+
+// Perform bitiwse AND assignment.
+var f int = 0b01
+f &= 0b11
+f == 0b01
+
+// Perform bitiwse OR assignment.
+var g int = 0b01
+g |= 0b11
+g == 0b11
+
+// Perform bitiwse XOR assignment.
+var h int = 0b01
+h ^= 0b11
+h == 0b10
+
+// Perform bitiwse left shift assignment.
+var i int = 0b01
+i <<= 1
+i == 0b10
+
+// Perform bitiwse right shift assignment.
+var j int = 0b10
+j >>= 1
+j == 0b01
+```
+
+## 11 Pointers
+
+Pointers are variables that store memory addresses. These can be used to manipulate the values of
+variables without assignments.
+
+```go
+// Declare pointer variable.
+var p *int
+
+// Get pointer to variable by getting its memory address.
+var x int = 3
+p = &x
+
+// Access value of pointer by dereferencing it.
+var y int = p*
+p* = 5
+```
 
 ## 12 Control Flow Structures
 
+Controll flow structures are block statements that manipulate the control flow of the program.
+
 ### 12.1 Conditions
 
-```text
-Example for conditions in the language
-```
+Conditions are block statements that are only run on certain conditions.
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+```go
+import "fmt"
+
+// Only execute condition when expression is true.
+x := 3
+if x > 0 {
+	fmt.Println("x is positive")
+}
+
+// Initialize variable within the condition's definition.
+if y := 4; y > 0 {
+	fmt.Println("y is positive")
+}
+
+// Define alternative paths within condition.
+z := 3
+if x > 0 {
+	fmt.Println("z is positive")
+} else if < 0 {  // Only execute condition when last condition was skipped and expression is true.
+	fmt.Println("z is positive")
+} else {         // Only execute condition when last condition was skipped.
+	fmt.Println("z is zero")
+}
+```
 
 ### 12.2 Switches
 
-```text
-Example for switches in the language
-```
+Switches are short-hand conditions that execute statements based on value comparisons.
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+```go
+import "fmt"
+
+// Execute first case that evaluates to the switch's condition.
+x := 3
+switch x {
+	case 0:
+		fmt.Println("x is 0")
+	case 5:
+		fmt.Println("x is 5")
+	// Execute case when no other case matched.
+	default:
+		fmt.Println("x isn't 1 or 2")
+}
+
+// Execute first case that evaluates to true.
+y := 2
+switch {
+	case y % 2 == 0:
+		fmt.Println("y is dividable by 2")
+	case y % 5 == 0:
+		fmt.Println("y is dividable by 5")
+	default:
+		fmt.Println("y isn't dividable by 2 or 5")
+}
+
+// Initialize variable within the switch's definition.
+switch z := 12; z {
+	case z % 2 == 0:
+		fmt.Println("z is dividable by 2")
+	case z % 5 == 0:
+		fmt.Println("z is dividable by 5")
+	default:
+		fmt.Println("z has an unknown divider")
+}
+```
 
 ### 12.3 Loops
 
-```text
-Example for loops in the language
+Loops are block statements that are rerun multiple times.
+
+```go
+import "fmt"
+
+// Loop a specified amount of time according to running variable.
+for i := 0; i < 10; i++ {
+	fmt.Println(i)  // Reference loop's running variable.
+}
+
+// Loop as long as expression is true.
+i := 0
+for i < 10 {
+	fmt.Println(i)
+	i++
+}
+
+// Loop forever.
+j := 0
+for {
+	fmt.Println(j)
+	j++
+}
+
+// Loop over elements of iterable (array, slice, map).
+arr := [4]int{1, 2, 3, 4}
+for i, v := range arr {
+	fmt.Printf("Current index/key: %d\n", i)
+	fmt.Printf("Current value: %d\n", v)
+}
+
+// Discard values in loops over iterables.
+slice := []int{1, 2, 3, 4}
+for _, _ := range slice {
+	fmt.Println("Iterating...")
+}
+
+// Exiting loops and their iterations early..
+k := 0
+for {
+	fmt.Println(k)
+	k++
+
+	if k % 2 == 0 {
+		// Skip current loop iteration immediately.
+		continue
+	}
+
+	if k > 10 {
+		// Exit loop immediately.
+		break
+	}
+}
 ```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 12.4 Jumps
-
-How jumps are treated in the language.
-
-```text
-Example for jumps in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
 
 ## 13 Functions
 
@@ -688,65 +1056,93 @@ result := add(3, 8)
 x, y := swap(2, 4)
 ```
 
+### 13.3 Deferred Function Calls
+
+Inside functions other function calls can be deferred to after their execution by pushing them
+on top of the call stack. Thereby the deferred function's arguments are evaluated beforehand.
+
+```go
+import "fmt"
+
+func info() {
+	// Defer function calls to end of current function.
+	defer fmt.Println("1")  // Prints fourth.
+	defer fmt.Println("2")  // Prints third.
+	defer fmt.Println("3")  // Prints second.
+
+	fmt.Println("End of function")  // Prints first.
+}
+```
+
+### 13.4 Functions as Values
+
+Functions are first-class values and therefore can be assigned to variables, passed as arguments,
+returned from functions, and used to create closures and higher-order functions.
+
+```go
+// Assign function to a variable.
+func add(x int, y int) int {
+	return x x y
+}
+var add func(int, int) int = add
+
+// Assign anonymous function to a variable.
+var sub func(int, int) int = func(x int, y int) int {
+    return x - y
+}
+
+// Call function assigned to variable.
+result = add(3, 4)
+
+// Call anonymous function immediately.
+var result int = func(x int, y int) int { return x + y }(3, 4)
+
+// Declare anonymous function as closure.
+var counter int = 0    // Initialize variable that is captured by closure.
+count := func() int {
+	counter++          // Use captured variable internally as a copy.
+	return counter
+}
+```
+
 ## 14 Object Orientation
 
-How object orientation in implemented in the language.
+Go doesn't support conventional object orientation, but it provides some comparable functionality
+for structures. Structures are custom value data types that can be defined with any number of
+named elements.
 
-```text
-Example for classes and objects in the language
+```go
+// Define custom structure.
+type Person struct {
+	Name string
+	Age, Height int
+}
+
+// Create structure values.
+var john Person = Person{"John", 18, 180}  // Pass values for structure elements by order.
+var jane Person = Person{                  // Pass values for structure elements by identifier.
+	Name: "Jane",
+	Age: 20,
+	Height: 170,
+}
+var anonymous Person = Person{}            // Initialize non-defined elements to zero values.
+
+// Access structure elements.
+john.Age == 18
+john.Age = 21
+john.Age == 21
+
+// Access elements of structure pointer.
+var max Person = &{"Max", 16}
+(*max).Age == 16  // Explicitly dereference structure pointer.
+max.Age == 16     // Implicitly dereference structure pointer.
 ```
 
 <u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 14.1 Inheritance
-
-How inheritance is treated in the language.
-
-```text
-Example for inheritance in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 14.2 Access Modifiers
-
-How access modifiers are treated in the language.
-
-```text
-Example for classes and objects in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 14.3 Abstract Classes
-
-How abstract classes are treated in the language.
-
-```text
-Example for abstract classes in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 14.4 Interfaces
-
-How interfaces are treated in the language.
-
-```text
-Example for interfaces in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+- Identifiers of exported structures should be in Pascal case, otherwise they should be in camel
+  case.
+- Identifiers of exported structure elements should be in Pascal case, otherwise they should be in
+  camel case.
 
 ## 15 Error Handling
 
@@ -782,51 +1178,11 @@ Example for error/exception creation in the language
 - First best practice
 - Second best practice
 
-## 16 Containers
-
-How containers are treated in the language.
-
-### 16.1 Lists
-
-How lists are treated in the language.
-
-```test
-Example for list usage in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 16.2 Maps
-
-How maps are treated in the language.
-
-```test
-Example for map usage in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 16.3 Iterators
-
-How iterators are treated in the language.
-
-```test
-Example for iterator usage in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 17 IO
+## 16 IO
 
 How streams are treated in the language.
 
-### 17.1 Terminal
+### 16.1 Terminal
 
 How terminal streams are treated in the language.
 
@@ -838,7 +1194,7 @@ Example for terminal streams usage in the language
 - First best practice
 - Second best practice
 
-### 17.2 Filea
+### 16.2 Filea
 
 How file streams are treated in the language.
 
@@ -850,7 +1206,7 @@ Example for file streams usage in the language
 - First best practice
 - Second best practice
 
-## 18 Math
+## 17 Math
 
 ```test
 Example for math utilities in the language
@@ -860,7 +1216,7 @@ Example for math utilities in the language
 - First best practice
 - Second best practice
 
-## 19 Time and Date
+## 18 Time and Date
 
 ```test
 Example for time and date utilities in the language
@@ -870,7 +1226,7 @@ Example for time and date utilities in the language
 - First best practice
 - Second best practice
 
-## 20 System
+## 19 System
 
 ```test
 Example for system utilities in the language
@@ -880,7 +1236,7 @@ Example for system utilities in the language
 - First best practice
 - Second best practice
 
-## 21 Concurrency
+## 20 Concurrency
 
 How concurrency is treated in the language
 
@@ -892,19 +1248,7 @@ Example for concurrency in the language
 - First best practice
 - Second best practice
 
-## 22 Parallelism
-
-How parallelism is treated in the language
-
-```test
-Example for parallelism in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-## 23 Memory Management
+## 21 Memory Management
 
 Description of how memory management is implemented in the language.
 
