@@ -56,80 +56,145 @@ func main() {
 
 ### 1.3 History
 
-Short overview of the history of the language.
+- Go was developed in 2007 by Robert Griesemer, Rob Pike, and Ken Thompson at Google:
+  - It was designed to address problems the developers encountered when working with large-scale
+    software systems.
+  - The language focused on simplicity, fast compilation, concurrency, and efficient software
+    development.
+  - Development was initially an internal Google project and the language was first announced
+    publicly in 2009.
+- Go 1.0 was released in March 2012:
+  - It established the Go 1 compatibility promise, which aims to maintain source compatibility
+    for programs written according to the Go 1 specification.
+  - The Go standard library became an important part of the language's ecosystem.
+- Go became increasingly prominent during the 2010s:
+  - It was adopted particularly for network services, cloud infrastructure, distributed systems,
+    and command-line tools.
+  - Projects such as Docker and Kubernetes contributed to its popularity in cloud-native software
+    development.
+- Go is developed as an open-source project:
+  - The source code and development of Go were made publicly available through Google.
+  - The Go project is now maintained by the Go team and contributors from the broader
+    open-source community.
+- The Go language continues to receive regular releases:
+  - New releases generally follow a predictable release cycle.
+  - The language specification and standard library are updated alongside the Go toolchain.
 
 ## 2 Toolchain
 
 Go includes an official toolchain that can be used via CLI.
 
-### 2.1 Compilation
+```bash
+# Get overview about available commands.
+go help
 
-Description and/or list of the language's compiler(s)/interpreter(s).
+# Get current Go version.
+go version
 
-### 2.2 Build Systems
+# Manage current module.
+go mod init example.com/myproject  # Initialize Go module with specified namespace and name.
+go get github.com/example/foo      # Add specified external dependency to Go module.
+go mod tidy                        # Cleanup used dependencies.
 
-Description and/or list of the language's build system(s).
+# Execute current Go module with temporary build files.
+go run
 
-### 2.3 Package Managers
+# Compile current Go module into executable binary or library file.
+go build
+go build -o ./path/to/executable  # Specify output file of compilation.
 
-Description and/or list of the language's package manager(s).
+# Get overview of Go configurations.
+go env       # List of all configurations.
+go env GOOS  # Value of specified configuration.
 
-### 2.4 Debuggers
+# Set value of specified Go configuration.
+go env -w GOOS=linux
 
-Description and/or list of the language's debugger(s).
+# Execute Go tests.
+go test ./path/to/package/  # Execute tests in specified package.
+go test ./...               # Execute all tests in Go module.
 
-### 2.5 Formatters
+# Lint Go files.
+go vet ./path/to/package/  # Lint files in specified package.
+go vet ./...               # Lint all files in Go module.
 
-Description and/or list of the language's formatter(s).
+# Format Go files.
+go fmt ./path/to/package/  # Format files in specified package.
+go fmt ./...               # Format all files in Go module.
+```
+
+Go can be configured using values of the `go env` utility. These can be overwritten with identical
+named environment variables. The following configurations do exist:
+
+| Configuration | Description                                 |
+| :------------ | :------------------------------------------ |
+| `GOOS`        | Target OS for compilation.                  |
+| `GOARCH`      | Target architecture for compilation.        |
+| `GOROOT`      | Installation path of the Go toolchain.      |
+| `GOPATH`      | Installation path for external Go projects. |
+
+<u>Best practices</u>:
+- Go modules should be namespaced with the URL of the project's online repository or an
+  equivalent.
 
 ## 3 Compilation/Interpretation
 
 ```mermaid
 graph TD
-  source_files[Source files] --> |passed to| compiler[Compiler];
-  compiler --> |compiles into| executable_binary[Executable Binary];
+    source_files[Source files] --> |passed to| compiler[Compiler];
+    imported_packages[Imported packages] --> |loaded/compiled as needed| compiler;
+    compiler --> |If compiler error| stop[Stop];
+    compiler --> |produces| compiled_packages[Compiled packages];
+    compiled_packages --> |passed to| linker[Linker];
+    runtime[Go Runtime] --> |passed to| linker;
+    external_libraries[External libraries] --> |passed to| linker;
+    linker --> |links into| executable_binary[Executable Binary];
+    linker --> |If linker error| stop;
 ```
 
-1. **First compilation/interpretation step**: Description of the step
-2. **Second compilation/interpretation step**: Description of the step
+1. **Compiler**: Produces compiled package data from Go source files.
+
+   Go source files (`.go`) are passed to the Go compiler. Unlike C/C++, Go does not use a
+   traditional preprocessor. The compiler parses the source code, performs type checking and
+   semantic analysis, and translates the Go code into machine code and associated metadata.
+   All source files belonging to the same package are compiled together. Dependencies on other
+   packages are specified using `import` declarations and are resolved by the Go build system.
+   This step is canceled if the source code contains a syntax error, type error, or other
+   compile-time error.
+
+2. **Linker**: Produces a single executable binary from compiled packages.
+
+   The Go linker combines the compiled packages and resolves references between them to produce
+   the final executable binary. It also links the required parts of the Go runtime, which
+   provides functionality such as goroutine scheduling and garbage collection. Depending on the
+   build configuration, external libraries may also be involved, particularly when using `cgo`.
+   The executable gets no extension on Unix/Linux or `.exe` on Windows. This step is canceled if
+   required symbols cannot be resolved or another linker error occurs.
 
 ## 4 Syntax
 
 ### 4.1 Whitespace
 
-How whitespace is treated in the language.
-
-```text
-Example for whitespace usage
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+Whitespace characters include spaces, tabs, newlines, and carriage returns. Whitespace is only
+used to seperate tokens and statements without semicolons. In any other case whitespace
+is ignored by the compiler.
 
 ### 4.2 Statements
 
-How statements are composed in the language.
-
-```text
-Example for statement usage
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+Statements are instructions that perform actions. The following kinds of statements exist:
+- **Line statements**: Any combination of valid expressions terminated by a semicolon `;`.
+                       Semicolons can be omitted and are then inserted automatically by the
+                       compiler at linebreaks.
+- **Block statements**: Any number of line statements enclosed in curly braces `{}`.
 
 ### 4.3 Identifiers
 
-How identifiers are composed in the language.
-
-```text
-Example for identifier usage
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+Identifiers are names to uniquely reference objects and data types within programs. The following
+rules apply for creating identifiers:
+- Identifiers may contain letters, digits (`0-9`), and underscores.
+- Identifiers must start with a letter (`a-z`, `A-Z`) or underscore (`_`).
+- Identifiers cannot be pre-existing keywords (e.g. `int`, `struct`, `if`, `for`).
+- Identifiers are case-sensitive.
 
 ### 4.4 Scope
 
@@ -156,17 +221,31 @@ enclosing scope and is not shadowed by another declaration.
 
 ### 4.5 Keywords
 
-The following identifiers are reserved as keywords with special meaning in Go:
-
+The following identifiers are reserved as keywords with special meaning:
 - `break`
+- `case`
+- `chan`
+- `const`
 - `continue`
+- `default`
+- `defer`
 - `else`
+- `fallthrough`
 - `for`
 - `func`
+- `go`
+- `goto`
 - `if`
 - `import`
+- `interface`
+- `map`
 - `package`
+- `range`
 - `return`
+- `select`
+- `struct`
+- `switch`
+- `type`
 - `var`
 
 ## 5 Structure
@@ -263,23 +342,35 @@ func main() {
 }
 ```
 
-### 5.4 Projects
+### 5.4 Modules
+
+Go projects are organized as modules which can be compiled to executable binaries or importable
+libraries.
 
 Go doesn't enforce a project structure, but the following convention exists for medium- and
 large-sized projects:
 
 ```text
-
+<project_root>/          # Project root.
+├── cmd/                 # Entry point directory.
+│   └── <program_name>/  # Main package.
+│       └── main.go      # Program entry point.
+├── internal/            # Internal program packages.
+├── pkg/                 # Reusable packages.
+├── tests/               # Test packages.
+├── go.mod               # Module and dependecy definitions.
+└── go.sum               # Dependency checksums.
 ```
 
-Small Go programs can live entirely inside the `main` package.
+Small Go programs can live entirely inside the `main` package that can itself live inside
+the project root.
 
 ### 5.5 Standard Library
 
 Go provides a pre-installed standard library with additional types, functions and constants.
 
 The following packages exist in the standard library:
-- `fmt`:
+- `fmt`: Utilities to format and print strings.
 
 ## 6 Comments
 
@@ -491,11 +582,47 @@ matrix[0][2] = 3
 matrix[0][2] == 3
 ```
 
+#### 9.1.7 Structures
+
+Structures are custom data types that can be defined with any number of named elements. Their zero
+value is the zero value of all their elements.
+
+```go
+// Define custom structure.
+type Person struct {
+	Name string
+	Age, Height int
+}
+
+// Create structure values.
+var john Person = Person{"John", 18, 180}  // Pass values for structure elements by order.
+var jane Person = Person{                  // Pass values for structure elements by identifier.
+	Name: "Jane",
+	Age: 20,
+	Height: 170,
+}
+var anonymous Person = Person{}            // Initialize non-defined elements to zero values.
+
+// Access structure elements.
+john.Age == 18
+john.Age = 21
+john.Age == 21
+
+// Access elements of structure pointer.
+var max Person = &{"Max", 16}
+(*max).Age == 16  // Explicitly dereference structure pointer.
+max.Age == 16     // Implicitly dereference structure pointer.
+```
+
+<u>Best practices</u>:
+- Identifiers of exported structure elements should be in Pascal case, otherwise they should be in
+  camel case.
+
 ### 9.2 Reference Data Types
 
 Reference data types are pointers to dynamic data structures that are stored in heap memory.
 
-The zero value of reference data types is `nil`.
+The zero value of reference data types is the non-value `nil`. Dereferening it causes a panic.
 
 #### 9.2.1 Slices
 
@@ -570,7 +697,7 @@ scores["John"] == 8
 
 // Check whether keys exist in map.
 elem, ok := scores["John"]     // Existing key.
-elem == 8                     // Existing value or rero value of data type.
+elem == 8                     // Existing value or zero value of data type.
 ok == true                    // Whether key exists.
 
 // Add key-value pair to map.
@@ -607,6 +734,100 @@ var a rune = rune(65)
 // Convert a character into an integer by using its Unicode code point as its value.
 var b int = int('A')
 ```
+
+### 9.4 Custom Data Types
+
+Custom data types can be defined from existing ones. Thereby they still have the same
+encoding and functionality, but aren't interchangeable.
+
+```go
+import "fmt"
+
+// Define custom data type from existing data type.
+type Counter int
+
+// Implement string representation interface (fmt.Stringer) for custom data type.
+type Person struct {
+	Name string
+	Age int
+}
+func (p Person) String() string {
+	return p.Name
+}
+```
+
+<u>Best practices</u>:
+- Identifiers of exported custom data types should be in Pascal case, otherwise they should be in
+  camel case.
+
+### 9.5 Generics
+
+Generic types can be used in structure and function definitions to support multiple data types
+for them simultaneosly. Thereby generics specify constraints to only allow certain data types
+for their implementation.
+
+| Constraint    | Types                                                        |
+| :------------ | :----------------------------------------------------------- |
+| `any`         | Every data type.                                             |
+| `comparable`  | Data types that are compatible with `==` and `!=`.           |
+| `cmp.Ordered` | Data types that are compatible with `<`, `<=`, `>` and `>=`. |
+
+```go
+// Create generic structure.
+type Item[T, U any, V comparable] struct {
+	ItemA T  // Generic element with `any` constraint.
+	ItemB U  // Generic element with `any` constraint.
+	ItemC V  // Generic element with `comparable` constraint.
+	ItemD V  // Generic element with same data type as last element.
+}
+
+// Use generic structure.
+item := Item{ "Hi", true, 12, 5 }
+item = Item{ false, 'A', 8.5, 5.0 }
+item = Item{ 16, 4, 9, 5 }
+
+// Declare generic function.
+func log[T comparable, U, V any](x T, y U, z V) V {
+	fmt.Printf("%v\n", x)  // Generic element with `comparable` constraint.
+	fmt.Printf("%v\n", y)  // Generic element with `any` constraint.
+	fmt.Printf("%v\n", z)  // Generic element with `any` constraint.
+	return z               // Generic element with same data type as last element.
+}
+
+// Use generic function.
+item := Item{ "Hi", 12, 5 }
+item = Item{ false, 8.5, 5.0 }
+item = Item{ 16, 9, 5 }
+```
+
+Custom constraints for generics can be defined.
+
+```go
+// Create constraint that allows only specified data types.
+type MyTypeConstraint interface {
+	int | uint | rune
+}
+
+// Create constraint that allows only specified data types and types based on them.
+type MyUnderlyingConstraint interface {
+	~int | ~uint | ~rune
+}
+
+// Create regular interface as constraint that allows only implementations of it.
+type MyImplementationConstraint interface {
+	Greet() string
+}
+
+// Create mixed constraint.
+type MyMixedConstraint interface {
+	int | uint | ~rune
+	Greet() string
+}
+```
+
+<u>Best practices</u>:
+- Identifiers of exported constraints should be in Pascal case, otherwise they should be in
+  camel case.
 
 ## 10 Operators
 
@@ -923,6 +1144,17 @@ switch z := 12; z {
 	default:
 		fmt.Println("z has an unknown divider")
 }
+
+// Execute first case that specifies the data type of the switch's condition.
+a := 3
+switch a.(type) {
+	case int:
+		fmt.Println("a is int")
+	case float64:
+		fmt.Println("a is float64")
+	default:
+		fmt.Println("a isn't int or float64")
+}
 ```
 
 ### 12.3 Loops
@@ -1105,161 +1337,182 @@ count := func() int {
 }
 ```
 
-## 14 Object Orientation
+### 13.5 Pass By Reference
 
-Go doesn't support conventional object orientation, but it provides some comparable functionality
-for structures. Structures are custom value data types that can be defined with any number of
-named elements.
+Values are copied when they're passed as arguments to functions. Therefore functions can't
+mutate their parameters. To mutate parameters they must be defined as pointers.
 
 ```go
-// Define custom structure.
-type Person struct {
-	Name string
-	Age, Height int
+// Define function that mutates its parameters.
+func inc(val *int) {
+	(*val)++
 }
 
-// Create structure values.
-var john Person = Person{"John", 18, 180}  // Pass values for structure elements by order.
-var jane Person = Person{                  // Pass values for structure elements by identifier.
-	Name: "Jane",
-	Age: 20,
-	Height: 170,
-}
-var anonymous Person = Person{}            // Initialize non-defined elements to zero values.
-
-// Access structure elements.
-john.Age == 18
-john.Age = 21
-john.Age == 21
-
-// Access elements of structure pointer.
-var max Person = &{"Max", 16}
-(*max).Age == 16  // Explicitly dereference structure pointer.
-max.Age == 16     // Implicitly dereference structure pointer.
+// Call function that mutates its argument.
+var x int = 3
+inc(&x)  // Pass argument as pointer.
+x == 4
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported structures should be in Pascal case, otherwise they should be in camel
+- Parameters should be passed by reference when they're large structs, to avoid copying of large
+  amounts of data.
+
+### 13.6 Receiver Functions
+
+Receiver functions act as methods for data types. They can only be defined for custom
+data types (structures and aliased types).
+
+```go
+import "fmt"
+
+type Person struct {
+	Name string
+	age int
+}
+var john Person =  Person{
+	Name: "John",
+	Age: 21,
+}
+
+// Declare receiver function for custom data type.
+func (p Person) Greet() {                   // Pass copy of receiver object.
+	fmt.Printf("Hello, I'm %s!\n", p.Name)  // Reference receiver object.
+}
+
+// Declare mutating receiver function for custom data type.
+func (p *Person) Birthday() {  // Pass pointer to receiver object.
+	p.age++                    // Automatically dereference pointer to receiver object.
+}
+
+// Call receiver functions on object.
+john.Greet()
+
+// Call mutating receiver functions on object.
+(&john).Birthday()  // Explicitly pass pointer to receiver object.
+john.Birthday()     // Implicitly pass pointer to receiver object.
+```
+
+<u>Best practices</u>:
+- Receivers should be defined as pointers when they're large structs, to avoid copying of large
+  amounts of data.
+
+## 14 Interfaces
+
+Interfaces are custom data types and are sets of signatures for receiver functions. Any custom
+data type that has all signatures of an interface as declared receiver functions is considered
+to implement that interface implicitly.
+
+Thereby every custom data type that implements an interface can be used in its place. This enables
+polymorphism and decouples definition from implementation. The zero value of interfaces is `nil`.
+Every data type implements at least the empty interface without signatures, which can therefore
+be used as any type.
+
+```go
+// Define interface.
+type Counter interface {
+	Inc() int
+	Dec() int
+}
+
+// Define custom data type that will implement interface.
+type Tracker int
+
+// Declare receiver function that implements signature of interface.
+func (t *Tracker) Inc() int {
+	(*t)++
+	return t
+}
+
+// Declare receiver function that implements signature of interface.
+func (t *Tracker) Dec() int {
+	(*t)--
+	return t
+}
+
+// Use implementation for interface.
+var tracker Counter
+tracker = 3
+tracker.Inc() == 4  // Call receiver function of interface implementation.
+
+// Assert data type used for interface.
+t := tracker.(Counter)      // Panic when interface isn't specified type.
+t, ok := tracker.(Counter)  // Assert data type used for interface without panic.
+t                           // Existng value or zero value.
+ok == true                  // Whether the asserted data type was correct.
+
+// Use empty interface as any type.
+var i interface{}
+i = "Hello!"
+i = 23
+i = true
+
+// Use alias for empty interface.
+var j any
+j = "Hello!"
+j = 23
+j = true
+```
+
+<u>Best practices</u>:
+- Identifiers of exported interfaces should be in Pascal case, otherwise they should be in camel
   case.
-- Identifiers of exported structure elements should be in Pascal case, otherwise they should be in
-  camel case.
 
 ## 15 Error Handling
 
-How errors are treated in the language.
+Errors are represented by data types that implement the `error` interface. Thereby functions that
+can cause errors also return an error value that is an implementation of the `error` interface
+when an error occured or `nil` when none occured.
 
-### 15.1 Error/Exception Recovery/Catching
+```go
+import (
+	"fmt"
+	"strconv"
+)
 
-```test
-Example for error/exception recovery/catching in the language
+// Check whether an error occurred in a function call.
+num, err := strconv.atoi("3")
+if err != nil {
+	fmt.Printf("couldn't convert number: %v\n", err)
+}
+
+// Create custom error type.
+type MyError struct {}
+func (e MyError) Error() string {  // Implement `Error` function of `error` interface.
+	return "Oh no! An error occurred!"
+}
 ```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 15.2 Error/Exception Raising/Throwing
-
-```test
-Example for error/exception raising/throwing in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 15.3 Error/Exception Creation
-
-```test
-Example for error/exception creation in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
 
 ## 16 IO
 
-How streams are treated in the language.
+...
 
-### 16.1 Terminal
+### 16.1 Output
 
-How terminal streams are treated in the language.
+...
 
-```test
-Example for terminal streams usage in the language
-```
+### 16.2 Input
 
-<u>Best practices</u>:
-- First best practice
-- Second best practice
-
-### 16.2 Filea
-
-How file streams are treated in the language.
-
-```test
-Example for file streams usage in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+...
 
 ## 17 Math
 
-```test
-Example for math utilities in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+...
 
 ## 18 Time and Date
 
-```test
-Example for time and date utilities in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+...
 
 ## 19 System
 
-```test
-Example for system utilities in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+...
 
 ## 20 Concurrency
 
-How concurrency is treated in the language
-
-```test
-Example for concurrency in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+...
 
 ## 21 Memory Management
 
-Description of how memory management is implemented in the language.
-
-Description of how memory can be manually managed in the language.
-
-```text
-Example for manual memory management in the language
-```
-
-<u>Best practices</u>:
-- First best practice
-- Second best practice
+...
 
 {% endraw %}
