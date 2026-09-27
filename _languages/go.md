@@ -109,6 +109,7 @@ go env GOOS  # Value of specified configuration.
 
 # Set value of specified Go configuration.
 go env -w GOOS=linux
+go env -u GOOS  # Reset specified Go configuration to its default.
 
 # Execute Go tests.
 go test ./path/to/package/  # Execute tests in specified package.
@@ -126,16 +127,48 @@ go fmt ./...               # Format all files in Go module.
 Go can be configured using values of the `go env` utility. These can be overwritten with identical
 named environment variables. The following configurations do exist:
 
-| Configuration | Description                                 |
-| :------------ | :------------------------------------------ |
-| `GOOS`        | Target OS for compilation.                  |
-| `GOARCH`      | Target architecture for compilation.        |
-| `GOROOT`      | Installation path of the Go toolchain.      |
-| `GOPATH`      | Installation path for external Go projects. |
+| Configuration  | Description                                          | Value                                                |
+| :------------- | :--------------------------------------------------- | :--------------------------------------------------- |
+| `CC`           | C compiler used when compiling C code with cgo.      | `gcc`, `clang`, etc.                                 |
+| `CGO_CFLAGS`   | Additional C compiler flags for cgo.                 | Compiler flags                                       |
+| `CGO_CXXFLAGS` | Additional C++ compiler flags for cgo.               | Compiler flags                                       |
+| `CGO_ENABLED`  | Controls whether cgo is enabled.                     | `0`, `1`                                             |
+| `CGO_FFLAGS`   | Additional Fortran compiler flags for cgo.           | Compiler flags                                       |
+| `CGO_LDFLAGS`  | Additional linker flags for cgo.                     | Linker flags                                         |
+| `CGO_CPPFLAGS` | Additional C/C++ preprocessor flags for cgo.         | Preprocessor flags                                   |
+| `CXX`          | C++ compiler used when compiling C++ code with cgo.  | `g++`, `clang++`, etc.                               |
+| `GOBIN`        | Installation directory for installed Go executables. | Filesystem path                                      |
+| `GOCACHE`      | Build cache directory.                               | Filesystem path                                      |
+| `GOENV`        | Location of the persistent Goenv configuration file. | Filesystem path                                      |
+| `GOFLAGS`      | Default flags passed to Go commands.                 | Space-separated flags                                |
+| `GOINSECURE`   | Allowed module patterns for module-fetching methods. | Comma-separated module patterns                      |
+| `GOMOD`        | Path to the active `go.mod` file.                    | Filesystem path                                      |
+| `GOMODCACHE`   | Download cache for Go modules.                       | Filesystem path                                      |
+| `GONOPROXY`    | Module patterns that bypass the module proxy.        | Comma-separated module patterns                      |
+| `GONOSUMDB`    | Module patterns that bypass the checksum database.   | Comma-separated module patterns                      |
+| `GOOS`         | Target operating system for compilation.             | `android`, `darwin`, `ios`, `linux`, `windows`, etc. |
+| `GOPATH`       | Workspace for downloaded tools, modules, and caches. | Filesystem path                                      |
+| `GOPRIVATE`    | Module patterns considered private.                  | Comma-separated module patterns                      |
+| `GOPROXY`      | URLs of module proxies used for downloading modules. | URL list                                             |
+| `GOROOT`       | Installation path of the Go toolchain.               | Filesystem path                                      |
+| `GOSUMDB`      | Checksum database used to verify downloaded modules. | `sum.golang.org`, `off`, etc.                        |
+| `GOTOOLCHAIN`  | Controls which Go toolchain is selected.             | `auto`, `local`, or a specific toolchain version     |
+| `GOTOOLDIR`    | Directory containing the Go toolchain's tools.       | Filesystem path                                      |
+| `GOVCS`        | Version-control systems used for module downloads.   | Pattern-based configuration                          |
+| `GOWORK`       | Path to the active `go.work` workspace file.         | Filesystem path; `(off)` when disabled               |
+| `GOARCH`       | Target architecture for compilation.                 | `amd64`, `arm64`, `wasm`, etc.                       |
+| `GOAMD64`      | Controls the minimum x86-64 microarchitecture level. | `v1`, `v2`, `v3`, `v4`                               |
+| `GOARM`        | Controls the ARM architecture version.               | `5`, `6`, `7`                                        |
+| `GOARM64`      | Controls the ARM64 architecture feature level.       | Architecture-specific feature level                  |
+| `GOMIPS`       | Controls the MIPS floating-point ABI.                | `hardfloat`, `softfloat`                             |
+| `GOMIPS64`     | Controls the MIPS64 floating-point ABI.              | `hardfloat`, `softfloat`                             |
+| `GOPPC64`      | Controls the minimum PowerPC64 processor level.      | `power8`, `power9`, `power10`, etc.                  |
+| `GORISCV64`    | Controls RISC-V 64-bit architecture features.        | Architecture-specific feature level                  |
+| `GOWASM`       | Controls WebAssembly-specific features.              | Comma-separated features                             |
 
 <u>Best practices</u>:
-- Go modules should be namespaced with the URL of the project's online repository or an
-  equivalent.
+- Go modules should be namespaced with the domain of the project's online repository or a
+  reversed owner name domain.
 
 ## 3 Compilation/Interpretation
 
@@ -1507,9 +1540,141 @@ func (e MyError) Error() string {  // Implement `Error` function of `error` inte
 
 ...
 
-## 20 Concurrency
+## 20 Asynchronous Execution
 
-...
+Go uses lightweight coroutines for async operations that are called goroutines. These run
+immediately in the background and are non-blocking per default. When their control flow reached
+their end they're terminated automatically.
+
+Goroutines are managed by the Go runtime and can be used in large amounts without noteworthy
+performance penalties. This is because they only use a minimal amount of resources and only run on
+new OS threads when required.
+
+The main control flow itself is a goroutine that acts as parent for subsequent goroutine. Any
+subsequent can only be spawned inside of functions.
+
+```go
+import "fmt"
+
+// Spawn goroutine that runs specified function.
+func Greet(name string) {
+	fmt.Printf("Hello from %s\n!", name)
+}
+go Greet("John")
+
+// Spawn goroutine that runs specified function which itself spawns goroutines.
+func GreetMultiple(names []string) {
+	for _, v := range names {
+		go fmt.Printf("Hello from %s\n!", v)
+	}
+}
+go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
+```
+
+### 20.1 Channels
+
+Goroutines can communicate with each other through channels. They're blocking the control flow of
+their according goroutine and can exchange vales.
+
+```go
+// Create channels for specified data types.
+var res chan int = make(chan int)
+var name chan string = make(chan string)
+
+// Declare function that sends data through channel.
+func Add(x, y int, ch chan int) {  // Define channel to use as parameter.
+	ch <- x + y                    // Send value through channel; blocks execution until received.
+}
+
+// Declare function that receives data from channel.
+func Greet(ch chan string) {  // Define channel to use as parameter.
+	name <- chan              // Receive value from channel; blocks execution until sent.
+	fmt.Printf("Hello %s!\n", name)
+}
+
+// Use channel to receive data.
+go Add(3, 4, res)  // Pass channel to receive data from to goroutine.
+result := <- ch    // Receive value from channel; blocks execution until sent.
+
+// Use channel to send data.
+go Greet(name)  // Pass channel to send data to to goroutine.
+name <- "John"  // Send value to channel; blocks execution until received.
+
+// Create buffered channel that can store specified amount of values before it blocks execution.
+var counter chan int = make(chan int, 10)
+```
+
+Channels can be closed to invalidate them. Trying to receive values from closed channels causes a
+panic. This is only required by statements that automatically receive values from channels.
+
+```go
+// Declare function with quit channel parameter to delegate channel closing from outside.
+func Count(quit chan bool, ch chan int) {
+	num := 0
+	for {
+		// Execute case of first channel operation that isn't blocked.
+		select {
+			// Send data to channel and execute its case.
+			case ch <- num:
+				num++
+			// Receive data from channel and execute its case.
+			case <- quit:
+				close(ch)  // Close channel.
+				return
+			// Default case to execute when every other case is blocked.
+			default:
+				fmt.Println("Nothing to do...")
+		}
+	}
+}
+
+var ch chan int = make(chan int)
+var quit chan bool = make(chan bool)
+go Count(quit, ch)
+
+// Check whether channel is closed.
+v, ok := <- ch
+v == 0      // Existing value or zero value of its data type.
+ok == true  // Whether channel is closed.
+
+// Receive values from channel repeatedly as long as channel isn't closed.
+for v := range ch {
+	fmt.Println(v)
+
+	if v >= 10 {
+		// Send arbitrary data through quit channel to delegate its closing.
+		quit <- true
+	}
+}
+```
+
+### 20.2 Mutexes
+
+Goroutines can access and manipulate the same data through pointers. To avoid race conditions with
+shared memory mutexes can be used to lock and unlock them for other goroutines.
+
+```go
+import (
+	"fmt"
+	"sync"
+)
+
+// Declare a mutex that prevents simultaneous execution of statements.
+var mutex sync.Mutex
+
+// Declare function that mutates shared data while holding the mutex.
+func Inc(counter *int) {
+	mutex.Lock()    // Lock the critical section for other goroutines.
+	(*counter)++
+	mutex.Unlock()  // Unlock the critical section.
+}
+
+var counter int = 0
+for i := range 100 {
+	go Inc(&counter)  // Spawn goroutines that synchronize access to counter.
+}
+fmt.Println(counter)
+```
 
 ## 21 Memory Management
 
