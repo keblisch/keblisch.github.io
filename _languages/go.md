@@ -220,6 +220,9 @@ Statements are instructions that perform actions. The following kinds of stateme
                        compiler at linebreaks.
 - **Block statements**: Any number of line statements enclosed in curly braces `{}`.
 
+<u>Best practices</u>:
+- Indentations should use hard tabs instead of spaces.
+
 ### 4.3 Identifiers
 
 Identifiers are names to uniquely reference objects and data types within programs. The following
@@ -415,9 +418,13 @@ Single-line comments reach from `//` to the next linebreak. Thereby `//` isn't r
 as the beginning of a comment inside strings.
 
 ```go
-// This is a single-line comment.
+package main
 
-var x int = 3 // This is also a single-line comment.
+func main() {
+	// This is a single-line comment.
+
+	var x int = 3 // This is also a single-line comment.
+}
 ```
 
 ### 6.2 Multi-Line Comments
@@ -426,17 +433,21 @@ Multi-line comments reach from `/*` to the next `*/`. Thereby these two aren't r
 as the beginning and end of a comment inside strings.
 
 ```go
-/* This is a multi-line comment. */
+package main
 
-/* This is
-also a
-multi-line
-comment. */
+func main() {
+	/* This is a multi-line comment. */
 
-var x int = 3 /* This is
-another
-multi-line
-comment. */ var y int = 4
+	/* This is
+	also a
+	multi-line
+	comment. */
+
+	var x int = 3 /* This is
+	another
+	multi-line
+	comment. */ var y int = 4
+}
 ```
 
 ## 7 Variables
@@ -446,36 +457,40 @@ specific type, and only values assignable to that type can be assigned
 to the variable.
 
 ```go
-// Declare variables.
-var x int         // Single variable.
-var y, z float32  // Multiple variables of the same type.
+package main
 
-// Define existing variables.
-x = 12           // Single variable.
-y, z = 3.0, 5.1  // Multiple variables of the same type.
-x, y = 9, 3.12   // Multiple variables of different types.
+func main() {
+	// Declare variables.
+	var x int         // Single variable.
+	var y, z float32  // Multiple variables of the same type.
 
-// Initialize variables.
-var a int = 9        // Single variable.
-var b, c int = 3, 4  // Multiple variables of the same type.
+	// Define existing variables.
+	x = 12           // Single variable.
+	y, z = 3.0, 5.1  // Multiple variables of the same type.
+	x, y = 9, 3.12   // Multiple variables of different types.
 
-// Initialize variables with type inference.
-var alice = 9               // Single variable.
-var bob, charly = 3, 4      // Multiple variables of the same type.
-var dickons, elly = 7, 1.2  // Multiple variables of different types.
+	// Initialize variables.
+	var a int = 9        // Single variable.
+	var b, c int = 3, 4  // Multiple variables of the same type.
 
-// Initialize variables with shorthand type inference (only possible inside functions).
-foo := 9             // Single variable.
-bar, foobar := 3, 4  // Multiple variables of the same type.
-zig, zag := 7, 1.2   // Multiple variables of different types.
-zig, zug := 7, 1.2   // Mixed initialization and redefinition.
+	// Initialize variables with type inference.
+	var alice = 9               // Single variable.
+	var bob, charly = 3, 4      // Multiple variables of the same type.
+	var dickons, elly = 7, 1.2  // Multiple variables of different types.
 
-// Create multiple variables in one var block.
-var (
-	min int        // Declare variable.
-	max int = 100  // Initialize variable.
-	default        // Reuse the type and expression list from the previous declaration.
-)
+	// Create multiple variables in one var block.
+	var (
+		min int        // Declare variable.
+		max int = 100  // Initialize variable.
+		default        // Reuse the type and expression list from the previous declaration.
+	)
+
+	// Initialize variables with shorthand type inference (only possible inside functions).
+	foo := 9             // Single variable.
+	bar, foobar := 3, 4  // Multiple variables of the same type.
+	zig, zag := 7, 1.2   // Multiple variables of different types.
+	zig, zug := 7, 1.2   // Mixed initialization and redefinition.
+}
 ```
 
 <u>Best practices</u>:
@@ -490,20 +505,24 @@ declaration. Their values must be representable by constant expressions and can 
 be evaluated at compile time. They cannot depend on runtime information.
 
 ```go
-// Initialize constants.
-const a int = 9        // Single constant.
-const b, c int = 3, 4  // Multiple constants of the same type.
+package main
 
-// Initialize an untyped constant that can be used as different data types.
-const x = 9    // Untyped integer constant.
-var y int = x  // The constant can be used in any context that requires an integer.
+func main() {
+	// Initialize constants.
+	const a int = 9        // Single constant.
+	const b, c int = 3, 4  // Multiple constants of the same type.
 
-// Initialize multiple constants in one const block.
-const (
-	alice int = 3  // Typed constant.
-	bob = 8        // Untyped constant.
-	charly         // Takes the same constant expression as the preceding declaration.
-)
+	// Initialize an untyped constant that can be used as different data types.
+	const x = 9    // Untyped integer constant.
+	var y int = x  // The constant can be used in any context that requires an integer.
+
+	// Initialize multiple constants in one const block.
+	const (
+		alice int = 3  // Typed constant.
+		bob = 8        // Untyped constant.
+		charly         // Takes the same constant expression as the preceding declaration.
+	)
+}
 ```
 
 Every literal value is a constant expression and is therefore untyped.
@@ -592,27 +611,31 @@ same data type.
 The zero value of arrays are arrays of zero values of their contained data type.
 
 ```go
-// Declare array of specified size and type.
-var arr [5]int
+package main
 
-// Define array of specified size and type.
-arr = [5]int{1, 2, 3, 4, 5}
+func main() {
+	// Declare array of specified size and type.
+	var arr [5]int
 
-// Access array elements by their index.
-arr[0] = 1
-arr[0] == 1
+	// Define array of specified size and type.
+	arr = [5]int{1, 2, 3, 4, 5}
 
-// Create multi-dimensional array.
-var matrix int[4][4] = int[4][4]{
-	{1, 2, 3, 4},
-	{2, 4, 6, 8},
-	{3, 5, 7, 9},
-	{1, 3, 5, 7},
+	// Access array elements by their index.
+	arr[0] = 1
+	arr[0] == 1
+
+	// Create multi-dimensional array.
+	var matrix int[4][4] = int[4][4]{
+		{1, 2, 3, 4},
+		{2, 4, 6, 8},
+		{3, 5, 7, 9},
+		{1, 3, 5, 7},
+	}
+
+	// Access element of multi-dimensional array.
+	matrix[0][2] = 3
+	matrix[0][2] == 3
 }
-
-// Access element of multi-dimensional array.
-matrix[0][2] = 3
-matrix[0][2] == 3
 ```
 
 #### 9.1.7 Structures
@@ -621,30 +644,34 @@ Structures are custom data types that can be defined with any number of named el
 value is the zero value of all their elements.
 
 ```go
-// Define custom structure.
-type Person struct {
-	Name string
-	Age, Height int
+package main
+
+func main() {
+	// Define custom structure.
+	type Person struct {
+		Name string
+		Age, Height int
+	}
+
+	// Create structure values.
+	var john Person = Person{"John", 18, 180}  // Pass values for structure elements by order.
+	var jane Person = Person{                  // Pass values for structure elements by name.
+		Name: "Jane",
+		Age: 20,
+		Height: 170,
+	}
+	var anonymous Person = Person{}            // Initialize non-defined elements to zero values.
+
+	// Access structure elements.
+	john.Age == 18
+	john.Age = 21
+	john.Age == 21
+
+	// Access elements of structure pointer.
+	var max Person = &{"Max", 16}
+	(*max).Age == 16  // Explicitly dereference structure pointer.
+	max.Age == 16     // Implicitly dereference structure pointer.
 }
-
-// Create structure values.
-var john Person = Person{"John", 18, 180}  // Pass values for structure elements by order.
-var jane Person = Person{                  // Pass values for structure elements by identifier.
-	Name: "Jane",
-	Age: 20,
-	Height: 170,
-}
-var anonymous Person = Person{}            // Initialize non-defined elements to zero values.
-
-// Access structure elements.
-john.Age == 18
-john.Age = 21
-john.Age == 21
-
-// Access elements of structure pointer.
-var max Person = &{"Max", 16}
-(*max).Age == 16  // Explicitly dereference structure pointer.
-max.Age == 16     // Implicitly dereference structure pointer.
 ```
 
 <u>Best practices</u>:
@@ -663,47 +690,51 @@ Slices are dynamic views into arrays. Therefore any change to the slice also cha
 underlying array.
 
 ```go
-// Create slice of an existing array.
-arr := [5]int{1, 2, 3, 4, 5}
-var slice1 []int = arr[1:3]  // Slice from and to (exclusive) specified element.
-var slice2 []int = arr[:3]   // Slice from start to specified element (exclusive).
-var slice3 []int = arr[1:]   // Slice from specified element to end.
+package main
 
-// Create slice literal with its own internal array.
-var dyn []int = []int{1, 2, 3, 4, 5}
+func main() {
+	// Create slice of an existing array.
+	arr := [5]int{1, 2, 3, 4, 5}
+	var slice1 []int = arr[1:3]  // Slice from and to (exclusive) specified element.
+	var slice2 []int = arr[:3]   // Slice from start to specified element (exclusive).
+	var slice3 []int = arr[1:]   // Slice from specified element to end.
 
-// Create slices with specific length and capacity.
-dyn = make([]int, 5)     // Specify data type and length.
-dyn = make([]int, 5, 8)  // Specify data type, length and capacity.
+	// Create slice literal with its own internal array.
+	var dyn []int = []int{1, 2, 3, 4, 5}
 
-// Access slice elements by their index.
-dyn[0] = 5
-dyn[0] == 5
+	// Create slices with specific length and capacity.
+	dyn = make([]int, 5)     // Specify data type and length.
+	dyn = make([]int, 5, 8)  // Specify data type, length and capacity.
 
-// Get length of slice.
-len(dyn) == 5  // Number of elements.
-cap(dyn) == 5  // Current capacity for elements.
+	// Access slice elements by their index.
+	dyn[0] = 5
+	dyn[0] == 5
 
-// Change length of slice.
-dyn = dyn[:2]  // Reduce to two elements.
-dyn = dyn[:8]  // Extend to eight elements (also increases capacity).
-dyn = dyn[2:]  // Drop first two elements.
+	// Get length of slice.
+	len(dyn) == 5  // Number of elements.
+	cap(dyn) == 5  // Current capacity for elements.
 
-// Append elements to slice.
-dyn = append(dyn, 4)        // Append single element.
-dyn = append(dyn, 7, 2, 5)  // Append multiple elements.
+	// Change length of slice.
+	dyn = dyn[:2]  // Reduce to two elements.
+	dyn = dyn[:8]  // Extend to eight elements (also increases capacity).
+	dyn = dyn[2:]  // Drop first two elements.
 
-// Create multi-dimensional slice.
-var matrix int[][] = []int{
-	[]int{1, 2, 3, 4},
-	[]int{2, 4, 6, 8},
-	[]int{3, 5, 7, 9},
-	[]int{1, 3, 5, 7},
+	// Append elements to slice.
+	dyn = append(dyn, 4)        // Append single element.
+	dyn = append(dyn, 7, 2, 5)  // Append multiple elements.
+
+	// Create multi-dimensional slice.
+	var matrix int[][] = []int{
+		[]int{1, 2, 3, 4},
+		[]int{2, 4, 6, 8},
+		[]int{3, 5, 7, 9},
+		[]int{1, 3, 5, 7},
+	}
+
+	// Access element of multi-dimensional slice.
+	matrix[0][2] = 3
+	matrix[0][2] == 3
 }
-
-// Access element of multi-dimensional slice.
-matrix[0][2] = 3
-matrix[0][2] == 3
 ```
 
 #### 9.2.2 Maps
@@ -711,41 +742,45 @@ matrix[0][2] == 3
 Maps are dynamic mappings between keys and values.
 
 ```go
-// Declare map with specified key and value data types.
-var scores map[string]int
+package main
 
-// Define map with key-value pairs.
-scores = map[string]int{
-	"John": 9,
-	"Jane": 7,
-}
+func main() {
+	// Declare map with specified key and value data types.
+	var scores map[string]int
 
-// Create maps with specific capacity.
-scores = make(map[string]int)     // Specify data type.
-scores = make(map[string]int, 8)  // Specify data type and capacity.
+	// Define map with key-value pairs.
+	scores = map[string]int{
+		"John": 9,
+		"Jane": 7,
+	}
 
-// Access map elements by their key.
-scores["John"] = 8
-scores["John"] == 8
+	// Create maps with specific capacity.
+	scores = make(map[string]int)     // Specify data type.
+	scores = make(map[string]int, 8)  // Specify data type and capacity.
 
-// Check whether keys exist in map.
-elem, ok := scores["John"]     // Existing key.
-elem == 8                     // Existing value or zero value of data type.
-ok == true                    // Whether key exists.
+	// Access map elements by their key.
+	scores["John"] = 8
+	scores["John"] == 8
 
-// Add key-value pair to map.
-scores["Max"] = 7
+	// Check whether keys exist in map.
+	elem, ok := scores["John"]     // Existing key.
+	elem == 8                     // Existing value or zero value of data type.
+	ok == true                    // Whether key exists.
 
-// Remove key-value pair from map.
-delete(scores, "Jane")
+	// Add key-value pair to map.
+	scores["Max"] = 7
 
-// Create map with structure as values.
-type Person struct {
-	Name string
-	age int
-}
-registry := map[string]Person{
-	"John": { Name: "John", Age: 21 }  // Omit structure name in key-value pair insertion.
+	// Remove key-value pair from map.
+	delete(scores, "Jane")
+
+	// Create map with structure as values.
+	type Person struct {
+		Name string
+		age int
+	}
+	registry := map[string]Person{
+		"John": { Name: "John", Age: 21 }  // Omit structure name in key-value pair insertion.
+	}
 }
 ```
 
@@ -755,17 +790,21 @@ To use values in places where other data types are expected, their data type mus
 converted first.
 
 ```go
-// Convert a floating-point number into an integer by truncating its fractional part.
-var x int = int(12.8)
+package main
 
-// Convert an integer into a floating-point number by adding a fractional part of 0.
-var y float32 = float32(18)
+func main() {
+	// Convert a floating-point number into an integer by truncating its fractional part.
+	var x int = int(12.8)
 
-// Convert an integer into a character by interpreting its numeric value as a Unicode code point.
-var a rune = rune(65)
+	// Convert an integer into a floating-point number by adding a fractional part of 0.
+	var y float32 = float32(18)
 
-// Convert a character into an integer by using its Unicode code point as its value.
-var b int = int('A')
+	// Convert an integer into a character by interpreting its numeric value as a Unicode number.
+	var a rune = rune(65)
+
+	// Convert a character into an integer by using its Unicode code point as its value.
+	var b int = int('A')
+}
 ```
 
 ### 9.4 Custom Data Types
@@ -774,18 +813,22 @@ Custom data types can be defined from existing ones. Thereby they still have the
 encoding and functionality, but aren't interchangeable.
 
 ```go
+package main
+
 import "fmt"
 
-// Define custom data type from existing data type.
-type Counter int
+func main() {
+	// Define custom data type from existing data type.
+	type Counter int
 
-// Implement string representation interface (fmt.Stringer) for custom data type.
-type Person struct {
-	Name string
-	Age int
-}
-func (p Person) String() string {
-	return p.Name
+	// Implement string representation interface (fmt.Stringer) for custom data type.
+	type Person struct {
+		Name string
+		Age int
+	}
+	func (p Person) String() string {
+		return p.Name
+	}
 }
 ```
 
@@ -806,55 +849,63 @@ for their implementation.
 | `cmp.Ordered` | Data types that are compatible with `<`, `<=`, `>` and `>=`. |
 
 ```go
-// Create generic structure.
-type Item[T, U any, V comparable] struct {
-	ItemA T  // Generic element with `any` constraint.
-	ItemB U  // Generic element with `any` constraint.
-	ItemC V  // Generic element with `comparable` constraint.
-	ItemD V  // Generic element with same data type as last element.
+package main
+
+func main() {
+	// Create generic structure.
+	type Item[T, U any, V comparable] struct {
+		ItemA T  // Generic element with `any` constraint.
+		ItemB U  // Generic element with `any` constraint.
+		ItemC V  // Generic element with `comparable` constraint.
+		ItemD V  // Generic element with same data type as last element.
+	}
+
+	// Use generic structure.
+	item := Item{ "Hi", true, 12, 5 }
+	item = Item{ false, 'A', 8.5, 5.0 }
+	item = Item{ 16, 4, 9, 5 }
+
+	// Declare generic function.
+	func log[T comparable, U, V any](x T, y U, z V) V {
+		fmt.Printf("%v\n", x)  // Generic element with `comparable` constraint.
+		fmt.Printf("%v\n", y)  // Generic element with `any` constraint.
+		fmt.Printf("%v\n", z)  // Generic element with `any` constraint.
+		return z               // Generic element with same data type as last element.
+	}
+
+	// Use generic function.
+	item := Item{ "Hi", 12, 5 }
+	item = Item{ false, 8.5, 5.0 }
+	item = Item{ 16, 9, 5 }
 }
-
-// Use generic structure.
-item := Item{ "Hi", true, 12, 5 }
-item = Item{ false, 'A', 8.5, 5.0 }
-item = Item{ 16, 4, 9, 5 }
-
-// Declare generic function.
-func log[T comparable, U, V any](x T, y U, z V) V {
-	fmt.Printf("%v\n", x)  // Generic element with `comparable` constraint.
-	fmt.Printf("%v\n", y)  // Generic element with `any` constraint.
-	fmt.Printf("%v\n", z)  // Generic element with `any` constraint.
-	return z               // Generic element with same data type as last element.
-}
-
-// Use generic function.
-item := Item{ "Hi", 12, 5 }
-item = Item{ false, 8.5, 5.0 }
-item = Item{ 16, 9, 5 }
 ```
 
 Custom constraints for generics can be defined.
 
 ```go
-// Create constraint that allows only specified data types.
-type MyTypeConstraint interface {
-	int | uint | rune
-}
+package main
 
-// Create constraint that allows only specified data types and types based on them.
-type MyUnderlyingConstraint interface {
-	~int | ~uint | ~rune
-}
+func main() {
+	// Create constraint that allows only specified data types.
+	type MyTypeConstraint interface {
+		int | uint | rune
+	}
 
-// Create regular interface as constraint that allows only implementations of it.
-type MyImplementationConstraint interface {
-	Greet() string
-}
+	// Create constraint that allows only specified data types and types based on them.
+	type MyUnderlyingConstraint interface {
+		~int | ~uint | ~rune
+	}
 
-// Create mixed constraint.
-type MyMixedConstraint interface {
-	int | uint | ~rune
-	Greet() string
+	// Create regular interface as constraint that allows only implementations of it.
+	type MyImplementationConstraint interface {
+		Greet() string
+	}
+
+	// Create mixed constraint.
+	type MyMixedConstraint interface {
+		int | uint | ~rune
+		Greet() string
+	}
 }
 ```
 
@@ -880,8 +931,12 @@ The precedence of operators decides in which order chained operations are evalua
 | 6                | `<-`                        |
 
 ```go
-// Give operations higher precedence.
-(3 + 4) * (5 - 3) == 14
+package main
+
+func main() {
+	// Give operations higher precedence.
+	(3 + 4) * (5 - 3) == 14
+}
 ```
 
 ### 10.2 Arithmetic Operators
@@ -899,36 +954,44 @@ Arithmetic operators perform operations on integers and floating-point numbers.
 | Modulo           | `%`      | Binary | Left          |
 
 ```go
-// Perform additions.
-3 + 4 == 7  // Binary plus.
-+(5) == 5   // Unary plus.
+package main
 
-// Perform subtractions.
-4 - 3 == 1  // Binary minus.
--(4) == -4  // Unary minus.
+func main() {
+	// Perform additions.
+	3 + 4 == 7  // Binary plus.
+	+(5) == 5   // Unary plus.
 
-// Perform multiplication.
-3 * 2 == 6
+	// Perform subtractions.
+	4 - 3 == 1  // Binary minus.
+	-(4) == -4  // Unary minus.
 
-// Perform division.
-3.0 / 2 == 1.5  // Floating-point division.
+	// Perform multiplication.
+	3 * 2 == 6
 
-// Perform modulo division.
-11 % 4 == 3
+	// Perform division.
+	3.0 / 2 == 1.5  // Floating-point division.
+
+	// Perform modulo division.
+	11 % 4 == 3
+}
 ```
 
 Incrementation and decrementation operations do exist, but only as statements.
 
 ```go
-// Perform incrementation.
-x := 3
-x++  // Increment statement.
-x == 4
+package main
 
-// Perform decrementation.
-y := 3
-y--  // Decrement statement.
-y == 2
+func main() {
+	// Perform incrementation.
+	x := 3
+	x++  // Increment statement.
+	x == 4
+
+	// Perform decrementation.
+	y := 3
+	y--  // Decrement statement.
+	y == 2
+}
 ```
 
 ### 10.3 Comparison Operators
@@ -946,17 +1009,21 @@ comparisons can only be performed on integers and floating-point numbers.
 | Less-Equals    | `<=`     | Binary | Left          |
 
 ```go
-// Perform equality check.
-4 == 4 == true
-3 != 4 == true
+package main
 
-// Perform greater-than check.
-4 > 3 == true
-4 >= 3 == true
+func main() {
+	// Perform equality check.
+	4 == 4 == true
+	3 != 4 == true
 
-// Perform less-than check.
-3 < 4 == true
-3 <= 4 == true
+	// Perform greater-than check.
+	4 > 3 == true
+	4 >= 3 == true
+
+	// Perform less-than check.
+	3 < 4 == true
+	3 <= 4 == true
+}
 ```
 
 ### 10.4 Logical Operators
@@ -971,14 +1038,18 @@ booleans.
 | NOT       | `!`      | Unary  | Right         |
 
 ```go
-// Perform logical AND.
-true && true == true
+package main
 
-// Perform logical OR.
-true ││ false == true
+func main() {
+	// Perform logical AND.
+	true && true == true
 
-// Perform logical NOT.
-!false == true
+	// Perform logical OR.
+	true ││ false == true
+
+	// Perform logical NOT.
+	!false == true
+}
 ```
 
 ### 10.5 Bitwise Operators
@@ -995,15 +1066,19 @@ Bitwise operators manipulate individual bits of values and can only work with in
 | Right Shift | `>>`     | Binary | Left          |
 
 ```go
-// Perform bitwise logical operations.
-0b0110 & 0b0011 == 0b0010  // Bitwise AND.
-0b0110 │ 0b0011 == 0b0111  // Bitwise OR.
-^0b0110 == 0b1001          // Bitwise NOT.
-0b0110 ^ 0b0011 == 0b0101  // Bitwise XOR.
+package main
 
-// Perform bitwise shifts.
-0b0011 << 2 == 0b1100  // Left shift.
-0b1100 >> 2 == 0b0011  // Right shift.
+func main() {
+	// Perform bitwise logical operations.
+	0b0110 & 0b0011 == 0b0010  // Bitwise AND.
+	0b0110 │ 0b0011 == 0b0111  // Bitwise OR.
+	^0b0110 == 0b1001          // Bitwise NOT.
+	0b0110 ^ 0b0011 == 0b0101  // Bitwise XOR.
+
+	// Perform bitwise shifts.
+	0b0011 << 2 == 0b1100  // Left shift.
+	0b1100 >> 2 == 0b0011  // Right shift.
+}
 ```
 
 ### 10.6 Assignment Operators
@@ -1028,63 +1103,67 @@ a variable. Assignment operations can only be used as statements.
 | Right Shift Assignment      | `>>=`   | Binary | Right         |
 
 ```go
-// Perform single assignment.
-var x int = 3
-x == 3
+package main
 
-// Perform shorthand assignment (only inside functions).
-y := 4
-y == 4
+func main() {
+	// Perform single assignment.
+	var x int = 3
+	x == 3
 
-// Perform addition assignment.
-var a int = 3
-a += 2
-a == 5
+	// Perform shorthand assignment (only inside functions).
+	y := 4
+	y == 4
 
-// Perform subtraction assignment.
-var b int = 3
-b -= 2
-b == 1
+	// Perform addition assignment.
+	var a int = 3
+	a += 2
+	a == 5
 
-// Perform multiplication assignment.
-var c int = 3
-c *= 2
-c == 6
+	// Perform subtraction assignment.
+	var b int = 3
+	b -= 2
+	b == 1
 
-// Perform division assignment.
-var d int = 6
-d /= 2
-d == 3
+	// Perform multiplication assignment.
+	var c int = 3
+	c *= 2
+	c == 6
 
-// Perform division assignment.
-var e int = 6
-e %= 2
-e == 0
+	// Perform division assignment.
+	var d int = 6
+	d /= 2
+	d == 3
 
-// Perform bitiwse AND assignment.
-var f int = 0b01
-f &= 0b11
-f == 0b01
+	// Perform division assignment.
+	var e int = 6
+	e %= 2
+	e == 0
 
-// Perform bitiwse OR assignment.
-var g int = 0b01
-g |= 0b11
-g == 0b11
+	// Perform bitiwse AND assignment.
+	var f int = 0b01
+	f &= 0b11
+	f == 0b01
 
-// Perform bitiwse XOR assignment.
-var h int = 0b01
-h ^= 0b11
-h == 0b10
+	// Perform bitiwse OR assignment.
+	var g int = 0b01
+	g |= 0b11
+	g == 0b11
 
-// Perform bitiwse left shift assignment.
-var i int = 0b01
-i <<= 1
-i == 0b10
+	// Perform bitiwse XOR assignment.
+	var h int = 0b01
+	h ^= 0b11
+	h == 0b10
 
-// Perform bitiwse right shift assignment.
-var j int = 0b10
-j >>= 1
-j == 0b01
+	// Perform bitiwse left shift assignment.
+	var i int = 0b01
+	i <<= 1
+	i == 0b10
+
+	// Perform bitiwse right shift assignment.
+	var j int = 0b10
+	j >>= 1
+	j == 0b01
+}
 ```
 
 ## 11 Pointers
@@ -1093,16 +1172,20 @@ Pointers are variables that store memory addresses. These can be used to manipul
 variables without assignments.
 
 ```go
-// Declare pointer variable.
-var p *int
+package main
 
-// Get pointer to variable by getting its memory address.
-var x int = 3
-p = &x
+func main() {
+	// Declare pointer variable.
+	var p *int
 
-// Access value of pointer by dereferencing it.
-var y int = p*
-p* = 5
+	// Get pointer to variable by getting its memory address.
+	var x int = 3
+	p = &x
+
+	// Access value of pointer by dereferencing it.
+	var y int = p*
+	p* = 5
+}
 ```
 
 ## 12 Control Flow Structures
@@ -1114,27 +1197,31 @@ Controll flow structures are block statements that manipulate the control flow o
 Conditions are block statements that are only run on certain conditions.
 
 ```go
+package main
+
 import "fmt"
 
-// Only execute condition when expression is true.
-x := 3
-if x > 0 {
-	fmt.Println("x is positive")
-}
+func main() {
+	// Only execute condition when expression is true.
+	x := 3
+	if x > 0 {
+		fmt.Println("x is positive")
+	}
 
-// Initialize variable within the condition's definition.
-if y := 4; y > 0 {
-	fmt.Println("y is positive")
-}
+	// Initialize variable within the condition's definition.
+	if y := 4; y > 0 {
+		fmt.Println("y is positive")
+	}
 
-// Define alternative paths within condition.
-z := 3
-if x > 0 {
-	fmt.Println("z is positive")
-} else if < 0 {  // Only execute condition when last condition was skipped and expression is true.
-	fmt.Println("z is positive")
-} else {         // Only execute condition when last condition was skipped.
-	fmt.Println("z is zero")
+	// Define alternative paths within condition.
+	z := 3
+	if x > 0 {
+		fmt.Println("z is positive")
+	} else if < 0 {  // Only execute condition when last condition was skipped and expression is true.
+		fmt.Println("z is positive")
+	} else {         // Only execute condition when last condition was skipped.
+		fmt.Println("z is zero")
+	}
 }
 ```
 
@@ -1143,50 +1230,54 @@ if x > 0 {
 Switches are short-hand conditions that execute statements based on value comparisons.
 
 ```go
+package main
+
 import "fmt"
 
-// Execute first case that evaluates to the switch's condition.
-x := 3
-switch x {
-	case 0:
-		fmt.Println("x is 0")
-	case 5:
-		fmt.Println("x is 5")
-	// Execute case when no other case matched.
-	default:
-		fmt.Println("x isn't 1 or 2")
-}
+func main() {
+	// Execute first case that evaluates to the switch's condition.
+	x := 3
+	switch x {
+		case 0:
+			fmt.Println("x is 0")
+		case 5:
+			fmt.Println("x is 5")
+		// Execute case when no other case matched.
+		default:
+			fmt.Println("x isn't 1 or 2")
+	}
 
-// Execute first case that evaluates to true.
-y := 2
-switch {
-	case y % 2 == 0:
-		fmt.Println("y is dividable by 2")
-	case y % 5 == 0:
-		fmt.Println("y is dividable by 5")
-	default:
-		fmt.Println("y isn't dividable by 2 or 5")
-}
+	// Execute first case that evaluates to true.
+	y := 2
+	switch {
+		case y % 2 == 0:
+			fmt.Println("y is dividable by 2")
+		case y % 5 == 0:
+			fmt.Println("y is dividable by 5")
+		default:
+			fmt.Println("y isn't dividable by 2 or 5")
+	}
 
-// Initialize variable within the switch's definition.
-switch z := 12; z {
-	case z % 2 == 0:
-		fmt.Println("z is dividable by 2")
-	case z % 5 == 0:
-		fmt.Println("z is dividable by 5")
-	default:
-		fmt.Println("z has an unknown divider")
-}
+	// Initialize variable within the switch's definition.
+	switch z := 12; z {
+		case z % 2 == 0:
+			fmt.Println("z is dividable by 2")
+		case z % 5 == 0:
+			fmt.Println("z is dividable by 5")
+		default:
+			fmt.Println("z has an unknown divider")
+	}
 
-// Execute first case that specifies the data type of the switch's condition.
-a := 3
-switch a.(type) {
-	case int:
-		fmt.Println("a is int")
-	case float64:
-		fmt.Println("a is float64")
-	default:
-		fmt.Println("a isn't int or float64")
+	// Execute first case that specifies the data type of the switch's condition.
+	a := 3
+	switch a.(type) {
+		case int:
+			fmt.Println("a is int")
+		case float64:
+			fmt.Println("a is float64")
+		default:
+			fmt.Println("a isn't int or float64")
+	}
 }
 ```
 
@@ -1195,54 +1286,58 @@ switch a.(type) {
 Loops are block statements that are rerun multiple times.
 
 ```go
+package main
+
 import "fmt"
 
-// Loop a specified amount of time according to running variable.
-for i := 0; i < 10; i++ {
-	fmt.Println(i)  // Reference loop's running variable.
-}
-
-// Loop as long as expression is true.
-i := 0
-for i < 10 {
-	fmt.Println(i)
-	i++
-}
-
-// Loop forever.
-j := 0
-for {
-	fmt.Println(j)
-	j++
-}
-
-// Loop over elements of iterable (array, slice, map).
-arr := [4]int{1, 2, 3, 4}
-for i, v := range arr {
-	fmt.Printf("Current index/key: %d\n", i)
-	fmt.Printf("Current value: %d\n", v)
-}
-
-// Discard values in loops over iterables.
-slice := []int{1, 2, 3, 4}
-for _, _ := range slice {
-	fmt.Println("Iterating...")
-}
-
-// Exiting loops and their iterations early..
-k := 0
-for {
-	fmt.Println(k)
-	k++
-
-	if k % 2 == 0 {
-		// Skip current loop iteration immediately.
-		continue
+func main() {
+	// Loop a specified amount of time according to running variable.
+	for i := 0; i < 10; i++ {
+		fmt.Println(i)  // Reference loop's running variable.
 	}
 
-	if k > 10 {
-		// Exit loop immediately.
-		break
+	// Loop as long as expression is true.
+	i := 0
+	for i < 10 {
+		fmt.Println(i)
+		i++
+	}
+
+	// Loop forever.
+	j := 0
+	for {
+		fmt.Println(j)
+		j++
+	}
+
+	// Loop over elements of iterable (array, slice, map).
+	arr := [4]int{1, 2, 3, 4}
+	for i, v := range arr {
+		fmt.Printf("Current index/key: %d\n", i)
+		fmt.Printf("Current value: %d\n", v)
+	}
+
+	// Discard values in loops over iterables.
+	slice := []int{1, 2, 3, 4}
+	for _, _ := range slice {
+		fmt.Println("Iterating...")
+	}
+
+	// Exit loops and their iterations early.
+	k := 0
+	for {
+		fmt.Println(k)
+		k++
+
+		if k % 2 == 0 {
+			// Skip current loop iteration immediately.
+			continue
+		}
+
+		if k > 10 {
+			// Exit loop immediately.
+			break
+		}
 	}
 }
 ```
@@ -1253,26 +1348,30 @@ Functions are callable block statements that can take arguments and produce retu
 parameters act as local variables.
 
 ```go
+package main
+
 import "fmt"
 
-// Declare function without parameters and return value.
-func greet() {
-	fmt.Println("Hello!")
-}
+func main() {
+	// Declare function without parameters and return value.
+	func greet() {
+		fmt.Println("Hello!")
+	}
 
-// Declare function with parameters and one return value.
-func add(x int, y int) int {
-	return x + y
-}
+	// Declare function with parameters and one return value.
+	func add(x int, y int) int {
+		return x + y
+	}
 
-// Shorten consectutive parameter definitions with the same type.
-func sub(x, y int) int {
-	return x - y
-}
+	// Shorten consectutive parameter definitions with the same type.
+	func sub(x, y int) int {
+		return x - y
+	}
 
-// Call function...
-greet()              // ...without parameters and return value.
-result := add(3, 4)  // ...with parameters and one return value.
+	// Call function...
+	greet()              // ...without parameters and return value.
+	result := add(3, 4)  // ...with parameters and one return value.
+}
 ```
 
 <u>Best practices</u>:
@@ -1284,17 +1383,21 @@ result := add(3, 4)  // ...with parameters and one return value.
 Functions can return any number of values.
 
 ```go
-// Declare function with multiple return values.
-func swap(x int, y int) (int, int) {
-	return y, x
+package main
+
+func main() {
+	// Declare function with multiple return values.
+	func swap(x int, y int) (int, int) {
+		return y, x
+	}
+
+	// Call function with multiple return values (explicit syntax).
+	var x, y int
+	x, y = swap(5, 8)
+
+	// Call function with multiple return values (shorthand syntax).
+	a, b := swap(2, 1)
 }
-
-// Call function with multiple return values (explicit syntax).
-var x, y int
-x, y = swap(5, 8)
-
-// Call function with multiple return values (shorthand syntax).
-a, b := swap(2, 1)
 ```
 
 ### 13.2 Named Return Values
@@ -1303,22 +1406,26 @@ Functions can name their return values to automatically return local variables w
 identifier.
 
 ```go
-// Declare function that automatically returns specified local variable.
-func add(x int, y int) (z int) {
-	z := x + y
-	return
-}
+package main
 
-// Declare function that automatically returns multiple specified local variables.
-func swap(x int, y int) (a, b int) {
-	a := y
-	b := x
-	return
-}
+func main() {
+	// Declare function that automatically returns specified local variable.
+	func add(x int, y int) (z int) {
+		z := x + y
+		return
+	}
 
-// Call functions with named return values
-result := add(3, 8)
-x, y := swap(2, 4)
+	// Declare function that automatically returns multiple specified local variables.
+	func swap(x int, y int) (a, b int) {
+		a := y
+		b := x
+		return
+	}
+
+	// Call functions with named return values
+	result := add(3, 8)
+	x, y := swap(2, 4)
+}
 ```
 
 ### 13.3 Deferred Function Calls
@@ -1327,15 +1434,19 @@ Inside functions other function calls can be deferred to after their execution b
 on top of the call stack. Thereby the deferred function's arguments are evaluated beforehand.
 
 ```go
+package main
+
 import "fmt"
 
-func info() {
-	// Defer function calls to end of current function.
-	defer fmt.Println("1")  // Prints fourth.
-	defer fmt.Println("2")  // Prints third.
-	defer fmt.Println("3")  // Prints second.
+func main() {
+	func info() {
+		// Defer function calls to end of current function.
+		defer fmt.Println("1")  // Prints fourth.
+		defer fmt.Println("2")  // Prints third.
+		defer fmt.Println("3")  // Prints second.
 
-	fmt.Println("End of function")  // Prints first.
+		fmt.Println("End of function")  // Prints first.
+	}
 }
 ```
 
@@ -1345,28 +1456,32 @@ Functions are first-class values and therefore can be assigned to variables, pas
 returned from functions, and used to create closures and higher-order functions.
 
 ```go
-// Assign function to a variable.
-func add(x int, y int) int {
-	return x x y
-}
-var add func(int, int) int = add
+package main
 
-// Assign anonymous function to a variable.
-var sub func(int, int) int = func(x int, y int) int {
-    return x - y
-}
+func main() {
+	// Assign function to a variable.
+	func add(x int, y int) int {
+		return x x y
+	}
+	var add func(int, int) int = add
 
-// Call function assigned to variable.
-result = add(3, 4)
+	// Assign anonymous function to a variable.
+	var sub func(int, int) int = func(x int, y int) int {
+		return x - y
+	}
 
-// Call anonymous function immediately.
-var result int = func(x int, y int) int { return x + y }(3, 4)
+	// Call function assigned to variable.
+	result = add(3, 4)
 
-// Declare anonymous function as closure.
-var counter int = 0    // Initialize variable that is captured by closure.
-count := func() int {
-	counter++          // Use captured variable internally as a copy.
-	return counter
+	// Call anonymous function immediately.
+	var result int = func(x int, y int) int { return x + y }(3, 4)
+
+	// Declare anonymous function as closure.
+	var counter int = 0    // Initialize variable that is captured by closure.
+	count := func() int {
+		counter++          // Use captured variable internally as a copy.
+		return counter
+	}
 }
 ```
 
@@ -1376,15 +1491,19 @@ Values are copied when they're passed as arguments to functions. Therefore funct
 mutate their parameters. To mutate parameters they must be defined as pointers.
 
 ```go
-// Define function that mutates its parameters.
-func inc(val *int) {
-	(*val)++
-}
+package main
 
-// Call function that mutates its argument.
-var x int = 3
-inc(&x)  // Pass argument as pointer.
-x == 4
+func main() {
+	// Define function that mutates its parameters.
+	func inc(val *int) {
+		(*val)++
+	}
+
+	// Call function that mutates its argument.
+	var x int = 3
+	inc(&x)  // Pass argument as pointer.
+	x == 4
+}
 ```
 
 <u>Best practices</u>:
@@ -1397,33 +1516,37 @@ Receiver functions act as methods for data types. They can only be defined for c
 data types (structures and aliased types).
 
 ```go
+package main
+
 import "fmt"
 
-type Person struct {
-	Name string
-	age int
-}
-var john Person =  Person{
-	Name: "John",
-	Age: 21,
-}
+func main() {
+	type Person struct {
+		Name string
+		age int
+	}
+	var john Person =  Person{
+		Name: "John",
+		Age: 21,
+	}
 
-// Declare receiver function for custom data type.
-func (p Person) Greet() {                   // Pass copy of receiver object.
-	fmt.Printf("Hello, I'm %s!\n", p.Name)  // Reference receiver object.
+	// Declare receiver function for custom data type.
+	func (p Person) Greet() {                   // Pass copy of receiver object.
+		fmt.Printf("Hello, I'm %s!\n", p.Name)  // Reference receiver object.
+	}
+
+	// Declare mutating receiver function for custom data type.
+	func (p *Person) Birthday() {  // Pass pointer to receiver object.
+		p.age++                    // Automatically dereference pointer to receiver object.
+	}
+
+	// Call receiver functions on object.
+	john.Greet()
+
+	// Call mutating receiver functions on object.
+	(&john).Birthday()  // Explicitly pass pointer to receiver object.
+	john.Birthday()     // Implicitly pass pointer to receiver object.
 }
-
-// Declare mutating receiver function for custom data type.
-func (p *Person) Birthday() {  // Pass pointer to receiver object.
-	p.age++                    // Automatically dereference pointer to receiver object.
-}
-
-// Call receiver functions on object.
-john.Greet()
-
-// Call mutating receiver functions on object.
-(&john).Birthday()  // Explicitly pass pointer to receiver object.
-john.Birthday()     // Implicitly pass pointer to receiver object.
 ```
 
 <u>Best practices</u>:
@@ -1442,49 +1565,53 @@ Every data type implements at least the empty interface without signatures, whic
 be used as any type.
 
 ```go
-// Define interface.
-type Counter interface {
-	Inc() int
-	Dec() int
+package main
+
+func main() {
+	// Define interface.
+	type Counter interface {
+		Inc() int
+		Dec() int
+	}
+
+	// Define custom data type that will implement interface.
+	type Tracker int
+
+	// Declare receiver function that implements signature of interface.
+	func (t *Tracker) Inc() int {
+		(*t)++
+		return t
+	}
+
+	// Declare receiver function that implements signature of interface.
+	func (t *Tracker) Dec() int {
+		(*t)--
+		return t
+	}
+
+	// Use implementation for interface.
+	var tracker Counter
+	tracker = 3
+	tracker.Inc() == 4  // Call receiver function of interface implementation.
+
+	// Assert data type used for interface.
+	t := tracker.(Counter)      // Panic when interface isn't specified type.
+	t, ok := tracker.(Counter)  // Assert data type used for interface without panic.
+	t                           // Existng value or zero value.
+	ok == true                  // Whether the asserted data type was correct.
+
+	// Use empty interface as any type.
+	var i interface{}
+	i = "Hello!"
+	i = 23
+	i = true
+
+	// Use alias for empty interface.
+	var j any
+	j = "Hello!"
+	j = 23
+	j = true
 }
-
-// Define custom data type that will implement interface.
-type Tracker int
-
-// Declare receiver function that implements signature of interface.
-func (t *Tracker) Inc() int {
-	(*t)++
-	return t
-}
-
-// Declare receiver function that implements signature of interface.
-func (t *Tracker) Dec() int {
-	(*t)--
-	return t
-}
-
-// Use implementation for interface.
-var tracker Counter
-tracker = 3
-tracker.Inc() == 4  // Call receiver function of interface implementation.
-
-// Assert data type used for interface.
-t := tracker.(Counter)      // Panic when interface isn't specified type.
-t, ok := tracker.(Counter)  // Assert data type used for interface without panic.
-t                           // Existng value or zero value.
-ok == true                  // Whether the asserted data type was correct.
-
-// Use empty interface as any type.
-var i interface{}
-i = "Hello!"
-i = 23
-i = true
-
-// Use alias for empty interface.
-var j any
-j = "Hello!"
-j = 23
-j = true
 ```
 
 <u>Best practices</u>:
@@ -1498,21 +1625,25 @@ can cause errors also return an error value that is an implementation of the `er
 when an error occured or `nil` when none occured.
 
 ```go
+package main
+
 import (
 	"fmt"
 	"strconv"
 )
 
-// Check whether an error occurred in a function call.
-num, err := strconv.atoi("3")
-if err != nil {
-	fmt.Printf("couldn't convert number: %v\n", err)
-}
+func main() {
+	// Check whether an error occurred in a function call.
+	num, err := strconv.atoi("3")
+	if err != nil {
+		fmt.Printf("couldn't convert number: %v\n", err)
+	}
 
-// Create custom error type.
-type MyError struct {}
-func (e MyError) Error() string {  // Implement `Error` function of `error` interface.
-	return "Oh no! An error occurred!"
+	// Create custom error type.
+	type MyError struct {}
+	func (e MyError) Error() string {  // Implement `Error` function of `error` interface.
+		return "Oh no! An error occurred!"
+	}
 }
 ```
 
@@ -1554,21 +1685,25 @@ The main control flow itself is a goroutine that acts as parent for subsequent g
 subsequent can only be spawned inside of functions.
 
 ```go
+package main
+
 import "fmt"
 
-// Spawn goroutine that runs specified function.
-func Greet(name string) {
-	fmt.Printf("Hello from %s\n!", name)
-}
-go Greet("John")
-
-// Spawn goroutine that runs specified function which itself spawns goroutines.
-func GreetMultiple(names []string) {
-	for _, v := range names {
-		go fmt.Printf("Hello from %s\n!", v)
+func main() {
+	// Spawn goroutine that runs specified function.
+	func Greet(name string) {
+		fmt.Printf("Hello from %s\n!", name)
 	}
+	go Greet("John")
+
+	// Spawn goroutine that runs specified function which itself spawns goroutines.
+	func GreetMultiple(names []string) {
+		for _, v := range names {
+			go fmt.Printf("Hello from %s\n!", v)
+		}
+	}
+	go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
 }
-go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
 ```
 
 ### 20.1 Channels
@@ -1577,73 +1712,85 @@ Goroutines can communicate with each other through channels. They're blocking th
 their according goroutine and can exchange vales.
 
 ```go
-// Create channels for specified data types.
-var res chan int = make(chan int)
-var name chan string = make(chan string)
+package main
 
-// Declare function that sends data through channel.
-func Add(x, y int, ch chan int) {  // Define channel to use as parameter.
-	ch <- x + y                    // Send value through channel; blocks execution until received.
+import "fmt"
+
+func main() {
+	// Create channels for specified data types.
+	var res chan int = make(chan int)
+	var name chan string = make(chan string)
+
+	// Declare function that sends data through channel.
+	func Add(x, y int, ch chan int) {  // Define channel to use as parameter.
+		ch <- x + y                    // Send value through channel; blocks until received.
+	}
+
+	// Declare function that receives data from channel.
+	func Greet(ch chan string) {  // Define channel to use as parameter.
+		name <- chan              // Receive value from channel; blocks until sent.
+		fmt.Printf("Hello %s!\n", name)
+	}
+
+	// Use channel to receive data.
+	go Add(3, 4, res)  // Pass channel to receive data from to goroutine.
+	result := <- ch    // Receive value from channel; blocks until sent.
+
+	// Use channel to send data.
+	go Greet(name)  // Pass channel to send data to to goroutine.
+	name <- "John"  // Send value to channel; blocks until received.
+
+	// Create buffered channel that can store specified amount of values before it blocks.
+	var counter chan int = make(chan int, 10)
 }
-
-// Declare function that receives data from channel.
-func Greet(ch chan string) {  // Define channel to use as parameter.
-	name <- chan              // Receive value from channel; blocks execution until sent.
-	fmt.Printf("Hello %s!\n", name)
-}
-
-// Use channel to receive data.
-go Add(3, 4, res)  // Pass channel to receive data from to goroutine.
-result := <- ch    // Receive value from channel; blocks execution until sent.
-
-// Use channel to send data.
-go Greet(name)  // Pass channel to send data to to goroutine.
-name <- "John"  // Send value to channel; blocks execution until received.
-
-// Create buffered channel that can store specified amount of values before it blocks execution.
-var counter chan int = make(chan int, 10)
 ```
 
 Channels can be closed to invalidate them. Trying to receive values from closed channels causes a
 panic. This is only required by statements that automatically receive values from channels.
 
 ```go
-// Declare function with quit channel parameter to delegate channel closing from outside.
-func Count(quit chan bool, ch chan int) {
-	num := 0
-	for {
-		// Execute case of first channel operation that isn't blocked.
-		select {
-			// Send data to channel and execute its case.
-			case ch <- num:
-				num++
-			// Receive data from channel and execute its case.
-			case <- quit:
-				close(ch)  // Close channel.
-				return
-			// Default case to execute when every other case is blocked.
-			default:
-				fmt.Println("Nothing to do...")
+package main
+
+import "fmt"
+
+func main() {
+	// Declare function with quit channel parameter to delegate channel closing from outside.
+	func Count(quit chan bool, ch chan int) {
+		num := 0
+		for {
+			// Execute case of first channel operation that isn't blocked.
+			select {
+				// Send data to channel and execute its case.
+				case ch <- num:
+					num++
+				// Receive data from channel and execute its case.
+				case <- quit:
+					close(ch)  // Close channel.
+					return
+				// Default case to execute when every other case is blocked.
+				default:
+					fmt.Println("Nothing to do...")
+			}
 		}
 	}
-}
 
-var ch chan int = make(chan int)
-var quit chan bool = make(chan bool)
-go Count(quit, ch)
+	var ch chan int = make(chan int)
+	var quit chan bool = make(chan bool)
+	go Count(quit, ch)
 
-// Check whether channel is closed.
-v, ok := <- ch
-v == 0      // Existing value or zero value of its data type.
-ok == true  // Whether channel is closed.
+	// Check whether channel is closed.
+	v, ok := <- ch
+	v == 0      // Existing value or zero value of its data type.
+	ok == true  // Whether channel is closed.
 
-// Receive values from channel repeatedly as long as channel isn't closed.
-for v := range ch {
-	fmt.Println(v)
+	// Receive values from channel repeatedly as long as channel isn't closed.
+	for v := range ch {
+		fmt.Println(v)
 
-	if v >= 10 {
-		// Send arbitrary data through quit channel to delegate its closing.
-		quit <- true
+		if v >= 10 {
+			// Send arbitrary data through quit channel to delegate its closing.
+			quit <- true
+		}
 	}
 }
 ```
@@ -1654,26 +1801,30 @@ Goroutines can access and manipulate the same data through pointers. To avoid ra
 shared memory mutexes can be used to lock and unlock them for other goroutines.
 
 ```go
+package main
+
 import (
 	"fmt"
 	"sync"
 )
 
-// Declare a mutex that prevents simultaneous execution of statements.
-var mutex sync.Mutex
+func main() {
+	// Declare a mutex that prevents simultaneous execution of statements.
+	var mutex sync.Mutex
 
-// Declare function that mutates shared data while holding the mutex.
-func Inc(counter *int) {
-	mutex.Lock()    // Lock the critical section for other goroutines.
-	(*counter)++
-	mutex.Unlock()  // Unlock the critical section.
-}
+	// Declare function that mutates shared data while holding the mutex.
+	func Inc(counter *int) {
+		mutex.Lock()    // Lock the critical section for other goroutines.
+		(*counter)++
+		mutex.Unlock()  // Unlock the critical section.
+	}
 
-var counter int = 0
-for i := range 100 {
-	go Inc(&counter)  // Spawn goroutines that synchronize access to counter.
+	var counter int = 0
+	for i := range 100 {
+		go Inc(&counter)  // Spawn goroutines that synchronize access to counter.
+	}
+	fmt.Println(counter)
 }
-fmt.Println(counter)
 ```
 
 ## 21 Memory Management
