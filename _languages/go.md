@@ -345,10 +345,10 @@ name rather than their import path.
 package mypackage
 
 import (
-    "someotherpackage"
-    "someotherpackage/somesubpackage"
-    sub "someotherpackage/someothersubpackage"
-    _ "someotherpackage/someinitpackage"
+	"someotherpackage"
+	"someotherpackage/somesubpackage"
+	sub "someotherpackage/someothersubpackage"
+	_ "someotherpackage/someinitpackage"
 )
 
 // Reference an imported package.
@@ -1732,6 +1732,11 @@ defer Crashout()
 
 ## 16 IO
 
+The following streams are predefined in the `os` package:
+- `os.Stdout`
+- `os.Stdin`
+- `os.Stderr`
+
 ### 16.1 Output
 
 ```go
@@ -1756,7 +1761,29 @@ fmt.Printf("Hello, %s!\n", "John")
 
 ### 16.2 Input
 
-...
+```go
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+// Create an input stream from a file.
+f, err := os.Open("./path/to/file.txt")
+f.Close()  // Close input stream.
+
+// Read an entire file at once.
+data, err := os.ReadFile("./path/to/file.txt")  // Get file content as slice of bytes.
+text := string(data)
+
+// Read an input stream line by line.
+s := bufio.NewScanner(os.Stdin)  // Create buffered scanner object for stream.
+for s.Scan() {                   // Iterate over stream line by line as long as no error occurs.
+	line := s.Text()             // Get read line as string.
+	fmt.Println(line)
+}
+err = s.Err()                    // Check whether an error occured while reading.
+```
 
 ## 17 Math
 
@@ -1923,10 +1950,28 @@ var timestamp int64 = time.Now().Unix()
 ## 20 System
 
 ```go
-import "time"
+import (
+	"path/filepath"
+	"time"
+)
 
 // Halt the control flow for a specified amount of milliseconds.
 time.Sleep(1000)
+
+// Create OS-compatible filepath string from cleaning and joining sub paths.
+var path string = filepath.Join("dir1/", "dir2/", "filename")
+
+// Create OS-compatible relative filepath string from a base to a target path.
+var way string = filepath.Rel("path/from/", "path/to/file.txt")
+
+// Get information about a filepath string.
+var dir string = filepath.Dir(path)     // Get directory of the path.
+var base string = filepath.Base(path)   // Get file of the path.
+var suffix string = filepath.Ext(path)  // Get file extension of the path.
+var isAbs bool = filepath.IsAbs(path)   // Whether the path is absolute.
+
+// Get filepath string to tmp directory of the OS.
+var tmp string = os.TempDir()
 ```
 
 ## 21 Memory Management
