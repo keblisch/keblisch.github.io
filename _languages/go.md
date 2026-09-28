@@ -45,14 +45,14 @@ func main() {
 
 ### 1.2 Advantages and Disadvantages
 
-| Advantages                             | Disadvantages                                       |
-| :------------------------------------- | :-------------------------------------------------- |
-| Good concurrency model.                | Smaller ecosystem in some domains.                  |
-| Fast and lightweight.                  | Verbose error handling.                             |
-| Minimalist syntax.                   | Syntax can be inflexible.                           |
+| Advantages                             | Disadvantages                                           |
+| :------------------------------------- | :------------------------------------------------------ |
+| Good concurrency model.                | Smaller ecosystem in some domains.                      |
+| Fast and lightweight.                  | Verbose error handling.                                 |
+| Minimalist syntax.                     | Syntax can be inflexible.                               |
 | Easy to learn and pick up.             | The mix of high- and low-level syntax can be confusing. |
-| Large standard library.                |                                                     |
-| Comes with a self-contained toolchain. |                                                     |
+| Large standard library.                |                                                         |
+| Comes with a self-contained toolchain. |                                                         |
 
 ### 1.3 History
 
@@ -96,12 +96,14 @@ go mod init example.com/myproject  # Initialize a Go module with the specified n
 go get github.com/example/foo      # Add the specified external dependency to the Go module.
 go mod tidy                        # Add missing and remove unused dependencies.
 
-# Execute the main package in the current directory with temporary build files.
-go run .
+# Execute Go files with temporary build files.
+go run ./path/to/file.go  # Execute the specified file.
+go run ./path/to/package  # Execute files in the specified package.
 
-# Compile the current package; produce an executable for a main package.
-go build
-go build -o ./path/to/executable  # Specify the compilation output file.
+# Compile Go files; produce an executable for a main package.
+go build ./path/to/file.go                          # Compile the specified file.
+go build ./path/to/package                          # Compile the specified package.
+go build -o ./path/to/executable ./path/to/package  # Specify the compilation output file.
 
 # Get an overview of Go settings.
 go env       # List all settings.
@@ -544,6 +546,13 @@ The zero value of integers is `0`.
 | `uintptr` | System Size | Unsigned   | `0`, `45`, `12`     |
 | `byte`    | 1           | Unsigned   | `0`, `45`, `12`     |
 
+```go
+import "strconv"
+
+// Create string representation of integer.
+strconv.Atoi(14) == "14"
+```
+
 #### 9.1.2 Floating-Point Numbers
 
 Floating-point numbers approximate real numbers and are implemented according to the IEEE 754
@@ -579,13 +588,31 @@ The zero value of booleans is `false`.
 
 #### 9.1.5 Strings
 
-Strings are immutable sequences of bytes, commonly containing UTF-8 text.
+Strings are read-only slices of bytes, commonly containing UTF-8 text. Therefore they're
+equivalent to `[]byte`.
 
 The zero value of strings is the empty string `""`.
 
 | Keyword  | Byte Size                | Literals               |
 | :------- | :----------------------- | :--------------------- |
 | `string` | Variable (byte sequence) | `"Hi!"`, `"1 + 2 = 3"` |
+
+```go
+
+import "unicode/utf8"
+
+// Index into byte of string.
+"ABC"[0] == 65
+
+// Count number of characters in string.
+utf8.RuneCountInString("Hello!") == 6
+```
+
+```go
+// Concatenate strings.
+name := "John" + " " + "Doe"
+name == "John Doe"
+```
 
 #### 9.1.6 Arrays
 
@@ -596,14 +623,25 @@ The zero value of an array contains the zero value of its element type in every 
 
 ```go
 // Declare an array of the specified size and type.
-var arr [5]int
+var arr1 [5]int
 
 // Define an array of the specified size and type.
-arr = [5]int{1, 2, 3, 4, 5}
+arr1 = [5]int{1, 2, 3, 4, 5}
+
+// Initialize an array with automatically calculated size.
+arr2 = [...]int{3, 5, 7, 9}
+
+// Initialize an array with values set at specific indices.
+arr3 = [...]int{
+	7,     // Set zero value at every index betwenn this and the next specified index.
+	3: 1,  // Set value at the specified index.
+	12,    // Set value at index after specified index.
+	4,
+}
 
 // Access array elements by index.
-arr[0] = 1
-arr[0] == 1
+arr1[0] = 1
+arr1[0] == 1
 
 // Create a multidimensional array.
 var matrix [4][4]int = [4][4]int{
@@ -653,6 +691,31 @@ max.Age == 16     // Implicitly dereference the structure pointer.
 <u>Best practices</u>:
 - Identifiers of exported structure elements should use Pascal case, while unexported ones should
   use camel case.
+- Encapsulate structure creations in dedicated constructor functions.
+
+#### 9.1.8 Enumerations
+
+An enumeration is a type that has a fixed number of possible values, each with a distinct name.
+Go doesn’t has an enumeration type as a distinct language feature, but enums are simple to
+implement using existing language idioms.
+
+```go
+// Define custom integer type to use as enumeration.
+type ServerState int
+
+// Create constants of custom integer type as enumeration values.
+const (
+	StateIdle ServerState = iota  // Automatically assign ascending numbers in const block.
+	StateConnected
+	StateError
+	StateRetrying
+)
+```
+
+<u>Best practices</u>:
+- Enumerations should be created with custom data types created for them.
+- Identifiers of exported enumeration types and elements should use Pascal case, while unexported
+  ones should use camel case.
 
 ### 9.2 Reference Data Types
 
@@ -667,13 +730,15 @@ Slices are dynamic views into arrays. Therefore, any change to a slice also chan
 array.
 
 ```go
+import "slices"
+
 // Create a slice from an existing array.
 arr := [5]int{1, 2, 3, 4, 5}
 var slice1 []int = arr[1:3]  // Slice between the specified elements, excluding the end.
 var slice2 []int = arr[:3]   // Slice from the start to the specified element (exclusive).
 var slice3 []int = arr[1:]   // Slice from the specified element to the end.
 
-// Create a slice literal with its own internal array.
+// Create a slice literal with its own internal array; The mechanisms of arrays are applicable.
 var dyn []int = []int{1, 2, 3, 4, 5}
 
 // Create slices with a specific length and capacity.
@@ -697,17 +762,12 @@ dyn = dyn[2:]  // Drop the first two elements.
 dyn = append(dyn, 4)        // Append a single element.
 dyn = append(dyn, 7, 2, 5)  // Append multiple elements.
 
-// Create a multidimensional slice.
-var matrix [][]int = [][]int{
-	[]int{1, 2, 3, 4},
-	[]int{2, 4, 6, 8},
-	[]int{3, 5, 7, 9},
-	[]int{1, 3, 5, 7},
-}
+// Copy a slice into another slice.
+newDyn := make([]int, 5)  // Slice to copy into.
+copy(newDyn, dyn)         // Overwrite slice with copied data from other slice.
 
-// Access an element of a multidimensional slice.
-matrix[0][2] = 3
-matrix[0][2] == 3
+// Compare slices for equality.
+slices.Equal(dyn, newDyn) == true
 ```
 
 #### 9.2.2 Maps
@@ -715,6 +775,8 @@ matrix[0][2] == 3
 Maps are dynamic mappings between keys and values.
 
 ```go
+import "maps"
+
 // Declare a map with the specified key and value data types.
 var scores map[string]int
 
@@ -740,8 +802,12 @@ ok == true                    // Whether the key exists.
 // Add a key-value pair to a map.
 scores["Max"] = 7
 
-// Remove a key-value pair from a map.
-delete(scores, "Jane")
+// Get the number of elements in a map.
+len(scores) == 3.
+
+// Remove key-value pairs from a map.
+delete(scores, "Jane")  // Delete one key-value pair.
+clear(scores)           // Delete all key-value pairs.
 
 // Create a map with structures as values.
 type Person struct {
@@ -751,6 +817,9 @@ type Person struct {
 registry := map[string]Person{
 	"John": { Name: "John", Age: 21 },  // Omit the structure name when inserting a key-value pair.
 }
+
+// Compare maps for equality.
+maps.Equal(scores, registry) == false
 ```
 
 ### 9.3 Data Type Conversion
@@ -777,18 +846,22 @@ Custom data types can be defined from existing ones. They retain the same underl
 and applicable operations but are distinct types.
 
 ```go
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Define a custom data type from an existing data type.
 type Counter int
 
-// Implement the string representation interface (fmt.Stringer) for a custom data type.
-type Person struct {
-	Name string
-	Age int
-}
-func (p Person) String() string {
-	return p.Name
+// Create a value of a custom data type.
+var c1 Counter = 2             // Untyped expressions of the underlying type can be used as value.
+var num int = 5
+var c2 Counter = Counter(num)  // Typed expressions of the underlying type must be converted.
+
+// Provide string representations for custom data type by implementing the fmt.Stringer interface.
+func (c Counter) String() string {
+	return strconv.Itoa(int(c))
 }
 ```
 
@@ -1199,9 +1272,27 @@ Loops are block statements that execute repeatedly.
 ```go
 import "fmt"
 
-// Loop a specified number of times using a loop variable.
+// Loop a specified number of times by controlling a loop variable.
 for i := 0; i < 10; i++ {
 	fmt.Println(i)  // Reference the loop variable.
+}
+
+// Loop a specified number of times.
+for i := range 10 {
+	fmt.Println(i)  // Reference the loop variable.
+}
+
+// Loop over the elements of an iterable (array, slice, map, string).
+arr := [...]int{1, 2, 3, 4}
+for i, v := range arr {
+	fmt.Printf("Current index/key: %d\n", i)  // Reference the current index/key.
+	fmt.Printf("Current value: %d\n", v)      // Reference the current value.
+}
+
+// Discard values in loops over iterables.
+slice := []int{1, 2, 3, 4}
+for _, _ := range slice {
+	fmt.Println("Iterating...")
 }
 
 // Loop as long as the expression is true.
@@ -1216,19 +1307,6 @@ j := 0
 for {
 	fmt.Println(j)
 	j++
-}
-
-// Loop over the elements of an iterable (array, slice, map).
-arr := [4]int{1, 2, 3, 4}
-for i, v := range arr {
-	fmt.Printf("Current index/key: %d\n", i)
-	fmt.Printf("Current value: %d\n", v)
-}
-
-// Discard values in loops over iterables.
-slice := []int{1, 2, 3, 4}
-for _, _ := range slice {
-	fmt.Println("Iterating...")
 }
 
 // Exit loops and their iterations early.
@@ -1297,6 +1375,9 @@ x, y = swap(5, 8)
 
 // Call a function with multiple return values (shorthand syntax).
 a, b := swap(2, 1)
+
+// Trailing return values can be omitted when they aren't needed.
+c := swap(2, 1)
 ```
 
 ### 13.2 Named Return Values
@@ -1323,7 +1404,33 @@ result := add(3, 8)
 x, y := swap(2, 4)
 ```
 
-### 13.3 Deferred Function Calls
+### 13.3 Variadic Functions
+
+Variadic functions can be called with any number of arguments. Thereby exactly one trailing
+parameter has to be defined as variadic and is used as a slice inside the function.
+
+```go
+// Declare function with variadic parameter.
+func sum(nums ...int) int {
+	r := 0
+	for _, n := range nums {  // Use variadic parameter as slice.
+		r += n
+	}
+	return r
+}
+
+// Call variadic function.
+sum(1, 2, 3, 4) == 10
+sum(1, 2) == 3
+sum(1) == 1
+sum() == 0
+
+// Unpack array or slice into variadic function.
+list := []int{1, 2, 3, 4, 5}
+sum(list...) == 15
+```
+
+### 13.4 Deferred Function Calls
 
 Inside a function, calls can be deferred until the surrounding function returns and are executed in
 reverse order. The deferred function value and arguments are evaluated when `defer` executes.
@@ -1341,7 +1448,7 @@ func info() {
 }
 ```
 
-### 13.4 Functions as Values
+### 13.5 Functions as Values
 
 Functions are first-class values and therefore can be assigned to variables, passed as arguments,
 returned from functions, and used to create closures and higher-order functions.
@@ -1372,7 +1479,7 @@ count := func() int {
 }
 ```
 
-### 13.5 Pass by Reference
+### 13.6 Pass by Reference
 
 Arguments are always passed by value. Reassigning a parameter does not change the caller's
 variable; passing a pointer lets the function modify the value it points to.
@@ -1392,7 +1499,7 @@ x == 4
 <u>Best practices</u>:
 - Large structs can be passed using pointers to avoid copying large amounts of data.
 
-### 13.6 Receiver Functions
+### 13.7 Receiver Functions
 
 Receiver functions act as methods for data types. They can only be defined for custom types
 declared in the same package.
@@ -1522,7 +1629,25 @@ func (e MyError) Error() string {  // Implement the `Error` function of the `err
 
 ### 16.1 Output
 
-...
+```go
+import "fmt"
+
+type Person struct {
+	Name string
+	Age int
+}
+person := Person{"John", 21}
+
+// Print the string representation of the specified expressions to stdout; append a new line.
+fmt.Println("Hello, Wolrd!")  // Print a string.
+fmt.Println(13)               // Print a number.
+fmt.Println(true)             // Print a boolean.
+fmt.Println(person)           // Print a custom type.
+fmt.Println("1 + 1 = ", 1+1)  // Concatenate multiple values and print them.
+
+// Print the specified format string to stdout.
+fmt.Printf("Hello, %s!\n", "John")
+```
 
 ### 16.2 Input
 
