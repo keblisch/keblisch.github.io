@@ -10,8 +10,8 @@ title: Go
 # Go
 {: .no_toc }
 
-Go or Golang is a minimalistic programming language with a focus on performance and concurrency
-developed by Google.
+Go, also known as Golang, is a minimalist programming language developed by Google, with a focus on
+performance and concurrency.
 
 | Paradigms                | Typing           | Memory Management | Execution | Current Version |
 | :----------------------- | :--------------- | :---------------- | :-------- | :-------------- |
@@ -33,7 +33,7 @@ func main() {
 - TOC
 {:toc}
 
-## 1 Backgrounds
+## 1 Background
 
 ### 1.1 Resources
 
@@ -49,8 +49,8 @@ func main() {
 | :------------------------------------- | :-------------------------------------------------- |
 | Good concurrency model.                | Smaller ecosystem in some domains.                  |
 | Fast and lightweight.                  | Verbose error handling.                             |
-| Minimalistic syntax.                   | Syntax can be inflexible.                           |
-| Easy to learn and pick up.             | Mix of high- and low-level syntax can be confusing. |
+| Minimalist syntax.                   | Syntax can be inflexible.                           |
+| Easy to learn and pick up.             | The mix of high- and low-level syntax can be confusing. |
 | Large standard library.                |                                                     |
 | Comes with a self-contained toolchain. |                                                     |
 
@@ -61,8 +61,8 @@ func main() {
     software systems.
   - The language focused on simplicity, fast compilation, concurrency, and efficient software
     development.
-  - Development was initially an internal Google project and the language was first announced
-    publicly in 2009.
+  - Development began as an internal Google project, and the language was first publicly announced
+    in 2009.
 - Go 1.0 was released in March 2012:
   - It established the Go 1 compatibility promise, which aims to maintain source compatibility
     for programs written according to the Go 1 specification.
@@ -73,7 +73,7 @@ func main() {
   - Projects such as Docker and Kubernetes contributed to its popularity in cloud-native software
     development.
 - Go is developed as an open-source project:
-  - The source code and development of Go were made publicly available through Google.
+  - Google made Go's source code and development process publicly accessible.
   - The Go project is now maintained by the Go team and contributors from the broader
     open-source community.
 - The Go language continues to receive regular releases:
@@ -82,18 +82,18 @@ func main() {
 
 ## 2 Toolchain
 
-Go includes an official toolchain that can be used via a CLI.
+Go includes an official toolchain accessible through a CLI.
 
 ```bash
 # Get an overview of available commands.
 go help
 
-# Get current Go version.
+# Get the current Go version.
 go version
 
-# Manage current module.
-go mod init example.com/myproject  # Initialize Go module with specified namespace and name.
-go get github.com/example/foo      # Add specified external dependency to Go module.
+# Manage the current module.
+go mod init example.com/myproject  # Initialize a Go module with the specified namespace and name.
+go get github.com/example/foo      # Add the specified external dependency to the Go module.
 go mod tidy                        # Add missing and remove unused dependencies.
 
 # Execute the main package in the current directory with temporary build files.
@@ -101,31 +101,32 @@ go run .
 
 # Compile the current package; produce an executable for a main package.
 go build
-go build -o ./path/to/executable  # Specify output file of compilation.
+go build -o ./path/to/executable  # Specify the compilation output file.
 
-# Get overview of Go configurations.
-go env       # List of all configurations.
-go env GOOS  # Value of specified configuration.
+# Get an overview of Go settings.
+go env       # List all settings.
+go env GOOS  # Show the value of the specified setting.
 
-# Set value of specified Go configuration.
+# Set the value of the specified Go setting.
 go env -w GOOS=linux
-go env -u GOOS  # Reset specified Go configuration to its default.
+go env -u GOOS  # Reset the specified Go setting to its default.
 
 # Execute Go tests.
-go test ./path/to/package/  # Execute tests in specified package.
-go test ./...               # Execute all tests in Go module.
+go test ./path/to/package/  # Execute tests in the specified package.
+go test ./...               # Execute all tests in the Go module.
 
 # Check Go packages for suspicious constructs.
 go vet ./path/to/package/  # Check the specified package.
 go vet ./...               # Check all packages in the Go module.
 
 # Format Go files.
-go fmt ./path/to/package/  # Format files in specified package.
-go fmt ./...               # Format all files in Go module.
+go fmt ./path/to/package/  # Format files in the specified package.
+go fmt ./...               # Format all files in the Go module.
 ```
 
 Go settings can be inspected with `go env`; writable settings can be persisted with `go env -w`.
-Environment variables with the same names override persisted settings. The following settings exist:
+Environment variables with the same names override persisted settings. The following settings are
+available:
 
 | Configuration  | Description                                               | Value                                                |
 | :------------- | :-------------------------------------------------------- | :--------------------------------------------------- |
@@ -137,7 +138,7 @@ Environment variables with the same names override persisted settings. The follo
 | `CGO_LDFLAGS`  | Additional linker flags for cgo.                          | Linker flags                                         |
 | `CGO_CPPFLAGS` | Additional C/C++ preprocessor flags for cgo.              | Preprocessor flags                                   |
 | `CXX`          | C++ compiler used when compiling C++ code with cgo.       | `g++`, `clang++`, etc.                               |
-| `GOBIN`        | Installation directory for installed Go executables.      | Filesystem path                                      |
+| `GOBIN`        | Installation directory for Go executables.                | Filesystem path                                      |
 | `GOCACHE`      | Build cache directory.                                    | Filesystem path                                      |
 | `GOENV`        | Location of the persistent Goenv configuration file.      | Filesystem path                                      |
 | `GOFLAGS`      | Default flags passed to Go commands.                      | Space-separated flags                                |
@@ -190,9 +191,9 @@ graph TD
    Go source files (`.go`) are passed to the Go compiler. Unlike C/C++, Go does not use a
    traditional preprocessor. The compiler parses the source code, performs type checking and
    semantic analysis, and translates the Go code into machine code and associated metadata.
-   All selected source files belonging to the same package are compiled together. Dependencies on other
-   packages are specified using `import` declarations and are resolved by the Go build system.
-   This step is canceled if the source code contains a syntax error, type error, or other
+   All selected source files belonging to the same package are compiled together. Dependencies
+   on other packages are specified using `import` declarations and resolved by the Go build system.
+   This step stops if the source code contains a syntax error, type error, or other
    compile-time error.
 
 2. **Linker**: Produces a single executable binary from compiled packages.
@@ -201,15 +202,16 @@ graph TD
    the final executable binary. It also links the required parts of the Go runtime, which
    provides functionality such as goroutine scheduling and garbage collection. Depending on the
    build configuration, external libraries may also be involved, particularly when using `cgo`.
-   The executable gets no extension on Unix/Linux or `.exe` on Windows. This step is canceled if
+   The executable has no extension on Unix/Linux and uses `.exe` on Windows. This step stops if
    required symbols cannot be resolved or another linker error occurs.
 
 ## 4 Syntax
 
 ### 4.1 Whitespace
 
-Whitespace characters include spaces, tabs, newlines, and carriage returns. Outside literals, whitespace separates tokens, and newlines can trigger semicolon insertion.
-Other whitespace is ignored by the compiler.
+Whitespace characters include spaces, tabs, newlines, and carriage returns. Outside literals,
+whitespace separates tokens, and newlines can trigger semicolon insertion. Other whitespace is
+ignored by the compiler.
 
 ### 4.2 Statements
 
@@ -220,21 +222,21 @@ Statements are instructions that perform actions. The following kinds of stateme
 - **Block statements**: Any number of statements enclosed in curly braces `{}`.
 
 <u>Best practices</u>:
-- Indentations should use hard tabs instead of spaces.
+- Use hard tabs instead of spaces for indentation.
 
 ### 4.3 Identifiers
 
-Identifiers are names to uniquely reference objects and data types within programs. The following
-rules apply for creating identifiers:
+Identifiers are names that uniquely reference objects and data types within programs. The following
+rules apply when creating identifiers:
 - Identifiers may contain letters, digits (`0-9`), and underscores.
 - Identifiers must start with a letter (`a-z`, `A-Z`) or underscore (`_`).
-- Identifiers cannot be pre-existing keywords (e.g. `int`, `struct`, `if`, `for`).
+- Identifiers cannot be existing keywords (e.g., `int`, `struct`, `if`, `for`).
 - Identifiers are case-sensitive.
 
 ### 4.4 Scope
 
-A scope is a region of code in which an identifier is valid and accessible.
-Go has several kinds of scopes:
+A scope is a region of code in which an identifier is valid and accessible. Go has several kinds of
+scopes:
 
 - **Package scope**: The outermost scope of a package. Every identifier declared at the top level
                      of a file belonging to the package is part of the package scope. Therefore,
@@ -251,8 +253,8 @@ Go has several kinds of scopes:
                    forming additional inner scopes. An identifier declared in an inner scope can
                    shadow an identifier with the same name from an outer scope.
 
-An identifier is visible at a given point if it is declared in the current scope or in an
-enclosing scope and is not shadowed by another declaration.
+An identifier is visible at a given point if it is declared in the current scope or in an enclosing
+scope and is not shadowed by another declaration.
 
 ### 4.5 Keywords
 
@@ -287,24 +289,24 @@ The following identifiers are reserved as keywords with special meaning:
 
 ### 5.1 Files
 
-Go source code lives inside files with the suffix `.go`.
+Go source code is stored in files with the `.go` extension.
 
 <u>Best practices</u>:
 - Go source files should be named in snake case.
 
 ### 5.2 Packages
 
-Each Go source file must be part of a Go package, that has to be defined at the top of the file.
-Thereby each source file in the same directory must belong to the same package. It is possible
-to nest packages inside other packages.
+Each Go source file must belong to a Go package, which must be declared at the top of the file. All
+source files in the same directory must belong to the same package. Packages can be nested inside
+other packages.
 
 ```go
-// Define package of the file.
+// Define the file's package.
 package mypackage
 ```
 
-Packages can be imported by other packages. Imports must appear after the package clause
-and before other declarations.
+Packages can be imported by other packages. Imports must appear after the package clause and before
+other declarations.
 
 ```go
 package mypackage
@@ -330,12 +332,12 @@ import (
 )
 ```
 
-Imported packages can be referenced to access their exported objects. Because of this identifiers
-are naturally namespaced by their package.
+Imported packages can be referenced to access their exported objects. As a result, identifiers are
+naturally namespaced by their package.
 
-Package-level identifiers, struct fields, and methods starting with an uppercase letter are exported.
-In case of package names that don't match their directory names, they're referenced by their
-package name and not their import path.
+Package-level identifiers, struct fields, and methods starting with an uppercase letter are
+exported. Packages whose names differ from their directory names are referenced by their package
+name rather than their import path.
 
 ```go
 package mypackage
@@ -347,25 +349,24 @@ import (
     _ "someotherpackage/someinitpackage"
 )
 
-// Reference imported package.
+// Reference an imported package.
 someotherpackage.MyObject()
 
-// Reference imported nested package.
+// Reference an imported nested package.
 somesubpackage.MyObject()
 
-// Reference imported aliased package.
+// Reference an imported aliased package.
 sub.MyObject()
 ```
 
 <u>Best practices</u>:
-- Packages and their containing directory should have matching names.
-- Packages should be named in lowercase and consist of single words.
+- Packages and their containing directories should have matching names.
+- Package names should consist of a single lowercase word.
 
 ### 5.3 Entry Point
 
-Every executable Go program must contain a package with the identifier `main`.
-Inside that package a main function with the identifier `main` must be defined, which acts
-as entry point for the program.
+Every executable Go program must contain a package with the identifier `main`. That package must
+define a function named `main`, which serves as the entry point for the program.
 
 ```go
 // Define the program's main package.
@@ -379,11 +380,11 @@ func main() {
 
 ### 5.4 Modules
 
-Go projects are organized as modules containing packages that can be compiled as executables
-or used as importable libraries.
+Go projects are organized as modules containing packages that can be compiled as executables or
+used as importable libraries.
 
-Go doesn't enforce a project structure, but the following layout is one convention used for medium- and
-large-sized projects:
+Go does not enforce a project structure, but the following layout is one convention used for
+medium-sized and large projects:
 
 ```text
 <project_root>/          # Project root.
@@ -397,14 +398,14 @@ large-sized projects:
 └── go.sum               # Dependency checksums.
 ```
 
-Small Go programs can live entirely inside the `main` package that can itself live inside
-the project root.
+Small Go programs can reside entirely in the `main` package, which can be placed in the project
+root.
 
 ### 5.5 Standard Library
 
-Go provides a pre-installed standard library with additional types, functions and constants.
+Go includes a standard library with additional types, functions, and constants.
 
-The following package exists in the standard library:
+The following package is part of the standard library:
 - `fmt`: Utilities to format and print strings.
 
 ## 6 Comments
@@ -413,8 +414,8 @@ Comments are treated as whitespace by the compiler.
 
 ### 6.1 Single-Line Comments
 
-Single-line comments reach from `//` to the next line break. Thereby `//` isn't recognized
-as the beginning of a comment inside strings.
+Single-line comments extend from `//` to the next line break. Within strings, `//` is not
+recognized as the start of a comment.
 
 ```go
 // This is a single-line comment.
@@ -424,8 +425,8 @@ var x int = 3 // This is also a single-line comment.
 
 ### 6.2 Multi-Line Comments
 
-Multi-line comments reach from `/*` to the next `*/`. Thereby these two aren't recognized
-as the beginning and end of a comment inside strings.
+Multi-line comments extend from `/*` to the next `*/`. Within strings, these markers are not
+recognized as the start and end of a comment.
 
 ```go
 /* This is a multi-line comment. */
@@ -443,9 +444,8 @@ comment. */ var y int = 4
 
 ## 7 Variables
 
-Variables are named storage locations for values. Each variable has a
-specific type, and only values assignable to that type can be assigned
-to the variable.
+Variables are named storage locations for values. Each variable has a specific type, and only
+values assignable to that type can be assigned to the variable.
 
 ```go
 // Declare variables.
@@ -466,14 +466,14 @@ var alice = 9               // Single variable.
 var bob, charly = 3, 4      // Multiple variables of the same type.
 var dickons, elly = 7, 1.2  // Multiple variables of different types.
 
-// Create multiple variables in one var block.
+// Create multiple variables in a single var block.
 var (
-	min int        // Declare variable.
-	max int = 100  // Initialize variable.
+	min int        // Declare a variable.
+	max int = 100  // Initialize a variable.
 )
 
 func main() {
-	// Initialize variables with shorthand type inference (only possible inside functions).
+	// Initialize variables with shorthand type inference (only available inside functions).
 	foo := 9             // Single variable.
 	bar, foobar := 3, 4  // Multiple variables of the same type.
 	zig, zag := 7, 1.2   // Multiple variables of different types.
@@ -482,15 +482,15 @@ func main() {
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported variables should be in Pascal case, otherwise they should be in camel
-  case.
-- Use type inference for variable creation when possible.
+- Identifiers of exported variables should use Pascal case, while unexported ones should use
+  camel case.
+- Use type inference when creating variables whenever possible.
 
 ## 8 Constants
 
 Constants are values that must be initialized when declared and cannot be changed after
-declaration. Their values must be representable by constant expressions and can therefore
-be evaluated at compile time. They cannot depend on runtime information.
+declaration. Their values must be representable by constant expressions and can therefore be
+evaluated at compile time. They cannot depend on runtime information.
 
 ```go
 // Initialize constants.
@@ -509,17 +509,17 @@ const (
 )
 ```
 
-Every value literal value is a constant expression and is therefore untyped.
+Literals are constant expressions and are therefore untyped.
 
 <u>Best practices</u>:
 - Identifiers of exported constants should use Pascal case, while unexported constants should use
   camel case.
-- Related constants should be grouped together in a const block.
+- Related constants should be grouped in a const block.
 
 ## 9 Data Types
 
-Data types specify what a value represents and how it is encoded internally. Any variable
-without a defined value defaults to the zero value of its data type.
+Data types specify what a value represents and how it is encoded internally. Any variable without
+an explicitly assigned value defaults to the zero value of its data type.
 
 ### 9.1 Value Data Types
 
@@ -558,7 +558,7 @@ The zero value of floating-point numbers is `0.0`.
 
 #### 9.1.3 Characters
 
-Characters are implemented as integers and store the Unicode number of the character they
+Characters are implemented as integers that store the Unicode code point of the character they
 represent.
 
 The zero value of characters is the empty character `''`.
@@ -569,7 +569,7 @@ The zero value of characters is the empty character `''`.
 
 #### 9.1.4 Booleans
 
-Booleans represent the truth values true or false.
+Booleans represent the truth values true and false.
 
 The zero value of booleans is `false`.
 
@@ -589,23 +589,23 @@ The zero value of strings is the empty string `""`.
 
 #### 9.1.6 Arrays
 
-Arrays are fixed-sized containers for multiple values. They can only hold values of the
-same data type.
+Arrays are fixed-size containers for multiple values. They can only hold values of the same data
+type.
 
-The zero values of arrays are arrays of zero values of their contained data type.
+The zero value of an array contains the zero value of its element type in every position.
 
 ```go
-// Declare array of specified size and type.
+// Declare an array of the specified size and type.
 var arr [5]int
 
-// Define array of specified size and type.
+// Define an array of the specified size and type.
 arr = [5]int{1, 2, 3, 4, 5}
 
-// Access array elements by their index.
+// Access array elements by index.
 arr[0] = 1
 arr[0] == 1
 
-// Create multi-dimensional array.
+// Create a multidimensional array.
 var matrix [4][4]int = [4][4]int{
 	{1, 2, 3, 4},
 	{2, 4, 6, 8},
@@ -613,7 +613,7 @@ var matrix [4][4]int = [4][4]int{
 	{1, 3, 5, 7},
 }
 
-// Access element of multi-dimensional array.
+// Access an element of a multidimensional array.
 matrix[0][2] = 3
 matrix[0][2] == 3
 ```
@@ -621,82 +621,83 @@ matrix[0][2] == 3
 #### 9.1.7 Structures
 
 Structures are custom data types that can be defined with any number of named elements. Their zero
-value is the zero value of all their elements.
+value consists of the zero values of all their elements.
 
 ```go
-// Define custom structure.
+// Define a custom structure.
 type Person struct {
 	Name string
 	Age, Height int
 }
 
 // Create structure values.
-var john Person = Person{"John", 18, 180}  // Pass values for structure elements by order.
-var jane Person = Person{                  // Pass values for structure elements by identifier.
+var john Person = Person{"John", 18, 180}  // Pass structure element values in order.
+var jane Person = Person{                  // Pass structure element values by identifier.
 	Name: "Jane",
 	Age: 20,
 	Height: 170,
 }
-var anonymous Person = Person{}            // Initialize non-defined elements to zero values.
+var anonymous Person = Person{}            // Initialize unspecified elements to their zero values.
 
 // Access structure elements.
 john.Age == 18
 john.Age = 21
 john.Age == 21
 
-// Access elements of structure pointer.
+// Access elements through a structure pointer.
 var max *Person = &Person{"Max", 16}
-(*max).Age == 16  // Explicitly dereference structure pointer.
-max.Age == 16     // Implicitly dereference structure pointer.
+(*max).Age == 16  // Explicitly dereference the structure pointer.
+max.Age == 16     // Implicitly dereference the structure pointer.
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported structure elements should be in Pascal case, otherwise they should be in
-  camel case.
+- Identifiers of exported structure elements should use Pascal case, while unexported ones should
+  use camel case.
 
 ### 9.2 Reference Data Types
 
 Reference data types are pointers to dynamic data structures that are stored in heap memory.
 
-The zero value of reference data types is the non-value `nil`. Dereferening it causes a panic.
+The zero value of reference data types is `nil`, which represents the absence of a value.
+Dereferencing it causes a panic.
 
 #### 9.2.1 Slices
 
-Slices are dynamic views into arrays. Therefore any change to the slice also changes the
-underlying array.
+Slices are dynamic views into arrays. Therefore, any change to a slice also changes the underlying
+array.
 
 ```go
-// Create slice of an existing array.
+// Create a slice from an existing array.
 arr := [5]int{1, 2, 3, 4, 5}
-var slice1 []int = arr[1:3]  // Slice from and to (exclusive) specified element.
-var slice2 []int = arr[:3]   // Slice from start to specified element (exclusive).
-var slice3 []int = arr[1:]   // Slice from specified element to end.
+var slice1 []int = arr[1:3]  // Slice between the specified elements, excluding the end.
+var slice2 []int = arr[:3]   // Slice from the start to the specified element (exclusive).
+var slice3 []int = arr[1:]   // Slice from the specified element to the end.
 
-// Create slice literal with its own internal array.
+// Create a slice literal with its own internal array.
 var dyn []int = []int{1, 2, 3, 4, 5}
 
-// Create slices with specific length and capacity.
-dyn = make([]int, 5)     // Specify data type and length.
-dyn = make([]int, 5, 8)  // Specify data type, length and capacity.
+// Create slices with a specific length and capacity.
+dyn = make([]int, 5)     // Specify the data type and length.
+dyn = make([]int, 5, 8)  // Specify the data type, length, and capacity.
 
-// Access slice elements by their index.
+// Access slice elements by index.
 dyn[0] = 5
 dyn[0] == 5
 
-// Get length of slice.
+// Get the length of a slice.
 len(dyn) == 5  // Number of elements.
 cap(dyn) == 5  // Current capacity for elements.
 
-// Change length of slice.
+// Change the length of a slice.
 dyn = dyn[:2]  // Reduce to two elements.
 dyn = dyn[:8]  // Extend to eight elements within the existing capacity.
-dyn = dyn[2:]  // Drop first two elements.
+dyn = dyn[2:]  // Drop the first two elements.
 
-// Append elements to slice.
-dyn = append(dyn, 4)        // Append single element.
+// Append elements to a slice.
+dyn = append(dyn, 4)        // Append a single element.
 dyn = append(dyn, 7, 2, 5)  // Append multiple elements.
 
-// Create multi-dimensional slice.
+// Create a multidimensional slice.
 var matrix [][]int = [][]int{
 	[]int{1, 2, 3, 4},
 	[]int{2, 4, 6, 8},
@@ -704,7 +705,7 @@ var matrix [][]int = [][]int{
 	[]int{1, 3, 5, 7},
 }
 
-// Access element of multi-dimensional slice.
+// Access an element of a multidimensional slice.
 matrix[0][2] = 3
 matrix[0][2] == 3
 ```
@@ -714,48 +715,47 @@ matrix[0][2] == 3
 Maps are dynamic mappings between keys and values.
 
 ```go
-// Declare map with specified key and value data types.
+// Declare a map with the specified key and value data types.
 var scores map[string]int
 
-// Define map with key-value pairs.
+// Define a map with key-value pairs.
 scores = map[string]int{
 	"John": 9,
 	"Jane": 7,
 }
 
-// Create maps with specific capacity.
-scores = make(map[string]int)     // Specify data type.
-scores = make(map[string]int, 8)  // Specify data type and capacity.
+// Create maps with a specific capacity.
+scores = make(map[string]int)     // Specify the data type.
+scores = make(map[string]int, 8)  // Specify the data type and capacity.
 
-// Access map elements by their key.
+// Access map elements by key.
 scores["John"] = 8
 scores["John"] == 8
 
-// Check whether keys exist in map.
+// Check whether keys exist in a map.
 elem, ok := scores["John"]     // Existing key.
-elem == 8                     // Existing value or zero value of data type.
-ok == true                    // Whether key exists.
+elem == 8                     // The existing value or the zero value of the data type.
+ok == true                    // Whether the key exists.
 
-// Add key-value pair to map.
+// Add a key-value pair to a map.
 scores["Max"] = 7
 
-// Remove key-value pair from map.
+// Remove a key-value pair from a map.
 delete(scores, "Jane")
 
-// Create map with structure as values.
+// Create a map with structures as values.
 type Person struct {
 	Name string
 	Age int
 }
 registry := map[string]Person{
-	"John": { Name: "John", Age: 21 },  // Omit structure name in key-value pair insertion.
+	"John": { Name: "John", Age: 21 },  // Omit the structure name when inserting a key-value pair.
 }
 ```
 
 ### 9.3 Data Type Conversion
 
-To use values in places where other data types are expected, their data type must be
-converted first.
+To use values where different data types are expected, convert them to those types first.
 
 ```go
 // Convert a floating-point number into an integer by truncating its fractional part.
@@ -773,16 +773,16 @@ var b int = int('A')
 
 ### 9.4 Custom Data Types
 
-Custom data types can be defined from existing ones. Thereby they still have the same
-underlying representation and applicable operations, but are distinct types.
+Custom data types can be defined from existing ones. They retain the same underlying representation
+and applicable operations but are distinct types.
 
 ```go
 import "fmt"
 
-// Define custom data type from existing data type.
+// Define a custom data type from an existing data type.
 type Counter int
 
-// Implement string representation interface (fmt.Stringer) for custom data type.
+// Implement the string representation interface (fmt.Stringer) for a custom data type.
 type Person struct {
 	Name string
 	Age int
@@ -793,14 +793,13 @@ func (p Person) String() string {
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported custom data types should be in Pascal case, otherwise they should be in
-  camel case.
+- Identifiers of exported custom data types should use Pascal case, while unexported ones should
+  use camel case.
 
 ### 9.5 Generics
 
-Type parameters can be used in type and function definitions to support multiple data types
-through different instantiations. Thereby generics specify constraints to only allow certain data types
-for their implementation.
+Type parameters can be used in type and function definitions to support multiple data types through
+different instantiations. Constraints restrict the data types allowed in generic implementations.
 
 | Constraint    | Types                                                        |
 | :------------ | :----------------------------------------------------------- |
@@ -809,52 +808,52 @@ for their implementation.
 | `cmp.Ordered` | Data types that are compatible with `<`, `<=`, `>` and `>=`. |
 
 ```go
-// Create generic structure.
+// Create a generic structure.
 type Item[T, U any, V comparable] struct {
-	ItemA T  // Generic element with `any` constraint.
-	ItemB U  // Generic element with `any` constraint.
-	ItemC V  // Generic element with `comparable` constraint.
-	ItemD V  // Generic element with same data type as last element.
+	ItemA T  // Generic element with the `any` constraint.
+	ItemB U  // Generic element with the `any` constraint.
+	ItemC V  // Generic element with the `comparable` constraint.
+	ItemD V  // Generic element with the same data type as the previous element.
 }
 
-// Use generic structure.
+// Use a generic structure.
 item1 := Item[string, bool, int]{"Hi", true, 12, 5}
 item2 := Item[bool, rune, float64]{false, 'A', 8.5, 5.0}
 item3 := Item[int, int, int]{16, 4, 9, 5}
 
-// Declare generic function.
+// Declare a generic function.
 func log[T comparable, U, V any](x T, y U, z V) V {
-	fmt.Printf("%v\n", x)  // Generic element with `comparable` constraint.
-	fmt.Printf("%v\n", y)  // Generic element with `any` constraint.
-	fmt.Printf("%v\n", z)  // Generic element with `any` constraint.
-	return z               // Generic element with same data type as last element.
+	fmt.Printf("%v\n", x)  // Generic element with the `comparable` constraint.
+	fmt.Printf("%v\n", y)  // Generic element with the `any` constraint.
+	fmt.Printf("%v\n", z)  // Generic element with the `any` constraint.
+	return z               // Generic element with the same data type as the previous element.
 }
 
-// Use generic function.
+// Use a generic function.
 result1 := log("Hi", 12, 5)
 result2 := log(false, 8.5, 5.0)
 result3 := log(16, 9, 5)
 ```
 
-Custom constraints for generics can be defined.
+Custom constraints can be defined for generics.
 
 ```go
-// Create constraint that allows only specified data types.
+// Create a constraint that allows only the specified data types.
 type MyTypeConstraint interface {
 	int | uint | rune
 }
 
-// Create constraint that allows only specified data types and types based on them.
+// Create a constraint that allows only the specified data types and types based on them.
 type MyUnderlyingConstraint interface {
 	~int | ~uint | ~rune
 }
 
-// Create regular interface as constraint that allows only implementations of it.
+// Create a regular interface as a constraint that allows only its implementations.
 type MyImplementationConstraint interface {
 	Greet() string
 }
 
-// Create mixed constraint.
+// Create a mixed constraint.
 type MyMixedConstraint interface {
 	int | uint | ~rune
 	Greet() string
@@ -862,16 +861,16 @@ type MyMixedConstraint interface {
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported constraints should be in Pascal case, otherwise they should be in
+- Identifiers of exported constraints should use Pascal case, while unexported ones should use
   camel case.
 
 ## 10 Operators
 
-Operators manipulate and chain expressions into new values.
+Operators manipulate and combine expressions to produce new values.
 
 ### 10.1 Precedence
 
-The precedence of operators decides in which order chained operations are evaluated.
+Operator precedence determines the order in which chained operations are evaluated.
 
 | Precedence Level| Operators                     |
 | :-------------- | :---------------------------- |
@@ -902,11 +901,11 @@ Arithmetic operators perform operations on integers and floating-point numbers.
 | Modulo           | `%`      | Binary | Left          |
 
 ```go
-// Perform additions.
+// Perform addition.
 3 + 4 == 7  // Binary plus.
 +(5) == 5   // Unary plus.
 
-// Perform subtractions.
+// Perform subtraction.
 4 - 3 == 1  // Binary minus.
 -(4) == -4  // Unary minus.
 
@@ -920,15 +919,15 @@ Arithmetic operators perform operations on integers and floating-point numbers.
 11 % 4 == 3
 ```
 
-Incrementation and decrementation operations do exist, but only as statements.
+Increment and decrement operations are available, but only as statements.
 
 ```go
-// Perform incrementation.
+// Perform an increment.
 x := 3
 x++  // Increment statement.
 x == 4
 
-// Perform decrementation.
+// Perform a decrement.
 y := 3
 y--  // Decrement statement.
 y == 2
@@ -936,36 +935,35 @@ y == 2
 
 ### 10.3 Comparison Operators
 
-Comparison operators compare two values and evaluate to boolean values. They can be performed
-on integers, floating-point numbers, and strings.
+Comparison operators compare two values and evaluate to boolean values. They can be applied to
+integers, floating-point numbers, and strings.
 
-| Operation      | Symbol   | Arity  | Associativity |
-| :------------- | :------- | :----- | :------------ |
-| Equality       | `==`     | Binary | Left          |
-| Inequality     | `!=`     | Binary | Left          |
-| Greater        | `>`      | Binary | Left          |
-| Greater-Equals | `>=`     | Binary | Left          |
-| Less           | `<`      | Binary | Left          |
-| Less-Equals    | `<=`     | Binary | Left          |
+| Operation             | Symbol   | Arity  | Associativity |
+| :-------------------- | :------- | :----- | :------------ |
+| Equality              | `==`     | Binary | Left          |
+| Inequality            | `!=`     | Binary | Left          |
+| Greater Than          | `>`      | Binary | Left          |
+| Greater Than or Equal | `>=`     | Binary | Left          |
+| Less Than             | `<`      | Binary | Left          |
+| Less Than or Equal    | `<=`     | Binary | Left          |
 
 ```go
-// Perform equality check.
+// Perform an equality check.
 4 == 4 == true
 3 != 4 == true
 
-// Perform greater-than check.
+// Perform a greater-than check.
 4 > 3 == true
 4 >= 3 == true
 
-// Perform less-than check.
+// Perform a less-than check.
 3 < 4 == true
 3 <= 4 == true
 ```
 
 ### 10.4 Logical Operators
 
-Logical operators perform logical operations on boolean values and evaluate themselves to
-booleans.
+Logical operators perform logical operations on boolean values and evaluate to booleans.
 
 | Operation | Symbol   | Arity  | Associativity |
 | :-------- | :------- | :----- | :------------ |
@@ -986,7 +984,7 @@ true ││ false == true
 
 ### 10.5 Bitwise Operators
 
-Bitwise operators manipulate individual bits of values and can only work with integral types.
+Bitwise operators manipulate individual bits of values and work only with integer types.
 
 | Operation   | Symbol   | Arity  | Associativity |
 | :---------- | :------- | :----- | :------------ |
@@ -1031,7 +1029,7 @@ Assignments and short variable declarations are statements, not expressions.
 | Right Shift Assignment             | `>>=`   | Binary | N/A           |
 
 ```go
-// Perform single assignment.
+// Perform a single assignment.
 var x int = 3
 x == 3
 
@@ -1092,75 +1090,76 @@ j == 0b01
 
 ## 11 Pointers
 
-Pointers are variables that store memory addresses. These can be used to manipulate the values of
-variables indirectly through dereferencing.
+Pointers are variables that store memory addresses. Dereferencing pointers allows the values of
+variables to be manipulated indirectly.
 
 ```go
-// Declare pointer variable.
+// Declare a pointer variable.
 var p *int
 
-// Get pointer to variable by getting its memory address.
+// Get a pointer to a variable by taking its memory address.
 var x int = 3
 p = &x
 
-// Access value of pointer by dereferencing it.
+// Access the value a pointer points to by dereferencing it.
 var y int = *p
 *p = 5
 ```
 
 ## 12 Control Flow Structures
 
-Control flow structures are block statements that manipulate the control flow of the program.
+Control flow structures are block statements that control the flow of program execution.
 
 ### 12.1 Conditions
 
-Conditions are block statements that are only run on certain conditions.
+Conditional statements are block statements that run only when certain conditions are met.
 
 ```go
 import "fmt"
 
-// Only execute condition when expression is true.
+// Execute the block only when the expression is true.
 x := 3
 if x > 0 {
 	fmt.Println("x is positive")
 }
 
-// Initialize variable within the condition's definition.
+// Initialize a variable within the condition's definition.
 if y := 4; y > 0 {
 	fmt.Println("y is positive")
 }
 
-// Define alternative paths within condition.
+// Define alternative branches within a conditional statement.
 z := 3
 if z > 0 {
 	fmt.Println("z is positive")
-} else if z < 0 {  // Only execute condition when last condition was skipped and expression is true.
+} else if z < 0 {  // Run this only if the previous one was skipped and this expression is true.
 	fmt.Println("z is negative")
-} else {           // Only execute condition when last condition was skipped.
+} else {           // Run this only if the previous one was skipped.
 	fmt.Println("z is zero")
 }
 ```
 
 ### 12.2 Switches
 
-Switches are short-hand conditions that execute statements based on value comparisons.
+Switch statements are a shorthand for conditional statements that execute code based on value
+comparisons.
 
 ```go
 import "fmt"
 
-// Execute first case that evaluates to the switch's condition.
+// Execute the first case that matches the switch's condition.
 x := 3
 switch x {
 	case 0:
 		fmt.Println("x is 0")
 	case 5:
 		fmt.Println("x is 5")
-	// Execute case when no other case matched.
+	// Execute this case when no other case matches.
 	default:
 		fmt.Println("x isn't 0 or 5")
 }
 
-// Execute first case that evaluates to true.
+// Execute the first case that evaluates to true.
 y := 2
 switch {
 	case y % 2 == 0:
@@ -1171,7 +1170,7 @@ switch {
 		fmt.Println("y isn't divisible by 2 or 5")
 }
 
-// Initialize variable within the switch's definition.
+// Initialize a variable within the switch's definition.
 switch z := 12; {
 	case z % 2 == 0:
 		fmt.Println("z is divisible by 2")
@@ -1181,7 +1180,7 @@ switch z := 12; {
 		fmt.Println("z has an unknown divider")
 }
 
-// Execute first case that specifies the data type of the switch's condition.
+// Execute the first case that matches the data type of the switch's condition.
 var a any = 3
 switch a.(type) {
 	case int:
@@ -1195,17 +1194,17 @@ switch a.(type) {
 
 ### 12.3 Loops
 
-Loops are block statements that are rerun multiple times.
+Loops are block statements that execute repeatedly.
 
 ```go
 import "fmt"
 
-// Loop a specified amount of time according to running variable.
+// Loop a specified number of times using a loop variable.
 for i := 0; i < 10; i++ {
-	fmt.Println(i)  // Reference loop's running variable.
+	fmt.Println(i)  // Reference the loop variable.
 }
 
-// Loop as long as expression is true.
+// Loop as long as the expression is true.
 i := 0
 for i < 10 {
 	fmt.Println(i)
@@ -1219,7 +1218,7 @@ for {
 	j++
 }
 
-// Loop over elements of iterable (array, slice, map).
+// Loop over the elements of an iterable (array, slice, map).
 arr := [4]int{1, 2, 3, 4}
 for i, v := range arr {
 	fmt.Printf("Current index/key: %d\n", i)
@@ -1232,19 +1231,19 @@ for _, _ := range slice {
 	fmt.Println("Iterating...")
 }
 
-// Exiting loops and their iterations early.
+// Exit loops and their iterations early.
 k := 0
 for {
 	fmt.Println(k)
 	k++
 
 	if k % 2 == 0 {
-		// Skip current loop iteration immediately.
+		// Skip the current loop iteration immediately.
 		continue
 	}
 
 	if k > 10 {
-		// Exit loop immediately.
+		// Exit the loop immediately.
 		break
 	}
 }
@@ -1258,12 +1257,12 @@ parameters act as local variables.
 ```go
 import "fmt"
 
-// Declare function without parameters and return value.
+// Declare a function without parameters or a return value.
 func greet() {
 	fmt.Println("Hello!")
 }
 
-// Declare function with parameters and one return value.
+// Declare a function with parameters and one return value.
 func add(x int, y int) int {
 	return x + y
 }
@@ -1273,30 +1272,30 @@ func sub(x, y int) int {
 	return x - y
 }
 
-// Call function...
-greet()              // ...without parameters and return value.
+// Call a function...
+greet()              // ...without parameters or a return value.
 result := add(3, 4)  // ...with parameters and one return value.
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported functions should be in Pascal case, otherwise they should be in camel
-  case.
+- Identifiers of exported functions should use Pascal case, while unexported ones should use
+  camel case.
 
 ### 13.1 Multiple Return Values
 
 Functions can return any number of values.
 
 ```go
-// Declare function with multiple return values.
+// Declare a function with multiple return values.
 func swap(x int, y int) (int, int) {
 	return y, x
 }
 
-// Call function with multiple return values (explicit syntax).
+// Call a function with multiple return values (explicit syntax).
 var x, y int
 x, y = swap(5, 8)
 
-// Call function with multiple return values (shorthand syntax).
+// Call a function with multiple return values (shorthand syntax).
 a, b := swap(2, 1)
 ```
 
@@ -1306,34 +1305,34 @@ Functions can declare named result parameters, which act as local variables. A b
 returns their current values.
 
 ```go
-// Declare function that automatically returns specified local variable.
+// Declare a function that automatically returns the specified local variable.
 func add(x int, y int) (z int) {
 	z = x + y
 	return
 }
 
-// Declare function that automatically returns multiple specified local variables.
+// Declare a function that automatically returns multiple specified local variables.
 func swap(x int, y int) (a, b int) {
 	a = y
 	b = x
 	return
 }
 
-// Call functions with named return values
+// Call functions with named return values.
 result := add(3, 8)
 x, y := swap(2, 4)
 ```
 
 ### 13.3 Deferred Function Calls
 
-Inside a function, calls can be deferred until the surrounding function returns and are executed
-in reverse order. The deferred function value and arguments are evaluated when `defer` executes.
+Inside a function, calls can be deferred until the surrounding function returns and are executed in
+reverse order. The deferred function value and arguments are evaluated when `defer` executes.
 
 ```go
 import "fmt"
 
 func info() {
-	// Defer function calls to end of current function.
+	// Defer function calls until the end of the current function.
 	defer fmt.Println("1")  // Prints fourth.
 	defer fmt.Println("2")  // Prints third.
 	defer fmt.Println("3")  // Prints second.
@@ -1348,45 +1347,45 @@ Functions are first-class values and therefore can be assigned to variables, pas
 returned from functions, and used to create closures and higher-order functions.
 
 ```go
-// Assign function to a variable.
+// Assign a function to a variable.
 func add(x int, y int) int {
 	return x + y
 }
 var addFunc func(int, int) int = add
 
-// Assign anonymous function to a variable.
+// Assign an anonymous function to a variable.
 var sub func(int, int) int = func(x int, y int) int {
     return x - y
 }
 
-// Call function assigned to variable.
+// Call a function assigned to a variable.
 result := addFunc(3, 4)
 
-// Call anonymous function immediately.
+// Call an anonymous function immediately.
 result = func(x int, y int) int { return x + y }(3, 4)
 
-// Declare anonymous function as closure.
-var counter int = 0    // Initialize variable that is captured by closure.
+// Declare an anonymous function as a closure.
+var counter int = 0    // Initialize a variable captured by the closure.
 count := func() int {
 	counter++          // Modify the captured variable shared with the enclosing scope.
 	return counter
 }
 ```
 
-### 13.5 Pass By Reference
+### 13.5 Pass by Reference
 
 Arguments are always passed by value. Reassigning a parameter does not change the caller's
 variable; passing a pointer lets the function modify the value it points to.
 
 ```go
-// Define function that mutates the value pointed to by its parameter.
+// Define a function that mutates the value pointed to by its parameter.
 func inc(val *int) {
 	(*val)++
 }
 
-// Call function that mutates the value pointed to by its argument.
+// Call a function that mutates the value pointed to by its argument.
 var x int = 3
-inc(&x)  // Pass argument as pointer.
+inc(&x)  // Pass the argument as a pointer.
 x == 4
 ```
 
@@ -1395,8 +1394,8 @@ x == 4
 
 ### 13.6 Receiver Functions
 
-Receiver functions act as methods for data types. They can only be defined for custom
-types declared in the same package.
+Receiver functions act as methods for data types. They can only be defined for custom types
+declared in the same package.
 
 ```go
 import "fmt"
@@ -1410,79 +1409,78 @@ var john Person =  Person{
 	Age: 21,
 }
 
-// Declare receiver function for custom data type.
-func (p Person) Greet() {                   // Pass copy of receiver object.
-	fmt.Printf("Hello, I'm %s!\n", p.Name)  // Reference receiver object.
+// Declare a receiver function for a custom data type.
+func (p Person) Greet() {                   // Pass a copy of the receiver object.
+	fmt.Printf("Hello, I'm %s!\n", p.Name)  // Reference the receiver object.
 }
 
-// Declare mutating receiver function for custom data type.
-func (p *Person) Birthday() {  // Pass pointer to receiver object.
-	p.Age++                    // Automatically dereference pointer to receiver object.
+// Declare a mutating receiver function for a custom data type.
+func (p *Person) Birthday() {  // Pass a pointer to the receiver object.
+	p.Age++                    // Automatically dereference the pointer to the receiver object.
 }
 
-// Call receiver functions on object.
+// Call receiver functions on an object.
 john.Greet()
 
-// Call mutating receiver functions on object.
-(&john).Birthday()  // Explicitly pass pointer to receiver object.
-john.Birthday()     // Implicitly pass pointer to receiver object.
+// Call mutating receiver functions on an object.
+(&john).Birthday()  // Explicitly pass a pointer to the receiver object.
+john.Birthday()     // Implicitly pass a pointer to the receiver object.
 ```
 
 <u>Best practices</u>:
-- Receivers should be defined as pointers when they're large structs, to avoid copying of large
-  amounts of data.
+- Use pointer receivers for large structs to avoid copying large amounts of data.
 
 ## 14 Interfaces
 
-Interfaces are custom data types and are sets of signatures for receiver functions. Any custom
-data type that has all signatures of an interface as declared receiver functions is considered
-to implement that interface implicitly.
+Interfaces are custom data types that define sets of signatures for receiver functions. Any custom
+data type whose declared receiver functions match all signatures of an interface implicitly
+implements that interface.
 
-Thereby every custom data type that implements an interface can be used in its place. This enables
+Any custom data type that implements an interface can therefore be used in its place. This enables
 polymorphism and decouples definition from implementation. The zero value of interfaces is `nil`.
-Every data type implements at least the empty interface without signatures, which can therefore
-be used as any type.
+Every data type implements at least the empty interface, which has no signatures and can therefore
+represent any type.
 
 ```go
-// Define interface.
+// Define an interface.
 type Counter interface {
 	Inc() int
 	Dec() int
 }
 
-// Define custom data type that will implement interface.
+// Define a custom data type that will implement the interface.
 type Tracker int
 
-// Declare receiver function that implements signature of interface.
+// Declare a receiver function that implements a signature of the interface.
 func (t *Tracker) Inc() int {
 	(*t)++
 	return int(*t)
 }
 
-// Declare receiver function that implements signature of interface.
+// Declare a receiver function that implements a signature of the interface.
 func (t *Tracker) Dec() int {
 	(*t)--
 	return int(*t)
 }
 
-// Use implementation for interface.
+// Use an implementation of the interface.
 var tracker Counter
 tracker = 3
-tracker.Inc() == 4  // Call receiver function of interface implementation.
+tracker.Inc() == 4  // Call a receiver function of the interface implementation.
 
-// Assert data type used for interface.
-t := tracker.(Counter)      // Panic when interface isn't specified type.
-t, ok := tracker.(Counter)  // Assert data type used for interface without panic.
-t                           // Existng value or zero value.
+// Assert the data type used for the interface.
+t := tracker.(Counter)      // Panic if the interface is not of the specified type.
+t, ok := tracker.(Counter)  // Assert the data type used for the interface without panicking.
+t                           // The existing value or the zero value.
 ok == true                  // Whether the asserted data type was correct.
 
-// Use empty interface as any type.
+// Use the empty interface to represent any type.
 var i interface{}
 i = "Hello!"
 i = 23
 i = true
 
-// Use alias for empty interface.
+// Use the alias for the empty interface.
 var j any
 j = "Hello!"
 j = 23
@@ -1490,14 +1488,14 @@ j = true
 ```
 
 <u>Best practices</u>:
-- Identifiers of exported interfaces should be in Pascal case, otherwise they should be in camel
-  case.
+- Identifiers of exported interfaces should use Pascal case, while unexported ones should use
+  camel case.
 
 ## 15 Error Handling
 
-Errors are represented by data types that implement the `error` interface. Thereby functions that
-can cause errors also return an error value that is an implementation of the `error` interface
-when an error occurred or `nil` when none occurred.
+Errors are represented by data types that implement the `error` interface. Functions that can
+produce errors also return a value implementing the `error` interface when an error occurs, or
+`nil` when no error occurs.
 
 ```go
 import (
@@ -1511,9 +1509,9 @@ if err != nil {
 	fmt.Printf("couldn't convert number: %v\n", err)
 }
 
-// Create custom error type.
+// Create a custom error type.
 type MyError struct {}
-func (e MyError) Error() string {  // Implement `Error` function of `error` interface.
+func (e MyError) Error() string {  // Implement the `Error` function of the `error` interface.
 	return "Oh no! An error occurred!"
 }
 ```
@@ -1544,13 +1542,13 @@ func (e MyError) Error() string {  // Implement `Error` function of `error` inte
 
 ## 20 Asynchronous Execution
 
-Go uses lightweight coroutines for async operations that are called goroutines. They are scheduled
-concurrently, and starting one does not wait for its completion. When its function returns,
-the goroutine terminates automatically.
+Go uses lightweight coroutines called goroutines for asynchronous operations. They are scheduled
+concurrently, and starting one does not wait for its completion. When its function returns, the
+goroutine terminates automatically.
 
-Goroutines are managed by the Go runtime and typically use fewer resources than OS threads,
-though large numbers still incur memory and scheduling costs. The runtime multiplexes them onto
-OS threads and creates additional threads when needed.
+Goroutines are managed by the Go runtime and typically use fewer resources than OS threads, though
+large numbers still incur memory and scheduling costs. The runtime multiplexes them onto OS threads
+and creates additional threads when needed.
 
 The main function runs in a goroutine; other goroutines are started by `go` statements inside
 functions. When `main` returns, the program exits without waiting for other goroutines.
@@ -1558,13 +1556,13 @@ functions. When `main` returns, the program exits without waiting for other goro
 ```go
 import "fmt"
 
-// Spawn goroutine that runs specified function.
+// Spawn a goroutine that runs the specified function.
 func Greet(name string) {
 	fmt.Printf("Hello from %s!\n", name)
 }
 go Greet("John")
 
-// Spawn goroutine that runs specified function which itself spawns goroutines.
+// Spawn a goroutine that runs the specified function, which itself spawns goroutines.
 func GreetMultiple(names []string) {
 	for _, v := range names {
 		go fmt.Printf("Hello from %s!\n", v)
@@ -1575,55 +1573,55 @@ go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
 
 ### 20.1 Channels
 
-Goroutines can communicate with each other through channels. Send and receive operations exchange values
-and block the calling goroutine when the operation cannot proceed.
+Goroutines can communicate with each other through channels. Send and receive operations exchange
+values and block the calling goroutine when the operation cannot proceed.
 
 ```go
-// Create channels for specified data types.
+// Create channels for the specified data types.
 var res chan int = make(chan int)
 var name chan string = make(chan string)
 
-// Declare function that sends data through channel.
-func Add(x, y int, ch chan int) {  // Define channel to use as parameter.
-	ch <- x + y                    // Send value through channel; blocks execution until received.
+// Declare a function that sends data through a channel.
+func Add(x, y int, ch chan int) {  // Define a channel parameter.
+	ch <- x + y                    // Send a value through the channel; block until it is received.
 }
 
-// Declare function that receives data from channel.
-func Greet(ch chan string) {  // Define channel to use as parameter.
-	name := <-ch              // Receive value from channel; blocks execution until sent.
+// Declare a function that receives data from a channel.
+func Greet(ch chan string) {  // Define a channel parameter.
+	name := <-ch              // Receive a value from the channel; block until it is sent.
 	fmt.Printf("Hello %s!\n", name)
 }
 
-// Use channel to receive data.
-go Add(3, 4, res)  // Pass channel to receive data from to goroutine.
-result := <-res    // Receive value from channel; blocks execution until sent.
+// Use a channel to receive data.
+go Add(3, 4, res)  // Pass the channel from which to receive data to the goroutine.
+result := <-res    // Receive a value from the channel; block until it is sent.
 
-// Use channel to send data.
-go Greet(name)  // Pass channel to send data to to goroutine.
-name <- "John"  // Send value to channel; blocks execution until received.
+// Use a channel to send data.
+go Greet(name)  // Pass the channel to which to send data to the goroutine.
+name <- "John"  // Send a value to the channel; block until it is received.
 
-// Create buffered channel that can store specified amount of values before it blocks execution.
+// Create a buffered channel that stores a specified number of values before blocking execution.
 var counter chan int = make(chan int, 10)
 ```
 
-Closing a channel signals that no more values will be sent; sending to a closed channel panics.
-A channel range ends after the channel is closed and drained.
+Closing a channel signals that no more values will be sent; sending to a closed channel panics. A
+channel range ends after the channel is closed and drained.
 
 ```go
-// Declare function with quit channel parameter to delegate channel closing from outside.
+// Declare a function with a quit channel parameter to request channel closure from outside.
 func Count(quit chan bool, ch chan int) {
 	num := 0
 	for {
-		// Execute case of first channel operation that isn't blocked.
+		// Execute the case of the first channel operation that is not blocked.
 		select {
-			// Send data to channel and execute its case.
+			// Send data to the channel and execute its case.
 			case ch <- num:
 				num++
-			// Receive data from channel and execute its case.
+			// Receive data from the channel and execute its case.
 			case <- quit:
-				close(ch)  // Close channel.
+				close(ch)  // Close the channel.
 				return
-			// Default case to execute when every other case is blocked.
+			// Execute the default case when every other case is blocked.
 			default:
 				fmt.Println("Nothing to do...")
 		}
@@ -1634,9 +1632,9 @@ var ch chan int = make(chan int)
 var quit chan bool = make(chan bool)
 go Count(quit, ch)
 
-// Check whether channel is closed.
+// Check whether the channel is closed.
 v, ok := <- ch
-v == 0      // Existing value or zero value of its data type.
+v == 0      // The existing value or the zero value of its data type.
 ok == true  // Whether a value was received before the channel was closed.
 
 // Receive values until the channel is closed.
@@ -1644,7 +1642,7 @@ for v := range ch {
 	fmt.Println(v)
 
 	if v >= 10 {
-		// Send arbitrary data through quit channel to delegate its closing.
+		// Send arbitrary data through the quit channel to request channel closure.
 		quit <- true
 	}
 }
@@ -1664,7 +1662,7 @@ import (
 // Declare a mutex that prevents simultaneous execution of statements.
 var mutex sync.Mutex
 
-// Declare function that mutates shared data while holding the mutex.
+// Declare a function that mutates shared data while holding the mutex.
 func Inc(counter *int) {
 	mutex.Lock()    // Lock the critical section for other goroutines.
 	(*counter)++
@@ -1673,7 +1671,7 @@ func Inc(counter *int) {
 
 var counter int = 0
 for i := range 100 {
-	go Inc(&counter)  // Spawn goroutines that synchronize access to counter.
+	go Inc(&counter)  // Spawn goroutines that synchronize access to the counter.
 }
 fmt.Println(counter)
 ```
