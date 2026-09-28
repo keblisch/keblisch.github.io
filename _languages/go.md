@@ -10,7 +10,7 @@ title: Go
 # Go
 {: .no_toc }
 
-Go or Golang is a minimalistic programming language with focus on performance and concurrency
+Go or Golang is a minimalistic programming language with a focus on performance and concurrency
 developed by Google.
 
 | Paradigms                | Typing           | Memory Management | Execution | Current Version |
@@ -37,7 +37,7 @@ func main() {
 
 ### 1.1 Resources
 
-- Officiel website: [The Go Programming Language](https://go.dev/)
+- Official website: [The Go Programming Language](https://go.dev/)
 - Official documentation: [The Go Programming Language Specification](https://go.dev/ref/spec)
 - Official repository: [golang/go](https://github.com/golang/go)
 - Official overview: [A Tour of Go](https://go.dev/tour/list)
@@ -47,10 +47,10 @@ func main() {
 
 | Advantages                             | Disadvantages                                       |
 | :------------------------------------- | :-------------------------------------------------- |
-| Good concurrency model.                | Small ecosystem.                                    |
-| Fast and leighweight.                  | Verbose error handling.                             |
-| Minimalistic syntax.                   | Syntax can be unflexible.                           |
-| Easy to learn and pickup.              | Mix of high- and low level syntax can be confusing. |
+| Good concurrency model.                | Smaller ecosystem in some domains.                  |
+| Fast and lightweight.                  | Verbose error handling.                             |
+| Minimalistic syntax.                   | Syntax can be inflexible.                           |
+| Easy to learn and pick up.             | Mix of high- and low-level syntax can be confusing. |
 | Large standard library.                |                                                     |
 | Comes with a self-contained toolchain. |                                                     |
 
@@ -82,10 +82,10 @@ func main() {
 
 ## 2 Toolchain
 
-Go includes an official toolchain that can be used via CLI.
+Go includes an official toolchain that can be used via a CLI.
 
 ```bash
-# Get overview about available commands.
+# Get an overview of available commands.
 go help
 
 # Get current Go version.
@@ -94,12 +94,12 @@ go version
 # Manage current module.
 go mod init example.com/myproject  # Initialize Go module with specified namespace and name.
 go get github.com/example/foo      # Add specified external dependency to Go module.
-go mod tidy                        # Cleanup used dependencies.
+go mod tidy                        # Add missing and remove unused dependencies.
 
-# Execute current Go module with temporary build files.
-go run
+# Execute the main package in the current directory with temporary build files.
+go run .
 
-# Compile current Go module into executable binary or library file.
+# Compile the current package; produce an executable for a main package.
 go build
 go build -o ./path/to/executable  # Specify output file of compilation.
 
@@ -115,60 +115,60 @@ go env -u GOOS  # Reset specified Go configuration to its default.
 go test ./path/to/package/  # Execute tests in specified package.
 go test ./...               # Execute all tests in Go module.
 
-# Lint Go files.
-go vet ./path/to/package/  # Lint files in specified package.
-go vet ./...               # Lint all files in Go module.
+# Check Go packages for suspicious constructs.
+go vet ./path/to/package/  # Check the specified package.
+go vet ./...               # Check all packages in the Go module.
 
 # Format Go files.
 go fmt ./path/to/package/  # Format files in specified package.
 go fmt ./...               # Format all files in Go module.
 ```
 
-Go can be configured using values of the `go env` utility. These can be overwritten with identical
-named environment variables. The following configurations do exist:
+Go settings can be inspected with `go env`; writable settings can be persisted with `go env -w`.
+Environment variables with the same names override persisted settings. The following settings exist:
 
-| Configuration  | Description                                          | Value                                                |
-| :------------- | :--------------------------------------------------- | :--------------------------------------------------- |
-| `CC`           | C compiler used when compiling C code with cgo.      | `gcc`, `clang`, etc.                                 |
-| `CGO_CFLAGS`   | Additional C compiler flags for cgo.                 | Compiler flags                                       |
-| `CGO_CXXFLAGS` | Additional C++ compiler flags for cgo.               | Compiler flags                                       |
-| `CGO_ENABLED`  | Controls whether cgo is enabled.                     | `0`, `1`                                             |
-| `CGO_FFLAGS`   | Additional Fortran compiler flags for cgo.           | Compiler flags                                       |
-| `CGO_LDFLAGS`  | Additional linker flags for cgo.                     | Linker flags                                         |
-| `CGO_CPPFLAGS` | Additional C/C++ preprocessor flags for cgo.         | Preprocessor flags                                   |
-| `CXX`          | C++ compiler used when compiling C++ code with cgo.  | `g++`, `clang++`, etc.                               |
-| `GOBIN`        | Installation directory for installed Go executables. | Filesystem path                                      |
-| `GOCACHE`      | Build cache directory.                               | Filesystem path                                      |
-| `GOENV`        | Location of the persistent Goenv configuration file. | Filesystem path                                      |
-| `GOFLAGS`      | Default flags passed to Go commands.                 | Space-separated flags                                |
-| `GOINSECURE`   | Allowed module patterns for module-fetching methods. | Comma-separated module patterns                      |
-| `GOMOD`        | Path to the active `go.mod` file.                    | Filesystem path                                      |
-| `GOMODCACHE`   | Download cache for Go modules.                       | Filesystem path                                      |
-| `GONOPROXY`    | Module patterns that bypass the module proxy.        | Comma-separated module patterns                      |
-| `GONOSUMDB`    | Module patterns that bypass the checksum database.   | Comma-separated module patterns                      |
-| `GOOS`         | Target operating system for compilation.             | `android`, `darwin`, `ios`, `linux`, `windows`, etc. |
-| `GOPATH`       | Workspace for downloaded tools, modules, and caches. | Filesystem path                                      |
-| `GOPRIVATE`    | Module patterns considered private.                  | Comma-separated module patterns                      |
-| `GOPROXY`      | URLs of module proxies used for downloading modules. | URL list                                             |
-| `GOROOT`       | Installation path of the Go toolchain.               | Filesystem path                                      |
-| `GOSUMDB`      | Checksum database used to verify downloaded modules. | `sum.golang.org`, `off`, etc.                        |
-| `GOTOOLCHAIN`  | Controls which Go toolchain is selected.             | `auto`, `local`, or a specific toolchain version     |
-| `GOTOOLDIR`    | Directory containing the Go toolchain's tools.       | Filesystem path                                      |
-| `GOVCS`        | Version-control systems used for module downloads.   | Pattern-based configuration                          |
-| `GOWORK`       | Path to the active `go.work` workspace file.         | Filesystem path; `(off)` when disabled               |
-| `GOARCH`       | Target architecture for compilation.                 | `amd64`, `arm64`, `wasm`, etc.                       |
-| `GOAMD64`      | Controls the minimum x86-64 microarchitecture level. | `v1`, `v2`, `v3`, `v4`                               |
-| `GOARM`        | Controls the ARM architecture version.               | `5`, `6`, `7`                                        |
-| `GOARM64`      | Controls the ARM64 architecture feature level.       | Architecture-specific feature level                  |
-| `GOMIPS`       | Controls the MIPS floating-point ABI.                | `hardfloat`, `softfloat`                             |
-| `GOMIPS64`     | Controls the MIPS64 floating-point ABI.              | `hardfloat`, `softfloat`                             |
-| `GOPPC64`      | Controls the minimum PowerPC64 processor level.      | `power8`, `power9`, `power10`, etc.                  |
-| `GORISCV64`    | Controls RISC-V 64-bit architecture features.        | Architecture-specific feature level                  |
-| `GOWASM`       | Controls WebAssembly-specific features.              | Comma-separated features                             |
+| Configuration  | Description                                               | Value                                                |
+| :------------- | :-------------------------------------------------------- | :--------------------------------------------------- |
+| `CC`           | C compiler used when compiling C code with cgo.           | `gcc`, `clang`, etc.                                 |
+| `CGO_CFLAGS`   | Additional C compiler flags for cgo.                      | Compiler flags                                       |
+| `CGO_CXXFLAGS` | Additional C++ compiler flags for cgo.                    | Compiler flags                                       |
+| `CGO_ENABLED`  | Controls whether cgo is enabled.                          | `0`, `1`                                             |
+| `CGO_FFLAGS`   | Additional Fortran compiler flags for cgo.                | Compiler flags                                       |
+| `CGO_LDFLAGS`  | Additional linker flags for cgo.                          | Linker flags                                         |
+| `CGO_CPPFLAGS` | Additional C/C++ preprocessor flags for cgo.              | Preprocessor flags                                   |
+| `CXX`          | C++ compiler used when compiling C++ code with cgo.       | `g++`, `clang++`, etc.                               |
+| `GOBIN`        | Installation directory for installed Go executables.      | Filesystem path                                      |
+| `GOCACHE`      | Build cache directory.                                    | Filesystem path                                      |
+| `GOENV`        | Location of the persistent Goenv configuration file.      | Filesystem path                                      |
+| `GOFLAGS`      | Default flags passed to Go commands.                      | Space-separated flags                                |
+| `GOINSECURE`   | Module patterns allowed to use insecure fetching.         | Comma-separated module patterns                      |
+| `GOMOD`        | Path to `go.mod`; empty or `/dev/null` if none is active. | Filesystem path                                      |
+| `GOMODCACHE`   | Download cache for Go modules.                            | Filesystem path                                      |
+| `GONOPROXY`    | Module patterns that bypass the module proxy.             | Comma-separated module patterns                      |
+| `GONOSUMDB`    | Module patterns that bypass the checksum database.        | Comma-separated module patterns                      |
+| `GOOS`         | Target operating system for compilation.                  | `android`, `darwin`, `ios`, `linux`, `windows`, etc. |
+| `GOPATH`       | Workspace for downloaded tools, modules, and caches.      | Filesystem path                                      |
+| `GOPRIVATE`    | Module patterns considered private.                       | Comma-separated module patterns                      |
+| `GOPROXY`      | URLs of module proxies used for downloading modules.      | URL list                                             |
+| `GOROOT`       | Installation path of the Go toolchain.                    | Filesystem path                                      |
+| `GOSUMDB`      | Checksum database used to verify downloaded modules.      | `sum.golang.org`, `off`, etc.                        |
+| `GOTOOLCHAIN`  | Controls which Go toolchain is selected.                  | `auto`, `local`, or a specific toolchain version     |
+| `GOTOOLDIR`    | Directory containing the Go toolchain's tools.            | Filesystem path                                      |
+| `GOVCS`        | Version-control systems used for module downloads.        | Pattern-based configuration                          |
+| `GOWORK`       | Path to the active `go.work` workspace file.              | Filesystem path; `off` when disabled                 |
+| `GOARCH`       | Target architecture for compilation.                      | `amd64`, `arm64`, `wasm`, etc.                       |
+| `GOAMD64`      | Controls the minimum x86-64 microarchitecture level.      | `v1`, `v2`, `v3`, `v4`                               |
+| `GOARM`        | Controls the ARM architecture version.                    | `5`, `6`, `7`                                        |
+| `GOARM64`      | Controls the ARM64 architecture feature level.            | Architecture-specific feature level                  |
+| `GOMIPS`       | Controls the MIPS floating-point ABI.                     | `hardfloat`, `softfloat`                             |
+| `GOMIPS64`     | Controls the MIPS64 floating-point ABI.                   | `hardfloat`, `softfloat`                             |
+| `GOPPC64`      | Controls the minimum PowerPC64 processor level.           | `power8`, `power9`, `power10`, etc.                  |
+| `GORISCV64`    | Controls RISC-V 64-bit architecture features.             | Architecture-specific feature level                  |
+| `GOWASM`       | Controls WebAssembly-specific features.                   | Comma-separated features                             |
 
 <u>Best practices</u>:
-- Go modules should be namespaced with the domain of the project's online repository or a
-  reversed owner name domain.
+- Go module paths should use the repository's domain and path, or an owner-controlled domain
+  followed by the module path.
 
 ## 3 Compilation/Interpretation
 
@@ -190,7 +190,7 @@ graph TD
    Go source files (`.go`) are passed to the Go compiler. Unlike C/C++, Go does not use a
    traditional preprocessor. The compiler parses the source code, performs type checking and
    semantic analysis, and translates the Go code into machine code and associated metadata.
-   All source files belonging to the same package are compiled together. Dependencies on other
+   All selected source files belonging to the same package are compiled together. Dependencies on other
    packages are specified using `import` declarations and are resolved by the Go build system.
    This step is canceled if the source code contains a syntax error, type error, or other
    compile-time error.
@@ -208,17 +208,16 @@ graph TD
 
 ### 4.1 Whitespace
 
-Whitespace characters include spaces, tabs, newlines, and carriage returns. Whitespace is only
-used to seperate tokens and statements without semicolons. In any other case whitespace
-is ignored by the compiler.
+Whitespace characters include spaces, tabs, newlines, and carriage returns. Outside literals, whitespace separates tokens, and newlines can trigger semicolon insertion.
+Other whitespace is ignored by the compiler.
 
 ### 4.2 Statements
 
 Statements are instructions that perform actions. The following kinds of statements exist:
-- **Line statements**: Any combination of valid expressions terminated by a semicolon `;`.
-                       Semicolons can be omitted and are then inserted automatically by the
-                       compiler at linebreaks.
-- **Block statements**: Any number of line statements enclosed in curly braces `{}`.
+- **Simple statements**: Expression statements, assignments, sends, increments, decrements, and
+                         short variable declarations. Semicolons can be omitted and are
+                         inserted automatically at line endings.
+- **Block statements**: Any number of statements enclosed in curly braces `{}`.
 
 <u>Best practices</u>:
 - Indentations should use hard tabs instead of spaces.
@@ -304,8 +303,8 @@ to nest packages inside other packages.
 package mypackage
 ```
 
-Packages can be imported inside other Packages. These imports must be placed after the package's
-package definition.
+Packages can be imported by other packages. Imports must appear after the package clause
+and before other declarations.
 
 ```go
 package mypackage
@@ -334,7 +333,7 @@ import (
 Imported packages can be referenced to access their exported objects. Because of this identifiers
 are naturally namespaced by their package.
 
-Thereby all identifiers starting with an uppercase letter are exported objects of their package.
+Package-level identifiers, struct fields, and methods starting with an uppercase letter are exported.
 In case of package names that don't match their directory names, they're referenced by their
 package name and not their import path.
 
@@ -364,12 +363,12 @@ sub.MyObject()
 
 ### 5.3 Entry Point
 
-Every executable Go program must contain a non-nested package with the identifier `main`.
+Every executable Go program must contain a package with the identifier `main`.
 Inside that package a main function with the identifier `main` must be defined, which acts
 as entry point for the program.
 
 ```go
-// define the program's main package.
+// Define the program's main package.
 package main
 
 // Define the program's main function.
@@ -380,10 +379,10 @@ func main() {
 
 ### 5.4 Modules
 
-Go projects are organized as modules which can be compiled to executable binaries or importable
-libraries.
+Go projects are organized as modules containing packages that can be compiled as executables
+or used as importable libraries.
 
-Go doesn't enforce a project structure, but the following convention exists for medium- and
+Go doesn't enforce a project structure, but the following layout is one convention used for medium- and
 large-sized projects:
 
 ```text
@@ -394,7 +393,7 @@ large-sized projects:
 ├── internal/            # Internal program packages.
 ├── pkg/                 # Reusable packages.
 ├── tests/               # Test packages.
-├── go.mod               # Module and dependecy definitions.
+├── go.mod               # Module and dependency definitions.
 └── go.sum               # Dependency checksums.
 ```
 
@@ -405,7 +404,7 @@ the project root.
 
 Go provides a pre-installed standard library with additional types, functions and constants.
 
-The following packages exist in the standard library:
+The following package exists in the standard library:
 - `fmt`: Utilities to format and print strings.
 
 ## 6 Comments
@@ -414,7 +413,7 @@ Comments are treated as whitespace by the compiler.
 
 ### 6.1 Single-Line Comments
 
-Single-line comments reach from `//` to the next linebreak. Thereby `//` isn't recognized
+Single-line comments reach from `//` to the next line break. Thereby `//` isn't recognized
 as the beginning of a comment inside strings.
 
 ```go
@@ -453,7 +452,7 @@ to the variable.
 var x int         // Single variable.
 var y, z float32  // Multiple variables of the same type.
 
-// Define existing variables.
+// Assign values to existing variables.
 x = 12           // Single variable.
 y, z = 3.0, 5.1  // Multiple variables of the same type.
 x, y = 9, 3.12   // Multiple variables of different types.
@@ -471,7 +470,6 @@ var dickons, elly = 7, 1.2  // Multiple variables of different types.
 var (
 	min int        // Declare variable.
 	max int = 100  // Initialize variable.
-	default        // Reuse the type and expression list from the previous declaration.
 )
 
 func main() {
@@ -479,7 +477,7 @@ func main() {
 	foo := 9             // Single variable.
 	bar, foobar := 3, 4  // Multiple variables of the same type.
 	zig, zag := 7, 1.2   // Multiple variables of different types.
-	zig, zug := 7, 1.2   // Mixed initialization and redefinition.
+	zig, zug := 7, 1.2   // Mixed declaration and reassignment.
 }
 ```
 
@@ -511,7 +509,7 @@ const (
 )
 ```
 
-Every literal value is a constant expression and is therefore untyped.
+Every value literal value is a constant expression and is therefore untyped.
 
 <u>Best practices</u>:
 - Identifiers of exported constants should use Pascal case, while unexported constants should use
@@ -548,7 +546,7 @@ The zero value of integers is `0`.
 
 #### 9.1.2 Floating-Point Numbers
 
-Floating-Point numbers represent real numbers and are implemented accordingly to the IEEE-754
+Floating-point numbers approximate real numbers and are implemented according to the IEEE 754
 standard.
 
 The zero value of floating-point numbers is `0.0`.
@@ -581,20 +579,20 @@ The zero value of booleans is `false`.
 
 #### 9.1.5 Strings
 
-Strings represent text and are implemented as arrays of characters.
+Strings are immutable sequences of bytes, commonly containing UTF-8 text.
 
 The zero value of strings is the empty string `""`.
 
-| Keyword  | Byte Size             | Literals               |
-| :------- | :-------------------- | :--------------------- |
-| `string` | 4 for every character | `"Hi!"`, `"1 + 2 = 3"` |
+| Keyword  | Byte Size                | Literals               |
+| :------- | :----------------------- | :--------------------- |
+| `string` | Variable (byte sequence) | `"Hi!"`, `"1 + 2 = 3"` |
 
 #### 9.1.6 Arrays
 
 Arrays are fixed-sized containers for multiple values. They can only hold values of the
 same data type.
 
-The zero value of arrays are arrays of zero values of their contained data type.
+The zero values of arrays are arrays of zero values of their contained data type.
 
 ```go
 // Declare array of specified size and type.
@@ -608,7 +606,7 @@ arr[0] = 1
 arr[0] == 1
 
 // Create multi-dimensional array.
-var matrix int[4][4] = int[4][4]{
+var matrix [4][4]int = [4][4]int{
 	{1, 2, 3, 4},
 	{2, 4, 6, 8},
 	{3, 5, 7, 9},
@@ -647,7 +645,7 @@ john.Age = 21
 john.Age == 21
 
 // Access elements of structure pointer.
-var max Person = &{"Max", 16}
+var max *Person = &Person{"Max", 16}
 (*max).Age == 16  // Explicitly dereference structure pointer.
 max.Age == 16     // Implicitly dereference structure pointer.
 ```
@@ -691,7 +689,7 @@ cap(dyn) == 5  // Current capacity for elements.
 
 // Change length of slice.
 dyn = dyn[:2]  // Reduce to two elements.
-dyn = dyn[:8]  // Extend to eight elements (also increases capacity).
+dyn = dyn[:8]  // Extend to eight elements within the existing capacity.
 dyn = dyn[2:]  // Drop first two elements.
 
 // Append elements to slice.
@@ -699,7 +697,7 @@ dyn = append(dyn, 4)        // Append single element.
 dyn = append(dyn, 7, 2, 5)  // Append multiple elements.
 
 // Create multi-dimensional slice.
-var matrix int[][] = []int{
+var matrix [][]int = [][]int{
 	[]int{1, 2, 3, 4},
 	[]int{2, 4, 6, 8},
 	[]int{3, 5, 7, 9},
@@ -747,10 +745,10 @@ delete(scores, "Jane")
 // Create map with structure as values.
 type Person struct {
 	Name string
-	age int
+	Age int
 }
 registry := map[string]Person{
-	"John": { Name: "John", Age: 21 }  // Omit structure name in key-value pair insertion.
+	"John": { Name: "John", Age: 21 },  // Omit structure name in key-value pair insertion.
 }
 ```
 
@@ -776,7 +774,7 @@ var b int = int('A')
 ### 9.4 Custom Data Types
 
 Custom data types can be defined from existing ones. Thereby they still have the same
-encoding and functionality, but aren't interchangeable.
+underlying representation and applicable operations, but are distinct types.
 
 ```go
 import "fmt"
@@ -800,8 +798,8 @@ func (p Person) String() string {
 
 ### 9.5 Generics
 
-Generic types can be used in structure and function definitions to support multiple data types
-for them simultaneosly. Thereby generics specify constraints to only allow certain data types
+Type parameters can be used in type and function definitions to support multiple data types
+through different instantiations. Thereby generics specify constraints to only allow certain data types
 for their implementation.
 
 | Constraint    | Types                                                        |
@@ -820,9 +818,9 @@ type Item[T, U any, V comparable] struct {
 }
 
 // Use generic structure.
-item := Item{ "Hi", true, 12, 5 }
-item = Item{ false, 'A', 8.5, 5.0 }
-item = Item{ 16, 4, 9, 5 }
+item1 := Item[string, bool, int]{"Hi", true, 12, 5}
+item2 := Item[bool, rune, float64]{false, 'A', 8.5, 5.0}
+item3 := Item[int, int, int]{16, 4, 9, 5}
 
 // Declare generic function.
 func log[T comparable, U, V any](x T, y U, z V) V {
@@ -833,9 +831,9 @@ func log[T comparable, U, V any](x T, y U, z V) V {
 }
 
 // Use generic function.
-item := Item{ "Hi", 12, 5 }
-item = Item{ false, 8.5, 5.0 }
-item = Item{ 16, 9, 5 }
+result1 := log("Hi", 12, 5)
+result2 := log(false, 8.5, 5.0)
+result3 := log(16, 9, 5)
 ```
 
 Custom constraints for generics can be defined.
@@ -875,14 +873,14 @@ Operators manipulate and chain expressions into new values.
 
 The precedence of operators decides in which order chained operations are evaluated.
 
-| Precedence Level | Operators                   |
-| :--------------- | :-------------------------- |
-| 1                | `+` `-` `*` `/` `%`         |
-| 2                | `&` `│` `^` `<<` `>>` `&^`  |
-| 3                | `==` `!=` `<` `<=` `>` `>=` |
-| 4                | `&&` `││` `!`               |
-| 5                | `&` `*`                     |
-| 6                | `<-`                        |
+| Precedence Level| Operators                     |
+| :-------------- | :---------------------------- |
+| Unary           | `+` `-` `!` `^` `*` `&` `<-`  |
+| 5               | `*` `/` `%` `<<` `>>` `&` `&^`|
+| 4               | `+` `-` `\|` `^`              |
+| 3               | `==` `!=` `<` `<=` `>` `>=`   |
+| 2               | `&&`                          |
+| 1               | `\|\|`                        |
 
 ```go
 // Give operations higher precedence.
@@ -938,8 +936,8 @@ y == 2
 
 ### 10.3 Comparison Operators
 
-Comparison operators compare two values and evaluate to boolean values. Less and greater
-comparisons can only be performed on integers and floating-point numbers.
+Comparison operators compare two values and evaluate to boolean values. They can be performed
+on integers, floating-point numbers, and strings.
 
 | Operation      | Symbol   | Arity  | Associativity |
 | :------------- | :------- | :----- | :------------ |
@@ -1002,8 +1000,8 @@ Bitwise operators manipulate individual bits of values and can only work with in
 ```go
 // Perform bitwise logical operations.
 0b0110 & 0b0011 == 0b0010  // Bitwise AND.
-0b0110 │ 0b0011 == 0b0111  // Bitwise OR.
-^0b0110 == 0b1001          // Bitwise NOT.
+0b0110 | 0b0011 == 0b0111  // Bitwise OR.
+^0b0110 == -0b0111         // Bitwise NOT.
 0b0110 ^ 0b0011 == 0b0101  // Bitwise XOR.
 
 // Perform bitwise shifts.
@@ -1013,31 +1011,31 @@ Bitwise operators manipulate individual bits of values and can only work with in
 
 ### 10.6 Assignment Operators
 
-Assignment operators are assigning values to variables, therefore the left operand must always be
-a variable. Assignment operations can only be used as statements.
+Assignments store values in variables or map entries; the blank identifier discards a value.
+Assignments and short variable declarations are statements, not expressions.
 
-| Operation                   | Symbol  | Arity  | Associativity |
-| :-------------------------- | :------ | :----- | :------------ |
-| Assignment                  | `=`     | Binary | Right         |
-| Shorthand Assignment        | `:=`    | Binary | Right         |
-| Addition Assignment         | `+=`    | Binary | Right         |
-| Subtraction Assignment      | `-=`    | Binary | Right         |
-| Multiplication Assignment   | `*=`    | Binary | Right         |
-| Division Assignment         | `/=`    | Binary | Right         |
-| Integer Division Assignment | `/=`    | Binary | Right         |
-| Modulo Assignment           | `%=`    | Binary | Right         |
-| Bitwise AND Assignment      | `&=`    | Binary | Right         |
-| Bitwise OR Assignment       | `│=`    | Binary | Right         |
-| Bitwise XOR Assignment      | `^=`    | Binary | Right         |
-| Left Shift Assignment       | `<<=`   | Binary | Right         |
-| Right Shift Assignment      | `>>=`   | Binary | Right         |
+| Operation                          | Symbol  | Arity  | Associativity |
+| :--------------------------------- | :------ | :----- | :------------ |
+| Assignment                         | `=`     | Binary | N/A           |
+| Short Variable Declaration         | `:=`    | Binary | N/A           |
+| Addition Assignment                | `+=`    | Binary | N/A           |
+| Subtraction Assignment             | `-=`    | Binary | N/A           |
+| Multiplication Assignment          | `*=`    | Binary | N/A           |
+| Floating-Point Division Assignment | `/=`    | Binary | N/A           |
+| Integer Division Assignment        | `/=`    | Binary | N/A           |
+| Modulo Assignment                  | `%=`    | Binary | N/A           |
+| Bitwise AND Assignment             | `&=`    | Binary | N/A           |
+| Bitwise OR Assignment              | `\|=`   | Binary | N/A           |
+| Bitwise XOR Assignment             | `^=`    | Binary | N/A           |
+| Left Shift Assignment              | `<<=`   | Binary | N/A           |
+| Right Shift Assignment             | `>>=`   | Binary | N/A           |
 
 ```go
 // Perform single assignment.
 var x int = 3
 x == 3
 
-// Perform shorthand assignment (only inside functions).
+// Use a short variable declaration (only inside functions).
 y := 4
 y == 4
 
@@ -1061,32 +1059,32 @@ var d int = 6
 d /= 2
 d == 3
 
-// Perform division assignment.
+// Perform modulo assignment.
 var e int = 6
 e %= 2
 e == 0
 
-// Perform bitiwse AND assignment.
+// Perform bitwise AND assignment.
 var f int = 0b01
 f &= 0b11
 f == 0b01
 
-// Perform bitiwse OR assignment.
+// Perform bitwise OR assignment.
 var g int = 0b01
 g |= 0b11
 g == 0b11
 
-// Perform bitiwse XOR assignment.
+// Perform bitwise XOR assignment.
 var h int = 0b01
 h ^= 0b11
 h == 0b10
 
-// Perform bitiwse left shift assignment.
+// Perform bitwise left shift assignment.
 var i int = 0b01
 i <<= 1
 i == 0b10
 
-// Perform bitiwse right shift assignment.
+// Perform bitwise right shift assignment.
 var j int = 0b10
 j >>= 1
 j == 0b01
@@ -1095,7 +1093,7 @@ j == 0b01
 ## 11 Pointers
 
 Pointers are variables that store memory addresses. These can be used to manipulate the values of
-variables without assignments.
+variables indirectly through dereferencing.
 
 ```go
 // Declare pointer variable.
@@ -1106,13 +1104,13 @@ var x int = 3
 p = &x
 
 // Access value of pointer by dereferencing it.
-var y int = p*
-p* = 5
+var y int = *p
+*p = 5
 ```
 
 ## 12 Control Flow Structures
 
-Controll flow structures are block statements that manipulate the control flow of the program.
+Control flow structures are block statements that manipulate the control flow of the program.
 
 ### 12.1 Conditions
 
@@ -1134,11 +1132,11 @@ if y := 4; y > 0 {
 
 // Define alternative paths within condition.
 z := 3
-if x > 0 {
+if z > 0 {
 	fmt.Println("z is positive")
-} else if < 0 {  // Only execute condition when last condition was skipped and expression is true.
-	fmt.Println("z is positive")
-} else {         // Only execute condition when last condition was skipped.
+} else if z < 0 {  // Only execute condition when last condition was skipped and expression is true.
+	fmt.Println("z is negative")
+} else {           // Only execute condition when last condition was skipped.
 	fmt.Println("z is zero")
 }
 ```
@@ -1159,32 +1157,32 @@ switch x {
 		fmt.Println("x is 5")
 	// Execute case when no other case matched.
 	default:
-		fmt.Println("x isn't 1 or 2")
+		fmt.Println("x isn't 0 or 5")
 }
 
 // Execute first case that evaluates to true.
 y := 2
 switch {
 	case y % 2 == 0:
-		fmt.Println("y is dividable by 2")
+		fmt.Println("y is divisible by 2")
 	case y % 5 == 0:
-		fmt.Println("y is dividable by 5")
+		fmt.Println("y is divisible by 5")
 	default:
-		fmt.Println("y isn't dividable by 2 or 5")
+		fmt.Println("y isn't divisible by 2 or 5")
 }
 
 // Initialize variable within the switch's definition.
-switch z := 12; z {
+switch z := 12; {
 	case z % 2 == 0:
-		fmt.Println("z is dividable by 2")
+		fmt.Println("z is divisible by 2")
 	case z % 5 == 0:
-		fmt.Println("z is dividable by 5")
+		fmt.Println("z is divisible by 5")
 	default:
 		fmt.Println("z has an unknown divider")
 }
 
 // Execute first case that specifies the data type of the switch's condition.
-a := 3
+var a any = 3
 switch a.(type) {
 	case int:
 		fmt.Println("a is int")
@@ -1234,7 +1232,7 @@ for _, _ := range slice {
 	fmt.Println("Iterating...")
 }
 
-// Exiting loops and their iterations early..
+// Exiting loops and their iterations early.
 k := 0
 for {
 	fmt.Println(k)
@@ -1254,7 +1252,7 @@ for {
 
 ## 13 Functions
 
-Functions are callable block statements that can take arguments and produce return values. Their
+Functions are callable units of code that can take arguments and produce return values. Their
 parameters act as local variables.
 
 ```go
@@ -1270,7 +1268,7 @@ func add(x int, y int) int {
 	return x + y
 }
 
-// Shorten consectutive parameter definitions with the same type.
+// Shorten consecutive parameter definitions with the same type.
 func sub(x, y int) int {
 	return x - y
 }
@@ -1304,20 +1302,20 @@ a, b := swap(2, 1)
 
 ### 13.2 Named Return Values
 
-Functions can name their return values to automatically return local variables with the same
-identifier.
+Functions can declare named result parameters, which act as local variables. A bare `return`
+returns their current values.
 
 ```go
 // Declare function that automatically returns specified local variable.
 func add(x int, y int) (z int) {
-	z := x + y
+	z = x + y
 	return
 }
 
 // Declare function that automatically returns multiple specified local variables.
 func swap(x int, y int) (a, b int) {
-	a := y
-	b := x
+	a = y
+	b = x
 	return
 }
 
@@ -1328,8 +1326,8 @@ x, y := swap(2, 4)
 
 ### 13.3 Deferred Function Calls
 
-Inside functions other function calls can be deferred to after their execution by pushing them
-on top of the call stack. Thereby the deferred function's arguments are evaluated beforehand.
+Inside a function, calls can be deferred until the surrounding function returns and are executed
+in reverse order. The deferred function value and arguments are evaluated when `defer` executes.
 
 ```go
 import "fmt"
@@ -1352,9 +1350,9 @@ returned from functions, and used to create closures and higher-order functions.
 ```go
 // Assign function to a variable.
 func add(x int, y int) int {
-	return x x y
+	return x + y
 }
-var add func(int, int) int = add
+var addFunc func(int, int) int = add
 
 // Assign anonymous function to a variable.
 var sub func(int, int) int = func(x int, y int) int {
@@ -1362,51 +1360,50 @@ var sub func(int, int) int = func(x int, y int) int {
 }
 
 // Call function assigned to variable.
-result = add(3, 4)
+result := addFunc(3, 4)
 
 // Call anonymous function immediately.
-var result int = func(x int, y int) int { return x + y }(3, 4)
+result = func(x int, y int) int { return x + y }(3, 4)
 
 // Declare anonymous function as closure.
 var counter int = 0    // Initialize variable that is captured by closure.
 count := func() int {
-	counter++          // Use captured variable internally as a copy.
+	counter++          // Modify the captured variable shared with the enclosing scope.
 	return counter
 }
 ```
 
 ### 13.5 Pass By Reference
 
-Values are copied when they're passed as arguments to functions. Therefore functions can't
-mutate their parameters. To mutate parameters they must be defined as pointers.
+Arguments are always passed by value. Reassigning a parameter does not change the caller's
+variable; passing a pointer lets the function modify the value it points to.
 
 ```go
-// Define function that mutates its parameters.
+// Define function that mutates the value pointed to by its parameter.
 func inc(val *int) {
 	(*val)++
 }
 
-// Call function that mutates its argument.
+// Call function that mutates the value pointed to by its argument.
 var x int = 3
 inc(&x)  // Pass argument as pointer.
 x == 4
 ```
 
 <u>Best practices</u>:
-- Parameters should be passed by reference when they're large structs, to avoid copying of large
-  amounts of data.
+- Large structs can be passed using pointers to avoid copying large amounts of data.
 
 ### 13.6 Receiver Functions
 
 Receiver functions act as methods for data types. They can only be defined for custom
-data types (structures and aliased types).
+types declared in the same package.
 
 ```go
 import "fmt"
 
 type Person struct {
 	Name string
-	age int
+	Age int
 }
 var john Person =  Person{
 	Name: "John",
@@ -1420,7 +1417,7 @@ func (p Person) Greet() {                   // Pass copy of receiver object.
 
 // Declare mutating receiver function for custom data type.
 func (p *Person) Birthday() {  // Pass pointer to receiver object.
-	p.age++                    // Automatically dereference pointer to receiver object.
+	p.Age++                    // Automatically dereference pointer to receiver object.
 }
 
 // Call receiver functions on object.
@@ -1459,13 +1456,13 @@ type Tracker int
 // Declare receiver function that implements signature of interface.
 func (t *Tracker) Inc() int {
 	(*t)++
-	return t
+	return int(*t)
 }
 
 // Declare receiver function that implements signature of interface.
 func (t *Tracker) Dec() int {
 	(*t)--
-	return t
+	return int(*t)
 }
 
 // Use implementation for interface.
@@ -1500,7 +1497,7 @@ j = true
 
 Errors are represented by data types that implement the `error` interface. Thereby functions that
 can cause errors also return an error value that is an implementation of the `error` interface
-when an error occured or `nil` when none occured.
+when an error occurred or `nil` when none occurred.
 
 ```go
 import (
@@ -1509,7 +1506,7 @@ import (
 )
 
 // Check whether an error occurred in a function call.
-num, err := strconv.atoi("3")
+num, err := strconv.Atoi("3")
 if err != nil {
 	fmt.Printf("couldn't convert number: %v\n", err)
 }
@@ -1547,30 +1544,30 @@ func (e MyError) Error() string {  // Implement `Error` function of `error` inte
 
 ## 20 Asynchronous Execution
 
-Go uses lightweight coroutines for async operations that are called goroutines. These run
-immediately in the background and are non-blocking per default. When their control flow reached
-their end they're terminated automatically.
+Go uses lightweight coroutines for async operations that are called goroutines. They are scheduled
+concurrently, and starting one does not wait for its completion. When its function returns,
+the goroutine terminates automatically.
 
-Goroutines are managed by the Go runtime and can be used in large amounts without noteworthy
-performance penalties. This is because they only use a minimal amount of resources and only run on
-new OS threads when required.
+Goroutines are managed by the Go runtime and typically use fewer resources than OS threads,
+though large numbers still incur memory and scheduling costs. The runtime multiplexes them onto
+OS threads and creates additional threads when needed.
 
-The main control flow itself is a goroutine that acts as parent for subsequent goroutine. Any
-subsequent can only be spawned inside of functions.
+The main function runs in a goroutine; other goroutines are started by `go` statements inside
+functions. When `main` returns, the program exits without waiting for other goroutines.
 
 ```go
 import "fmt"
 
 // Spawn goroutine that runs specified function.
 func Greet(name string) {
-	fmt.Printf("Hello from %s\n!", name)
+	fmt.Printf("Hello from %s!\n", name)
 }
 go Greet("John")
 
 // Spawn goroutine that runs specified function which itself spawns goroutines.
 func GreetMultiple(names []string) {
 	for _, v := range names {
-		go fmt.Printf("Hello from %s\n!", v)
+		go fmt.Printf("Hello from %s!\n", v)
 	}
 }
 go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
@@ -1578,8 +1575,8 @@ go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
 
 ### 20.1 Channels
 
-Goroutines can communicate with each other through channels. They're blocking the control flow of
-their according goroutine and can exchange vales.
+Goroutines can communicate with each other through channels. Send and receive operations exchange values
+and block the calling goroutine when the operation cannot proceed.
 
 ```go
 // Create channels for specified data types.
@@ -1593,13 +1590,13 @@ func Add(x, y int, ch chan int) {  // Define channel to use as parameter.
 
 // Declare function that receives data from channel.
 func Greet(ch chan string) {  // Define channel to use as parameter.
-	name <- chan              // Receive value from channel; blocks execution until sent.
+	name := <-ch              // Receive value from channel; blocks execution until sent.
 	fmt.Printf("Hello %s!\n", name)
 }
 
 // Use channel to receive data.
 go Add(3, 4, res)  // Pass channel to receive data from to goroutine.
-result := <- ch    // Receive value from channel; blocks execution until sent.
+result := <-res    // Receive value from channel; blocks execution until sent.
 
 // Use channel to send data.
 go Greet(name)  // Pass channel to send data to to goroutine.
@@ -1609,8 +1606,8 @@ name <- "John"  // Send value to channel; blocks execution until received.
 var counter chan int = make(chan int, 10)
 ```
 
-Channels can be closed to invalidate them. Trying to receive values from closed channels causes a
-panic. This is only required by statements that automatically receive values from channels.
+Closing a channel signals that no more values will be sent; sending to a closed channel panics.
+A channel range ends after the channel is closed and drained.
 
 ```go
 // Declare function with quit channel parameter to delegate channel closing from outside.
@@ -1640,9 +1637,9 @@ go Count(quit, ch)
 // Check whether channel is closed.
 v, ok := <- ch
 v == 0      // Existing value or zero value of its data type.
-ok == true  // Whether channel is closed.
+ok == true  // Whether a value was received before the channel was closed.
 
-// Receive values from channel repeatedly as long as channel isn't closed.
+// Receive values until the channel is closed.
 for v := range ch {
 	fmt.Println(v)
 
@@ -1656,7 +1653,7 @@ for v := range ch {
 ### 20.2 Mutexes
 
 Goroutines can access and manipulate the same data through pointers. To avoid race conditions with
-shared memory mutexes can be used to lock and unlock them for other goroutines.
+shared memory, mutexes can guard access when all participating goroutines use the same lock.
 
 ```go
 import (
