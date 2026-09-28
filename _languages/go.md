@@ -598,20 +598,35 @@ The zero value of strings is the empty string `""`.
 | `string` | Variable (byte sequence) | `"Hi!"`, `"1 + 2 = 3"` |
 
 ```go
-
-import "unicode/utf8"
+import (
+	"fmt"
+	"strings"
+	"unicode/utf8"
+)
 
 // Index into byte of string.
 "ABC"[0] == 65
 
-// Count number of characters in string.
-utf8.RuneCountInString("Hello!") == 6
-```
+// Check the contents of a string.
+utf8.RuneCountInString("Hello!") == 6     // Count number of characters in string.
+strings.Contains("Hello", "ll") == true   // Whether a string contains a substring.
+strings.HasPrefix("Hello", "He") == true  // Whether a string contains a prefix.
+strings.HasSuffix("Hello", "lo") == true  // Whether a string contains a suffix.
+strings.Count("Hello", "l") == 2          // How often a string contains a substring.
+strings.Index("Hello", "lo") == 3         // At which index a substring begins in a string.
 
-```go
-// Concatenate strings.
-name := "John" + " " + "Doe"
-name == "John Doe"
+// Create new strings from existing strings.
+"John" + " " + "Doe" == "John Doe".                    // Concatenate strings.
+strings.ToLower("Hello") == "hello"                    // Convert string to lower case.
+strings.ToUpper("Hello") == "HELLO"                    // Convert string to upper case.
+strings.Replace("Hello", "l", "f", 1) == "Heflo"       // Replace substrings in a string.
+strings.Replace("Hello", "l", "f", -1) == "Heffo"      // Replace all substrings in a string.
+strings.Join([]string{"a", "b", "c"}, "-") == "a-b-c"  // Join slice of strings into string.
+strings.Join("a-b-c", "-")                             // Split string into slice of strings.
+strings.Repeat("Hi", 3) == "HiHiHi"                    // Repeat string multiple times.
+
+// Create format string in printf style.
+fmt.Sprintf("1 + 1 = %d", 1+1) == "1 + 1 = 2"
 ```
 
 #### 9.1.6 Arrays
@@ -686,6 +701,56 @@ john.Age == 21
 var max *Person = &Person{"Max", 16}
 (*max).Age == 16  // Explicitly dereference the structure pointer.
 max.Age == 16     // Implicitly dereference the structure pointer.
+```
+
+Sructures can be embedded inside other structures for seamless composition.
+
+```go
+import "strconv"
+
+// Define structures to embed in other structures
+type FirstBase struct {
+	X int
+}
+type SecondBase struct {
+	Y int
+}
+
+// Declare receiver function for structure to embed in other structure.
+func (b FirstBase) String() string {
+	return strconv.Atoi(b.X)
+}
+
+// Embed strcutures inside other structure.
+type Container struct {
+	FirstBase FirstBase   // Explicitly set field name for embedded structure.
+	SecondBase            // Implicitly use name of embedded structure as field name.
+}
+
+// Initialize structure that embeds other structures.
+c := Container{
+	FirstBase: FirstBase{ X: 5 }
+	SecondBase: SecondBase{ Y: 8 }
+}
+
+// Access fields of embedded structures.
+c.FirstBase.X == 5  // Explicitly access field of embedded structure.
+c.Y == 8            // Implicitly access field of embedded structure.
+
+// Access receiver functions of embedded structures.
+c.FirstBase.String() == "5"  // Explicitly access receiver function of embedded structure.
+c.String() == "8"            // Implicitly access receiver function of embedded structure.
+
+// Embedding structure implements interfaces of its embedded structures.
+var s1 fmt.Stringer = c.FirstBase
+var s2 fmt.Stringer = c  // Error when multiple embeddings implement the same interface.
+
+// Overwrite fields and receiver functions of embedded structure.
+func (c Container) String() string {
+	return "I'm a container!"
+}
+c.String() == "I'm a container!"
+c.FirstBase.String() == "5"
 ```
 
 <u>Best practices</u>:
@@ -906,6 +971,12 @@ func log[T comparable, U, V any](x T, y U, z V) V {
 result1 := log("Hi", 12, 5)
 result2 := log(false, 8.5, 5.0)
 result3 := log(16, 9, 5)
+
+// Reference generics inside generics.
+type List[T []U, U comparable] struct {
+	Elem T  // Slice of generic type with the `comparable` constraint.
+}
+var list List[[]int, int] = List[[]int, int]{ []int{1, 2, 3, 4, 5} }
 ```
 
 Custom constraints can be defined for generics.
@@ -1432,8 +1503,9 @@ sum(list...) == 15
 
 ### 13.4 Deferred Function Calls
 
-Inside a function, calls can be deferred until the surrounding function returns and are executed in
-reverse order. The deferred function value and arguments are evaluated when `defer` executes.
+Inside a function, calls can be deferred until the surrounding function returns or paics and are
+executed in reverse order. The deferred function value and arguments are evaluated when `defer`
+executes.
 
 ```go
 import "fmt"
@@ -1600,12 +1672,15 @@ j = true
 
 ## 15 Error Handling
 
+### 15.1 Errors
+
 Errors are represented by data types that implement the `error` interface. Functions that can
 produce errors also return a value implementing the `error` interface when an error occurs, or
 `nil` when no error occurs.
 
 ```go
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -1616,16 +1691,46 @@ if err != nil {
 	fmt.Printf("couldn't convert number: %v\n", err)
 }
 
+// Create a basic error value with a custom message.
+var myError error = errors.New("Something went wrong")
+
+// Nest errors inside errors.
+e1 := errors.New("Something went wrong")
+e2 := errors.New(fmt.Sprintf("Something bad happened: %w", e1))
+
 // Create a custom error type.
 type MyError struct {}
 func (e MyError) Error() string {  // Implement the `Error` function of the `error` interface.
 	return "Oh no! An error occurred!"
 }
+
+// Check instance of error value.
+if errors.Is(err, MyError) {
+	fmt.Println("This was my error!")
+}
+```
+
+<u>Best practices</u>:
+- Errors should be the last return value of functions that return errors.
+- The absence of errors should be indicated by returning `nil` for an error.
+- Custom error types should be suffixed with `Error`.
+
+### 15.2 Panics
+
+Panics are runtime erros that crash the program.
+
+```go
+// Crash the program immediately with the specified message.
+panic("Oh No! Abort!")
+
+// Stop an occuring panic and get its error; this is only possible with deferred functions.
+defer func() {
+	val err error = recover()
+}
+defer Crashout()
 ```
 
 ## 16 IO
-
-...
 
 ### 16.1 Output
 
@@ -1655,17 +1760,16 @@ fmt.Printf("Hello, %s!\n", "John")
 
 ## 17 Math
 
-...
+```go
+import "math"
 
-## 18 Time and Date
+// Round floating-point numbers to integers.
+math.Round(3.5) == 4  // Round to nearest integer.
+math.Floor(3.9) == 3  // Round down.
+math.Ceil(3.1) == 4   // Round up.
+```
 
-...
-
-## 19 System
-
-...
-
-## 20 Asynchronous Execution
+## 18 Asynchronous Execution
 
 Go uses lightweight coroutines called goroutines for asynchronous operations. They are scheduled
 concurrently, and starting one does not wait for its completion. When its function returns, the
@@ -1696,7 +1800,7 @@ func GreetMultiple(names []string) {
 go GreetMultiple([]string{"John", "Jane", "Max", "Erica"})
 ```
 
-### 20.1 Channels
+### 18.1 Channels
 
 Goroutines can communicate with each other through channels. Send and receive operations exchange
 values and block the calling goroutine when the operation cannot proceed.
@@ -1707,14 +1811,20 @@ var res chan int = make(chan int)
 var name chan string = make(chan string)
 
 // Declare a function that sends data through a channel.
-func Add(x, y int, ch chan int) {  // Define a channel parameter.
-	ch <- x + y                    // Send a value through the channel; block until it is received.
+func Add(x, y int, ch chan<- int) {  // Define a sending channel parameter.
+	ch <- x + y                      // Send value through channel; block until it is received.
 }
 
 // Declare a function that receives data from a channel.
-func Greet(ch chan string) {  // Define a channel parameter.
-	name := <-ch              // Receive a value from the channel; block until it is sent.
+func Greet(ch <-chan string) {  // Define a receiving channel parameter.
+	name := <-ch                // Receive a value from the channel; block until it is sent.
 	fmt.Printf("Hello %s!\n", name)
+}
+
+// Declare a function that sends data through or receives data from a channel.
+func Inc(x int, ch chan int) {  // Define a channel parameter.
+	y := <- ch                  // Receive a value from the channel; block until it is sent.
+	ch <- x + y                 // Send value through channel; block until it is received.
 }
 
 // Use a channel to receive data.
@@ -1734,7 +1844,7 @@ channel range ends after the channel is closed and drained.
 
 ```go
 // Declare a function with a quit channel parameter to request channel closure from outside.
-func Count(quit chan bool, ch chan int) {
+func Count(quit <-chan bool, ch chan<- int) {
 	num := 0
 	for {
 		// Execute the case of the first channel operation that is not blocked.
@@ -1773,7 +1883,7 @@ for v := range ch {
 }
 ```
 
-### 20.2 Mutexes
+### 18.2 Mutexes
 
 Goroutines can access and manipulate the same data through pointers. To avoid race conditions with
 shared memory, mutexes can guard access when all participating goroutines use the same lock.
@@ -1801,8 +1911,31 @@ for i := range 100 {
 fmt.Println(counter)
 ```
 
+## 19 Time and Date
+
+```go
+import "time"
+
+// Get current UNIX-time timestamp.
+var timestamp int64 = time.Now().Unix()
+```
+
+## 20 System
+
+```go
+import "time"
+
+// Halt the control flow for a specified amount of milliseconds.
+time.Sleep(1000)
+```
+
 ## 21 Memory Management
 
-...
+```go
+import "runtime"
+
+// Invoke garbage collection.
+runtime.GC()
+```
 
 {% endraw %}
