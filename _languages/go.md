@@ -92,9 +92,9 @@ go help
 go version
 
 # Manage the current module.
-go mod init example.com/myproject  # Initialize a Go module with the specified namespace and name.
-go get github.com/example/foo      # Add the specified external dependency to the Go module.
-go mod tidy                        # Add missing and remove unused dependencies.
+go mod init github.com/user/project  # Initialize a Go module with specified namespace and name.
+go get github.com/example/foo        # Add the specified external dependency to the Go module.
+go mod tidy                          # Add missing and remove unused dependencies.
 
 # Execute Go files with temporary build files.
 go run ./path/to/file.go  # Execute the specified file.
