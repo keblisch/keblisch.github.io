@@ -85,6 +85,9 @@ python manage.py migrate
 
 # create superuser for the current Django project (requires migrations beforehand)
 python manage.py createsuperuser
+
+# open python shell that has all settings and dependencies of the Django project loaded
+python manage.py shell
 ```
 
 ## 5 Project Structure
@@ -102,10 +105,10 @@ python manage.py createsuperuser
 │   ├── urls.py       # URL mappings to views
 │   └── views.py      # view definitions
 ├── <project_name>/   # project configuration directory
-│   ├── asgi.py       #
+│   ├── asgi.py       # entry point for WSGI-compatible web servers
 │   ├── settings.py   # project settings
 │   ├── urls.py       # URL mappings to Django apps
-│   └── wsgi.py       #
+│   └── wsgi.py       # entry point for WSGI-compatible web servers
 ├── db.sqlite3        # internal data managed by Django (configurable)
 └── manage.py         # script to manage the Django project
 ```
@@ -130,13 +133,13 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 # include Django apps in the Django project
 INSTALLED_APPS: list[str] = [
-    # internal apps to include (populated per default)
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
+    # pre-configured Django apps
+    "django.contrib.admin",         # admin site
+    "django.contrib.auth",          # authentication system
+    "django.contrib.contenttypes",  # content types framework
+    "django.contrib.sessions",      # session framework
+    "django.contrib.messages",      # messaging framework
+    "django.contrib.staticfiles",   # frmaework for managing static files
 
     # user defined apps to include (must be added manually)
     "myapp",
@@ -165,46 +168,171 @@ from django.views import View
 from .forms import NameForm
 
 
-# define a view for an HTTP request
+# define a function-based view
 def index(request: HttpRequest) -> HttpResponse:
-
     # define the response to the request
-    return HttpResponse(content="Hello, World!")
+    return HttpResponse(content="Success!")
 
 
-# define a view as a class
+# define a class-based view
 class Hello(View):
+    # define method for class-based view
+    def get(self, request: HttpRequest) -> HttpResponse:
+        # define the response to the request
+        return HttpResponse(content="Hello, World!")
+```
 
-    # define the method for GET requests to the view
-    def get(self, request) -> HttpResponse:
-        return HttpResponse("Hello, World!")
+### 7.1 HTTP Methods
 
-    # define the method for POST requests to the view
-    def post(self, request) -> HttpResponse:
-        return HttpResponse("Success!")
+```python
+from django.http import HttpRequest, HttpResponse
+from django.views import View
 
 
-def greet(request) -> HttpResponse:
+def index(request: HttpRequest) -> HttpResponse:
     # handle GET requests
     if request.method == "GET":
-
         # access GET request parameter
         if "name" in request.GET:
             print(request.GET["name"])
 
-        # render a template as the response
-        return render(
-            request=request,             # original request
-            template_name="index.html",  # template to render
-            context={"name": "John"},    # pass values to insert into template
-        )
+        return HttpResponse(content="Hello, World!")
 
     # handle POST requests
     if request.method == "POST":
-
         # access POST request parameter
         if "name" in request.POST:
             print(request.POST["name"])
+
+        return HttpResponse(content="Success!")
+
+
+class Hello(View):
+
+    # define the method for GET requests to the view
+    def get(self, request: HttpRequest) -> HttpResponse:
+        # access GET request parameter
+        if "name" in request.GET:
+            print(request.GET["name"])
+
+        return HttpResponse(content="Hello, World!")
+
+    # define the method for POST requests to the view
+    def post(self, request: HttpRequest) -> HttpResponse:
+        # access POST request parameter
+        if "name" in request.POST:
+            print(request.POST["name"])
+
+        return HttpResponse(content="Success!")
+```
+
+### 7.2 URL Parameters
+
+```python
+from django.http import HttpRequest, HttpResponse
+
+# take URL parameters as arguments as defined in URL mapping
+def greet(request: HttpRequest, url_parameter: int, other_url_parameter: str) -> HttpResponse:
+    # access URL parameters
+    print(my_url_parameter)
+    print(my_other_url_parameter)
+
+    return HttpResponse(content="Hello, World!")
+```
+
+### 7.3 Redirects
+
+```python
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+
+
+def redirect1(request: HttpRequest) -> HttpResponse:
+    # return redirect to specified URL
+    return HttpResponseRedirect(
+        redirect_to=reverse(    # dynamically create URL
+            urlconf="my_view",  # view name to redirect to
+            args=[4, "John"],   # URL parameters to pass
+        ),
+    )
+
+
+def redirect2(request: HttpRequest) -> HttpResponse:
+    # return redirect to specified URL
+    return HttpResponseRedirect(
+        redirect_to=reverse(        # dynamically create URL
+            urlconf="myapp:index",  # internal URL mapping name to redirect to (can be namespaced)
+            args=[4, "John"],       # URL parameters to pass
+        ),
+    )
+```
+
+### 7.4 Templates
+
+```python
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import render
+from django.template import loader
+
+
+def index(request: HttpRequest) -> HttpResponse:
+    # render a template as the response
+    template = loader.get_template("polls/index.html")  # template to render
+    return HttpResponse(
+        content=template.render(       # render template
+            context={"name": "John"},  # pass values to insert into template
+            request=request,           # pass original request
+        ),
+    )
+
+
+def home(request: HttpRequest) -> HttpResponse:
+    # shortcut for responding with a rendered template
+    return render(
+        request=request,             # pass original request
+        template_name="index.html",  # pass template to render
+        context={"name": "John"},    # pass values to insert into template
+    )
+```
+
+### 7.5 Errors
+
+```python
+from django.http import Http404, HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, render
+
+from .models import MyModel  # custom model
+
+
+def error(request: HttpRequest) -> HttpResponse:
+    try:
+        model = MyModel.objects.get(pk=0)
+    # catch exception for when model entity couldn't be found
+    except MyModel.DoesNotExist:
+        # define the error for the request
+        raise Http404("This site doesn't exist")
+
+
+def search(request: HttpRequest) -> HttpResponse:
+    # shortcut for retrieving first model entity with matching fields or raising HTTP 404 error
+    model = get_object_or_404(klass=MyModel, pk=0)
+
+    # shortcut for retrieving model entities with matching fields or raising HTTP 404 error
+    models = get_list_or_404(klass=MyModel, text="Hi")
+
+    return HttpResponse(model.text)
+```
+
+### 7.6 Forms
+
+```python
+from django.http import HttpRequest, HttpResponse
+
+from .forms import NameForm  # custom form
+
+
+def greet(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
 
         # populate form with POST data
         form: NameForm = NameForm(data=request.POST)
@@ -217,7 +345,49 @@ def greet(request) -> HttpResponse:
 
             return HttpResponse("Success!")
 
-    return HttpResponse("Not Supported")
+    return HttpResponse("Hello, World!")
+```
+
+### 7.7 Generic Views
+
+- generic views automatically create views for models
+  - These are configured with specific fields and methods
+  - Thereby their URL mappings must be adjusted accordingly
+  - Thereby their used templates must adhere to them
+
+#### 7.7.1 Read-Only
+
+```python
+from django.db.models import Model, QuerySet
+from django.views import generic
+
+from .models import MyModel
+
+
+# define generic view that automatically creates view for model entity
+class DetailView(generic.DetailView):
+    # define model to generate view for
+    model: Model = MyModel
+
+    # define template to render for view
+    template_name: str = "polls/detail.html"
+
+    # name of context object to use for template insertion
+    context_object_name: str = "model"
+
+
+# define generic view that automatically creates view for model query set
+class IndexView(generic.ListView):
+    # define template to render for view
+    template_name: str = "index.html"
+
+    # name of context object to use for template insertion
+    context_object_name: str = "latest_question_list"
+
+    # method that returns query set to generate view for
+    def get_queryset(self) -> QuerySet[MyModel]:
+        return MyModel.objects.order_by("-pub_date")[:5]
+
 ```
 
 ## 8 Routing
@@ -234,7 +404,7 @@ from django.contrib import admin
 from django.urls import URLPattern, include, path
 
 
-# map URL prefixes to app URLs
+# map URL prefixes to app URLs (traversed in order)
 urlpatterns: list[URLPattern] = [
     # map the URL prefix to the internal admin app
     path(route="admin/", view=admin.site.urls),
@@ -253,7 +423,10 @@ from django.urls import path, URLPattern
 from . import views
 
 
-# map URLs to views
+# internal namespace for URL mappings of the Django app
+app_name: str = "demo"
+
+# map URLs to views (traversed in order)
 urlpatterns: list[URLPattern] = [
     # map URL to view function
     path(
@@ -262,11 +435,18 @@ urlpatterns: list[URLPattern] = [
         name="hello",      # internal mapping name for templates
     ),
 
-    # map URL to view class
+    # map URL to view class and generic view
     path(
         route="hi",               # URL path
         view=views.Hi.as_view(),  # view class
         name="hi",                # internal mapping name for templates
+    ),
+
+    # define URL parameters that are passed to its mapped view as arguments
+    path(
+        route="path/<int:some_id>/to/<str:some_name>",  # define type of URL parameters
+        view=views.hey,
+        name="hey",
     ),
 ]
 ```
@@ -283,46 +463,104 @@ urlpatterns: list[URLPattern] = [
 ```python
 from django.db.models import (
     CharField,
-    DateField,
-    IntegerChoices,
+    DateTimeField,
+    ForeignKey,
     IntegerField,
     Model,
 )
+from django.utils import timezone
 
 
 # define a model with an automatically managed primary key
-class Person(Model):
+class MyModel(Model):
     # define a text field
-    name: CharField = CharField(
+    text: CharField = CharField(
+        name="Text",     # human-readable name used by Django
         max_length=255,  # limit the length of the text
+        default="???",   # default value of field
     )
 
     # define an integer field
-    age: IntegerField = IntegerField()
-
-    # define integer choice element
-    friends: IntegerChoices = IntegerChoices()
-
-    # define a date field
-    registered_at: DateField = DateField(
-        auto_now=True,  # populate with the current date automatically
+    score: IntegerField = IntegerField(
+        name="Score",  # human-readable name used by Django
+        default=0,     # default value of field
     )
 
-    # define the string representation (used by the admin panel)
+    # define a date field
+    created_at: DateTimeField = DateTimeField(
+        name="Created at",       # human-readable name used by Django
+        auto_now=False,          # whether to populate with the current date time
+        default=timezone.now(),  # default value of field
+    )
+
+    # define the string representation (used as human-readable name by Django)
     def __str__(self) -> str:
-        return self.name
+        return self.text
 ```
+
+### 9.1 Relations
+
+```python
+from django.db.models import (
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    IntegerField,
+    Model,
+)
+from django.utils import timezone
+
+
+class Question(Model):
+    text: CharField = CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.text
+
+
+class Choice(Model):
+    # create n:1 relationship to other model
+    question: ForeignKey = ForeignKey(
+        to=Question,               # model to create relationship to
+        on_delete=models.CASCADE,  # behavior when related entity gets deleted
+    )
+
+    text: CharField = CharField(max_length=255)
+```
+
+### 9.2 Entitis
 
 - Models can be used to access and manipulate their represented database entries
 
 ```python
+from django.db.models import F
 from django.db.models import QuerySet
 
 from .models import MyModel
 
 
-# query the database for all entities of the specified model
-result: QuerySet[MyModel] = MyModel.objects.all()
+# query the database for entities of the specified model
+result1: QuerySet[MyModel] = MyModel.objects.all()  # all entities as query set
+result2: MyModel = MyModel.objects.get(pk=1)        # first entity with specified field value
+
+# mutate query set of database query
+result1 = result1.order_by(  # ordere query set
+    "name",  # order by field in ascending order
+    "-age",  # order by field in descending order
+)
+
+# create new entity of model
+model: MyModel = MyModel(name="John")
+
+# manipulate entity of model
+model.name = F("name").upper()  # act upon model entity referenced in statement
+
+# update or create model entity in database
+model.save()
+
+# access fields of entity
+id: int = model.id. # requires to be saved in database
+name: str = model.name
 ```
 
 ## 10 Forms
@@ -377,6 +615,11 @@ class Registration(forms.ModelForm):
             <p>{{ my_item.name }}</p>
         {% endfor %}
 
+        <!-- insert URLs by their internal mapping names -->
+        <a href="{% url 'index' %}">Index page</a>
+        <a href="{% url 'myapp:about' %}">About us</a>  <!-- specify namespace of URL mapping -->
+        <a href="{% url 'detils' item.id %}">{{ item.name }}</a>  <!-- pass URL parameter -->
+
         <!-- define form in template -->
         <form method="POST">
             {% csrf_token %}  <!-- insert CSRF token for form (required!) -->
@@ -388,9 +631,7 @@ class Registration(forms.ModelForm):
 </html>
 ```
 
-- Django templates can be inserted into other templates
-
-`base.html`:
+- Django templates can use other templates by inserting them
 
 ```html
 <!DOCTYPE html>
@@ -412,7 +653,7 @@ class Registration(forms.ModelForm):
 </html>
 ```
 
-`insert.html`:
+- Django templates can be inserted into other templates
 
 ```html
 <!-- define template in which to insert -->
