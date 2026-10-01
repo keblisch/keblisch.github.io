@@ -136,6 +136,12 @@ from typing import Any
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 
+# security options
+SECRET_KEY: str = "*********************"    # secret key
+DEBUG: bool = True                           # whether to enable debug logging
+ALLOWED_HOSTS: list[str] = ["mydomain.com"]  # which hosts are allowed
+
+
 # include Django apps in the Django project
 INSTALLED_APPS: list[str] = [
     # pre-configured Django apps
@@ -150,6 +156,39 @@ INSTALLED_APPS: list[str] = [
     "myapp",
 ]
 
+# activate middleware for the Django project
+MIDDLEWARE: list[str] = [
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+# set root URL
+ROOT_URLCONF: str = "djangotest.urls"
+
+# configure template system
+TEMPLATES: list[dict[str, Any]] = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
+# set WSGI application
+WSGI_APPLICATION: str = "djangotest.wsgi.application"
+
 
 # define database connections (elements depend on backend and database type)
 DATABASES: dict[str, Any] = {
@@ -158,6 +197,34 @@ DATABASES: dict[str, Any] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
+}
+
+
+# activate authentication password validators
+AUTH_PASSWORD_VALIDATORS: list[dict[str, str]] = [
+    { "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator" },
+    { "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator" },
+    { "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator" },
+    { "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator" },
+]
+
+
+# internationalization options
+LANGUAGE_CODE: str = "en-us"
+TIME_ZONE: str = "UTC"
+USE_I18N: bool = True
+USE_TZ: bool = True
+
+
+# set static files directory
+STATIC_URL: str = "static/"
+
+
+# set mailing backend
+MAILERS: dict[str, dict[str, str]] = {
+    "default": {
+        "BACKEND": "django.core.mail.backends.console.EmailBackend",
+    },
 }
 ```
 
@@ -501,6 +568,15 @@ class MyModel(Model):
     # define the string representation (used as human-readable name by Django)
     def __str__(self) -> str:
         return self.text
+
+    # define how method is treated in admin site
+    @admin.display(
+        boolean=True,
+        ordering="text",
+        description="Does stuff?",
+    )
+    def do_stuff(self) -> bool:
+        return True
 ```
 
 ### 9.1 Relations
@@ -511,6 +587,7 @@ from django.db.models import (
     DateTimeField,
     ForeignKey,
     IntegerField,
+    ManyToManyField,
     Model,
 )
 from django.utils import timezone
@@ -531,6 +608,13 @@ class Choice(Model):
     )
 
     text: CharField = CharField(max_length=255)
+
+
+class Participant(Model):
+    # create n:m relationship to other model
+    questions: ManyToManyField = ManyToManyField(to=Question)
+
+    name: CharField = CharField(max_length=255)
 ```
 
 ### 9.2 Entities
@@ -796,7 +880,7 @@ class MyViewTest(TestCase):
 
 ## 14 Administration
 
-- Django provides an admin panel by default in which users, permission groups, and
+- Django provides an admin site by default in which users, permission groups, and
   databases can be managed
   - This panel is reachable at `/admin/`
   - To access the panel, at least one superuser must be created, and migrations must have been
@@ -804,15 +888,59 @@ class MyViewTest(TestCase):
 
 - Models must be registered in the `admin.py` file of the corresponding Django app to make them
   accessible in the admin panel
+  - There they can also be configured for the admin site
 
 ```python
 from django.contrib import admin
+from django.db.models import Model
 
-from .models import MyModel
+from .models import Choice, Question
+
+
+# define inline class that enables models to be created inside other models in the admin site
+class ChoiceStackedInline(admin.StackedInline):  # stacked view
+    model: Model = Choice  # which model to add
+    extra: int = 4         # how many create slots should be provided per default (optional)
+
+
+# define inline class that enables models to be created inside other models in the admin site
+class ChoiceTabularInline(admin.TabularInline):  # tabular view
+    model: Model = Choice  # which model to add
+    extra: int = 4         # how many create slots should be provided per default (optional)
+
+
+# define admin class that controls how a model is displayed in admin site (optional)
+class QuestionAdmin(admin.ModelAdmin):
+    # define which model fields to display in which order for creating/editing model
+    fieldsets = [
+        # field set without heading
+        (None, {"fields": ["text"]}),
+
+        # field set with heading
+        ("Date information", {
+            "fields": ["pub_date"],   # fields to display in field set
+            "classes": ["collapse"],  # whether the field set should start collapsed (optional)
+        }),
+    ]
+
+    # which inline models should be included (automatically creates reference when related)
+    inlines: list[type] = [ChoiceTabularInline]
+
+    # which model fields to display in which order for list view of model
+    list_display: list[str] = ["question_text", "pub_date"]
+
+    # add filter options for specified fields in model list view
+    list_filter: list[str] = ["pub_date"]
+
+    # add search capability in specified fields in model list view
+    seacrh_fields: list[str] = ["text"]
 
 
 # register the model in the admin panel
-admin.site.register(model_or_iterable=MyModel)
+admin.site.register(
+    model_or_iterable=Question,  # model to register
+    admin_class=QuestionAdmin,   # admin class to use for model (optional)
+)
 ```
 
 {% endraw %}
