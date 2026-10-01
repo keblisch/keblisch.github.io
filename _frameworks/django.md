@@ -88,29 +88,33 @@ python manage.py createsuperuser
 
 # open python shell that has all settings and dependencies of the Django project loaded
 python manage.py shell
+
+# run tests for specified Django app
+python manage.py test myapp
 ```
 
 ## 5 Project Structure
 
 ```text
-<project_directory>/  # project root directory
-├── <app_name>/       # app directory (may have multiple)
-│   ├── migrations/   # migration directory
-│   ├── templates/    # template directory
-│   ├── admin.py      # admin panel configurations
-│   ├── apps.py       #
-│   ├── forms.py      # form definitions for templates
-│   ├── models.py     # model definitions
-│   ├── tests.py      #
-│   ├── urls.py       # URL mappings to views
-│   └── views.py      # view definitions
-├── <project_name>/   # project configuration directory
-│   ├── asgi.py       # entry point for WSGI-compatible web servers
-│   ├── settings.py   # project settings
-│   ├── urls.py       # URL mappings to Django apps
-│   └── wsgi.py       # entry point for WSGI-compatible web servers
-├── db.sqlite3        # internal data managed by Django (configurable)
-└── manage.py         # script to manage the Django project
+<project_directory>/   # project root directory
+├── <app_name>/        # app directory (may have multiple)
+│   ├── migrations/    # migration directory
+│   ├── templates/     # template directory
+│   ├── admin.py       # admin panel configurations
+│   ├── apps.py        #
+│   ├── exceptions.py  # exception definitions
+│   ├── forms.py       # form definitions for templates
+│   ├── models.py      # model definitions
+│   ├── tests.py       # test cases
+│   ├── urls.py        # URL mappings to views
+│   └── views.py       # view definitions
+├── <project_name>/    # project configuration directory
+│   ├── asgi.py        # entry point for WSGI-compatible web servers
+│   ├── settings.py    # project settings
+│   ├── urls.py        # URL mappings to Django apps
+│   └── wsgi.py        # entry point for WSGI-compatible web servers
+├── db.sqlite3         # internal data managed by Django (configurable)
+└── manage.py          # script to manage the Django project
 ```
 
 ## 6 Settings
@@ -528,7 +532,7 @@ class Choice(Model):
     text: CharField = CharField(max_length=255)
 ```
 
-### 9.2 Entitis
+### 9.2 Entities
 
 - Models can be used to access and manipulate their represented database entries
 
@@ -667,7 +671,91 @@ class Registration(forms.ModelForm):
 {% endblock %}
 ```
 
-## 12 Administration
+## 12 Tests
+
+- Every file inside Django apps prefixed with `test` are treated as tests by Django
+
+### 12.1 Unit Tests
+
+```python
+from django.test import TestCase
+
+from .exceptions import MyException
+from .models import MyModel
+
+
+# create test class
+class MyModelTests(TestCase):
+    # define test method
+    def test_all(self):
+        model: MyModel = MyModel()
+
+        # assert equality
+        self.assertIs(
+            expr1=model.get_text(),    # expression to compare
+            expr2="Hello, World!",     # expression to comppare to
+            msg="This wasn't equal!",  # custom failure message (optional)
+        )
+
+        # assert approximated equality
+        self.assertAlmostEqual(
+            first=model.get_price(),   # real number to compare
+            second=3.14,               # real number to comppare to
+            places=2,                  # how many decimal places should be equal (optional)
+            msg="This wasn't equal!",  # custom failure message (optional)
+        )
+
+        # assert truth
+        self.assertTrue(
+            expr=model.is_active(),    # expression to check
+            msg="This wasn't equal!",  # custom failure message (optional)
+        )
+
+        # assert falsehood
+        self.assertFalse(
+            expr=model.is_deleted(),   # expression to check
+            msg="This wasn't equal!",  # custom failure message (optional)
+        )
+
+        # assert throwing exception
+        self.assertRaises(
+            expected_exception=MyException,  # exception to check for
+            callable=lambda: model.panic(),  # expression that should throw exception
+        )
+
+    # define other test method
+    def test_other(self):
+        model: MyModel = MyModel()
+        self.assertTrue(expr=model.is_active(), msg="This wasn't equal!")
+```
+
+### 12.2 Endpoint Tests
+
+```python
+from django.http import HttpResponse
+from django.test import TestCase
+
+
+class MyViewTest(TestCase):
+    def test_get_text(self):
+        # simulate HTTP request
+        response: HttpResponse = self.client.get(
+            path="/",                         # URL to request
+            data={"q": "cat"},                # data to send
+            headers={"Accept": "text/html"},  # headers to send
+        )
+
+        # test status code of response
+        self.assertContains(response=response, status_code=200)
+
+        # test response text of response
+        self.assertContains(response=response, text="No polls are available.")
+
+        # test content of view's context object inserted into template
+        self.assertQuerySetEqual(qs=response.context["latest_question_list"], values=[])
+```
+
+## 13 Administration
 
 - Django provides an admin panel by default in which users, permission groups, and
   databases can be managed
