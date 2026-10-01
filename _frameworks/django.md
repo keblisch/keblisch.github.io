@@ -99,6 +99,7 @@ python manage.py test myapp
 <project_directory>/   # project root directory
 ├── <app_name>/        # app directory (may have multiple)
 │   ├── migrations/    # migration directory
+│   ├── static/        # static file directory
 │   ├── templates/     # template directory
 │   ├── admin.py       # admin panel configurations
 │   ├── apps.py        #
@@ -661,7 +662,7 @@ class Registration(forms.ModelForm):
 
 ```html
 <!-- define template in which to insert -->
-{% extends "base.html" %}
+{% extends "myapp/base.html" %}
 
 <!-- define block of template in which to insert -->
 {% block my_insertion %}
@@ -671,11 +672,49 @@ class Registration(forms.ModelForm):
 {% endblock %}
 ```
 
-## 12 Tests
+- <u>Best practices</u>:
+  - Template files in the `templates` directory should be namespaced by placing them inside
+    an additional directory with the same name as the corresponding Django app
+
+## 12 Static Files
+
+- Static files can be defined as HTML files in the `static` directory of the corresponding
+  Django app
+  - This directory has to be created manually
+
+```html
+<!-- enable usage of the static tag -->
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+
+        <!-- insert URL to specified static file -->
+        <link rel="stylesheet" href="{% static 'myapp/style.css' %}">
+    </head>
+
+    <body>
+        <p>Hello, World!</p>
+    </body>
+
+</html>
+```
+
+- <u>Best practices</u>:
+  - Static files in the `static` directory should be namespaced by placing them inside
+    an additional directory with the same name as the corresponding Django app
+
+## 13 Tests
 
 - Every file inside Django apps prefixed with `test` are treated as tests by Django
 
-### 12.1 Unit Tests
+### 13.1 Unit Tests
 
 ```python
 from django.test import TestCase
@@ -729,7 +768,7 @@ class MyModelTests(TestCase):
         self.assertTrue(expr=model.is_active(), msg="This wasn't equal!")
 ```
 
-### 12.2 Endpoint Tests
+### 13.2 Endpoint Tests
 
 ```python
 from django.http import HttpResponse
@@ -755,7 +794,7 @@ class MyViewTest(TestCase):
         self.assertQuerySetEqual(qs=response.context["latest_question_list"], values=[])
 ```
 
-## 13 Administration
+## 14 Administration
 
 - Django provides an admin panel by default in which users, permission groups, and
   databases can be managed
