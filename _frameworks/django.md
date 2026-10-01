@@ -221,7 +221,7 @@ STATIC_URL: str = "static/"
 
 
 # set the email backend
-MAILERS: dict[str, dict[str, str]] = {
+EMAIL_BACKEND: dict[str, dict[str, str]] = {
     "default": {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
@@ -316,26 +316,25 @@ def greet(request: HttpRequest, url_parameter: int, other_url_parameter: str) ->
 
 ```python
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse
 
 
 def redirect1(request: HttpRequest) -> HttpResponse:
     # return a redirect to the specified URL
     return HttpResponseRedirect(
-        redirect_to=reverse(     # dynamically create URL
-            viewname="my_view",  # view name to redirect to
-            args=[4, "John"],    # URL parameters to pass
+        redirect_to=reverse(         # dynamically create URL
+            viewname="myapp:index",  # URL pattern name (can be namespaced)
+            args=[4, "John"],        # URL parameters to pass
         ),
     )
 
 
 def redirect2(request: HttpRequest) -> HttpResponse:
-    # return a redirect to the specified URL
-    return HttpResponseRedirect(
-        redirect_to=reverse(         # dynamically create URL
-            viewname="myapp:index",  # URL pattern name (can be namespaced)
-            args=[4, "John"],        # URL parameters to pass
-        ),
+    # return a redirect to the specified URL and pass according URL parameters
+    return redirect(
+        "myapp:index",  # URL pattern name (can be namespaced)
+        4, "John",      # URL parameters to pass
     )
 ```
 
